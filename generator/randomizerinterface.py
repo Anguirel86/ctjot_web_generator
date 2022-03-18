@@ -295,8 +295,8 @@ class RandomizerInterface:
         for location in config.boss_assign_dict.keys():
             spoiler_log['bosses'].append(
                 {'location': str(location), 'boss': str(config.boss_assign_dict[location])})
-
-        return json.dumps(spoiler_log)
+        return spoiler_log
+        #return json.dumps(spoiler_log)
     # End get_web_spoiler_log
 
     #

@@ -1,0 +1,2 @@
+function populate_table() {
+}

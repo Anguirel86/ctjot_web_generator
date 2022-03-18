@@ -23,8 +23,8 @@ function resetAll() {
   $('#id_zeal').prop('checked', false).change();
   $('#id_locked_chars').prop('checked', false).change();
   $('#id_tab_treasures').prop('checked', false).change();
-  $('#id_shop_prices').val('Normal');
-  $('#id_tech_rando').val('Normal');
+  $('#id_shop_prices').val('normal');
+  $('#id_tech_rando').val('normal');
   $('#id_duplicate_characters').prop('checked', false).change();
   $('#id_mystery_seed').prop('checked', false).change();
   $('#id_spoiler_log').prop('checked', true).change();
@@ -74,7 +74,7 @@ function presetRace() {
   $('#id_disable_glitches').prop('checked', true).change();
   $('#id_zeal').prop('checked', true).change();
   $('#id_early_pendant').prop('checked', true).change();
-  $('#id_tech_rando').val('Fully Random');      
+  $('#id_tech_rando').val('fully_random');
 }
 
 /*
@@ -88,7 +88,7 @@ function presetNewPlayer() {
   $('#id_zeal').prop('checked', true).change();
   $('#id_early_pendant').prop('checked', true).change();
   $('#id_unlocked_magic').prop('checked', true).change();
-  $('#id_tech_rando').val('Fully Random');
+  $('#id_tech_rando').val('fully_random');
 }
 
 /*
@@ -101,7 +101,7 @@ function presetLostWorlds() {
   $('#id_disable_glitches').prop('checked', true).change();
   $('#id_zeal').prop('checked', true).change();
   $('#id_lost_worlds').prop('checked', true).change();
-  $('#id_tech_rando').val('Fully Random');
+  $('#id_tech_rando').val('fully_random');
 }
 
 /*
@@ -114,7 +114,7 @@ function presetHard() {
   $('#id_disable_glitches').prop('checked', true).change();
   $('#id_boss_scaling').prop('checked', true).change();
   $('#id_locked_chars').prop('checked', true).change();
-  $('#id_tech_rando').val('Balanced Random');
+  $('#id_tech_rando').val('balanced_random');
 }
 
 /*

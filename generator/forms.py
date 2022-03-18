@@ -5,7 +5,7 @@ from django import forms
 # This form is used to submit the ROM on the page where seeds are downloaded.
 #
 class RomForm(forms.Form):
-    rom_file = forms.FileField(required=False)
+    rom_file = forms.FileField(required=True)
     share_id = forms.CharField(widget=forms.HiddenInput(), required=True)
 
 
@@ -78,7 +78,7 @@ class GenerateForm(forms.Form):
     mystery_item_difficulty_easy = forms.IntegerField()
     mystery_item_difficulty_normal = forms.IntegerField()
     mystery_item_difficulty_hard = forms.IntegerField()
-    #  Enemy Difficult7
+    #  Enemy Difficulty
     mystery_enemy_difficulty_normal = forms.IntegerField()
     mystery_enemy_difficulty_hard = forms.IntegerField()
     #  Tech Order

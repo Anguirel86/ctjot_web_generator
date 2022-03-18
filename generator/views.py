@@ -57,7 +57,7 @@ def generate(request):
             rom_form = RomForm()
             context = {'share_id': game.share_id,
                        'form': rom_form,
-                       'spoiler_log': RandomizerInterface.get_web_spoiler_log(game.configuration)}
+                       'spoiler_log': RandomizerInterface.get_web_spoiler_log(pickle.loads(game.configuration))}
             return render(request, 'generator/seed.html', context)
         else:
             # TODO - Form isn't valid, for now just redirect to options

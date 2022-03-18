@@ -3,6 +3,7 @@
 {% block imports %}
     {% load static %}
     <script src="{% static 'generator/seed.js' %}"></script>
+    {{ spoiler_log|json_script:"spoiler_log" }}
 {% endblock %}
 
 {% block content %}
