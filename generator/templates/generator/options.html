@@ -1,0 +1,489 @@
+{% extends 'generator/base.html' %}
+
+{% block imports %}
+    {% load static %}
+    <script src="{% static 'generator/options.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'generator/styles.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+      <h1>Chrono Trigger Jets of Time Randomizer</h1>
+      <h4>Based on beta version 3.2.0</h4>
+      
+      <!-- Preset buttons -->
+      <h2 class="pt-4">Presets</h2>
+      <div class="border border-primary rounded p-3">
+        <button class="btn btn-primary" type="button" onclick="resetAll()">Reset All</button>
+        <button class="btn btn-primary" type="button" onclick="presetRace()">Race</button>
+        <button class="btn btn-primary" type="button" onclick="presetNewPlayer()">New Player</button>
+        <button class="btn btn-primary" type="button" onclick="presetLostWorlds()">Lost Worlds</button>
+        <button class="btn btn-primary" type="button" onclick="presetHard()">Hard</button>
+      </div> <!-- End preset buttons -->
+      
+      <form name="game_options_form" id="game_options_form" action="{% url 'generator:generate' %}" method="post" enctype="multipart/form-data" onsubmit="return prepareForm()">
+        {% csrf_token %}
+
+        <h2 class="mt-3"> Select Game Options (<a href="https://wiki.ctjot.com/doku.php?id=flags" target="_blank">help</a>)</h2>
+
+        <ul class="nav nav-tabs">
+          <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#options-general">General</a></li>
+          <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#options-tabs">Tabs</a></li>
+          <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#options-dc">Duplicate Chars</a></li>
+          <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#options-ro">Boss Rando</a></li>
+          <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#options-qol">Quality of Life</a></li>
+          <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#options-cos">Cosmetic</a></li>
+          <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#options-exp">Experimental</a></li>
+          <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#options-mystery">Mystery</a></li>
+        </ul>
+
+        <div class="tab-content">
+          <!-- General Options Tab -->
+          <div id="options-general" class="tab-pane fade show active">
+            <!-- Game Flags -->
+            <div class="border border-primary rounded p-2">
+
+              <div class="row">
+                <!-- Left column flags -->
+                <div class="col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{form.enemy_difficulty.id_for_label}}">Enemy Difficulty:</label>
+                    <select class="form-control" name="{{form.enemy_difficulty.name}}" id="{{form.enemy_difficulty.id_for_label}}">
+                      <option value="normal" selected>normal (n)</option>
+                      <option value="hard">hard (h)</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group mb-4">
+                    <label for="{{form.game_mode.id_for_label}}">Game Mode:</label>
+                    <select class="form-control" name="{{form.game_mode.name}}" id="{{form.game_mode.id_for_label}}">
+                      <option value="standard" selected>Standard</option>
+                      <option value="lost_worlds">Lost Worlds</option>
+                      <option value="ice_age">Ice Age</option>
+                      <option value="legacy_of_cyrus">Legacy of Cyrus</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.disable_glitches.name}}" id="{{form.disable_glitches.id_for_label}}" data-toggle="toggle">
+                    <label for="{{form.disable_glitches.id_for_label}}">Disable Glitches (g)</label>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.boss_scaling.name}}" id="{{form.boss_scaling.id_for_label}}" data-toggle="toggle">
+                    <label for="{{form.boss_scaling.id_for_label}}">Boss Scaling (b)</label>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.early_pendant.name}}" id="{{form.early_pendant.id_for_label}}" data-toggle="toggle">
+                    <label for="{{form.early_pendant.id_for_label}}">Early Pendant Charge (p)</label>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.unlocked_magic.name}}" id="{{form.unlocked_magic.id_for_label}}" data-toggle="toggle">
+                    <label for="{{form.unlocked_magic.id_for_label}}">Unlocked Magic (m)</label>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.chronosanity.name}}" id="{{form.chronosanity.id_for_label}}" data-toggle="toggle">
+                    <label for="{{form.chronosanity.id_for_label}}">Chronosanity (cr)</label>
+                  </div>
+                </div>
+
+                <!-- Right column flags -->
+                <div class="col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{form.item_difficulty.id_for_label}}">Item Difficulty:</label>
+                    <select class="form-control" name="{{form.item_difficulty.name}}" id="{{form.item_difficulty.id_for_label}}">
+                      <option value="easy">Easy (e)</option>
+                      <option value="normal" selected>Normal (n)</option>
+                      <option value="hard">Hard (h)</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.quiet_mode.name}}" id="{{form.quiet_mode.id_for_label}}" data-toggle="toggle">
+                    <label for="{{form.quiet_mode.id_for_label}}">Quiet Mode - No Music (q)</label>
+                  </div>
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.boss_rando.name}}" id="{{form.boss_rando.id_for_label}}" data-toggle="toggle">
+                    <label for="{{form.boss_rando.id_for_label}}">Randomize Bosses (ro)</label>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.zeal.name}}" id="{{form.zeal.id_for_label}}" data-toggle="toggle">
+                    <label for="{{form.zeal.id_for_label}}">Zeal 2 Counts As Last Boss (z)</label>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.locked_chars.name}}" id="{{form.locked_chars.id_for_label}}" data-toggle="toggle">
+                    <label for="{{form.locked_chars.id_for_label}}">Locked Characters (c)</label>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.tab_treasures.name}}" id="{{form.tab_treasures.id_for_label}}" data-toggle="toggle">
+                    <label for="{{form.tab_treasures.id_for_label}}">Make all treasures tabs (tb)</label>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.duplicate_characters.name}}" id="{{form.duplicate_characters.id_for_label}}"  data-toggle="toggle">
+                    <label for="{{form.duplicate_characters.id_for_label}}">Duplicate Characters (dc)</label>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.mystery_seed.name}}" id="{{form.mystery_seed.id_for_label}}"  data-toggle="toggle">
+                    <label for="{{form.mystery_seed.id_for_label}}">Mystery Seed</label>
+                  </div>
+                </div>
+              </div> <!-- End flag rows -->
+
+              <div class="form-group">
+                <label for="{{form.shop_prices.id_for_label}}">Shop Prices:</label>
+                <select class="form-control" name="{{form.shop_prices.name}}" id="{{form.shop_prices.id_for_label}}">
+                  <option value="normal" selected>Normal</option>
+                  <option value="free">Free (spf)</option>
+                  <option value="mostly_random">Mostly Random (spm)</option>
+                  <option value="fully_random">Fully Random (spr)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.tech_rando.id_for_label}}">Tech Randomization:</label>
+                <select class="form-control" name="{{form.tech_rando.name}}" id="{{form.tech_rando.id_for_label}}">
+                  <option value="normal" selected>Normal</option>
+                  <option value="balanced_random">Balanced Random (tex)</option>
+                  <option value="fully_random">Fully Random (te)</option>
+                </select>
+              </div>
+
+            </div> <!-- End Game Flags -->
+          </div> <!-- End General Options Tab -->
+
+          <!-- Tabs options tab -->
+          <div class="tab-pane fade" id="options-tabs">
+            <div class="border border-primary rounded p-2 mb-3">
+              <div class="form-group">
+                <label for="{{form.power_tab_min.id_for_label}}" class="form-label mr-2">Power Tab Min:</label>
+                <input type="range" class="form-range" name="{{form.power_tab_min.name}}" id="{{form.power_tab_min.id_for_label}}" min="1" max="9" value="2" oninput="updateAllTabValues()" onchange="updateAllTabValues()" >
+                <input type="text" id="power_tab_min_text" form="none" size="1" value="2" readonly>
+              </div>
+              <div class="form-group">
+                <label for="{{form.power_tab_max.id_for_label}}" class="form-label mr-2">Power Tab Max:</label>
+                <input type="range" class="form-range" name="{{form.power_tab_max.name}}" id="{{form.power_tab_max.id_for_label}}" min="1" max="9" value="4" oninput="updateAllTabValues(true)" onchange="updateAllTabValues(true)" >
+                <input type="text" id="power_tab_max_text" form="none" size="1" value="4" readonly>
+              </div>
+              <div class="form-group">
+                <label for="{{form.magic_tab_min.id_for_label}}" class="form-label mr-2">Magic Tab Min:</label>
+                <input type="range" class="form-range" name="{{form.magic_tab_min.name}}" id="{{form.magic_tab_min.id_for_label}}" min="1" max="9" value="1" oninput="updateAllTabValues()" onchange="updateAllTabValues()" >
+                <input type="text" id="magic_tab_min_text" form="none" size="1" value="1" readonly>
+              </div>
+              <div class="form-group">
+                <label for="{{form.magic_tab_max.id_for_label}}" class="form-label mr-2">Magic Tab Max:</label>
+                <input type="range" class="form-range" name="{{form.magic_tab_max.name}}" id="{{form.magic_tab_max.id_for_label}}" min="1" max="9" value="3" oninput="updateAllTabValues(true)" onchange="updateAllTabValues(true)" >
+                <input type="text" id="magic_tab_max_text" form="none" size="1" value="3" readonly>
+              </div>
+              <div class="form-group">
+                <label for="{{form.speed_tab_min.id_for_label}}" class="form-label mr-2">Speed Tab Min:</label>
+                <input type="range" class="form-range" name="{{form.speed_tab_min.name}}" id="{{form.speed_tab_min.id_for_label}}" min="1" max="9" value="1" oninput="updateAllTabValues()" onchange="updateAllTabValues()" >
+                <input type="text" id="speed_tab_min_text" form="none" size="1" value="1" readonly>
+              </div>
+              <div class="form-group">
+                <label for="{{form.speed_tab_max.id_for_label}}" class="form-label mr-2">Speed Tab Max:</label>
+                <input type="range" class="form-range" name="{{form.speed_tab_max.name}}" id="{{form.speed_tab_max.id_for_label}}" min="1" max="9" value="1" oninput="updateAllTabValues(true)" onchange="updateAllTabValues(true)" >
+                <input type="text" id="speed_tab_max_text" form="none" size="1" value="1" readonly>
+              </div>
+            </div>
+          </div>
+
+          <!-- DC options tab -->
+          <div class="tab-pane fade" id="options-dc">
+            <div class="border border-primary rounded p-2 mb-3">
+              <input type="hidden" name="{{form.duplicate_char_assignments.name}}" id="{{form.duplicate_char_assignments.id_for_label}}">
+              <p>Select which characters can turn into which other characters:</p>
+              <div id="character_selection_error" class="errorText"></div>
+              <table>
+                <tr>
+                  <th></th>
+                  <th>Crono</th>
+                  <th>Marle</th>
+                  <th>Lucca</th>
+                  <th>Robo</th>
+                  <th>Frog</th>
+                  <th>Ayla</th>
+                  <th>Magus</th>
+                </tr>
+
+                {% with 'Crono Marle Lucca Robo Frog Ayla Magus' as chars %}
+                  {% for character in chars.split %}
+                    <tr>
+                      <td>{{character}} can be:</td>
+                      <td><input type="checkbox" id="dc_{{character}}0" form="none" checked /></td>
+                      <td><input type="checkbox" id="dc_{{character}}1" form="none" checked /></td>
+                      <td><input type="checkbox" id="dc_{{character}}2" form="none" checked /></td>
+                      <td><input type="checkbox" id="dc_{{character}}3" form="none" checked /></td>
+                      <td><input type="checkbox" id="dc_{{character}}4" form="none" checked /></td>
+                      <td><input type="checkbox" id="dc_{{character}}5" form="none" checked /></td>
+                      <td><input type="checkbox" id="dc_{{character}}6" form="none" checked /></td>
+                    </tr>
+                  {% endfor %}
+                {% endwith %}
+              </table>
+              <div class="pt-2">
+                <input class="btn btn-primary" type="button" form="none" value="Check All" onclick="dcCheckAll()">
+                <input class="btn btn-primary" type="button" form="none" value="Uncheck All" onclick="dcUncheckAll()">
+              </div>
+
+              <div class="form-group form-check pt-3 pl-0">
+                <input type="checkbox" name="{{form.duplicate_duals.name}}" id="{{form.duplicate_duals.id_for_label}}" data-toggle="toggle" />
+                <label for="{{form.duplicate_duals.id_for_label}}">Duplicate Dual Techs</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- ro options tab -->
+          <div class="tab-pane fade" id="options-ro">
+            <div class="border border-primary rounded p-2 mb-3">
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.legacy_boss_placement.name}}" id="{{form.legacy_boss_placement.id_for_label}}"  data-toggle="toggle">
+                <label for="{{form.legacy_boss_placement.id_for_label}}">Legacy Boss Placement</label>
+              </div>
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.enable_sightscope.name}}" id="{{form.enable_sightscope.id_for_label}}"  data-toggle="toggle">
+                <label for="{{form.enable_sightscope.id_for_label}}">Enable Sightscope</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- qol options tab -->
+          <div class="tab-pane fade" id="options-qol">
+            <div class="border border-primary rounded p-2 mb-3">
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.sightscope_always_on.name}}" id="{{form.sightscope_always_on.id_for_label}}"  data-toggle="toggle">
+                <label for="{{form.sightscope_always_on.id_for_label}}">Sightscope Always On</label>
+              </div>
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.fast_tabs.name}}" id="{{form.fast_tabs.id_for_label}}"  data-toggle="toggle">
+                <label for="{{form.fast_tabs.id_for_label}}">Fast Tabs</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- cosmetic options tab -->
+          <div class="tab-pane fade" id="options-cos">
+            <div class="border border-primary rounded p-2 mb-3">
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.zenan_alt_battle_music.name}}" id="{{form.zenan_alt_battle_music.id_for_label}}" data-toggle="toggle">
+                <label for="{{form.zenan_alt_battle_music.id_for_label}}">Zenan Alt Battle Music</label>
+              </div>
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.death_peak_alt_music.name}}" id="{{form.death_peak_alt_music.id_for_label}}" data-toggle="toggle">
+                <label for="{{form.death_peak_alt_music.id_for_label}}">Death Peak Alt Music</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Experimental options tab -->
+          <div class="tab-pane fade" id="options-exp">
+            <div class="border border-primary rounded p-2 mb-3">
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.guaranteed_drops.name}}" id="{{form.guaranteed_drops.id_for_label}}"  data-toggle="toggle">
+                <label for="{{form.guaranteed_drops.id_for_label}}">Guaranteed Drops</label>
+              </div>
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.buff_x_strike.name}}" id="{{form.buff_x_strike.id_for_label}}"  data-toggle="toggle">
+                <label for="{{form.buff_x_strike.id_for_label}}">Buff X-Strike </label>
+              </div>
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.bucket_fragments.name}}" id="{{form.bucket_fragments.id_for_label}}"  data-toggle="toggle">
+                <label for="{{form.bucket_fragments.id_for_label}}">Bucket Fragments</label>
+              </div>
+              <div class="form-group">
+                <label for="{{form.fragments_required.id_for_label}}" class="form-label mr-2">Required Fragments:</label>
+                <input type="range" class="form-range" name="{{form.fragments_required.name}}" id="{{form.fragments_required.id_for_label}}" min="1" max="50" value="20" oninput="setFragmentsRequired()" onchange="setFragmentsRequired()" >
+                <input type="text" id="fragments_required_text" form="none" size="1" value="20" readonly>
+              </div>
+              <div class="form-group">
+                <label for="{{form.extra_fragments.id_for_label}}" class="form-label mr-2">Extra Fragments:</label>
+                <input type="range" class="form-range" name="{{form.extra_fragments.name}}" id="{{form.extra_fragments.id_for_label}}" min="0" max="50" value="10" oninput="setExtraFragments()" onchange="setExtraFragments()" >
+                <input type="text" id="extra_fragments_text" form="none" size="1" value="10" readonly>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mystery options tab -->
+          <div class="tab-pane fade" id="options-mystery">
+            <div class="border border-primary rounded p-2 mb-3">
+              <h4>Game Modes:</h4>
+              <div class="form-group">
+                <label for="{{form.mystery_game_mode_standard.id_for_label}}" class="form-label mr-2">Standard:</label>
+                <input type="range" class="form-range" name="{{form.mystery_game_mode_standard.name}}" id="{{form.mystery_game_mode_standard.id_for_label}}" min="0" max="100" value="75" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_game_mode_standard_text" form="none" size="1" value="75" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_game_mode_lw.id_for_label}}" class="form-label mr-2">Lost Worlds:</label>
+                <input type="range" class="form-range" name="{{form.mystery_game_mode_lw.name}}" id="{{form.mystery_game_mode_lw.id_for_label}}" min="0" max="100" value="25" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_game_mode_lw_text" form="none" size="1" value="25" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_game_mode_loc.id_for_label}}" class="form-label mr-2">Legacy of Cyrus:</label>
+                <input type="range" class="form-range" name="{{form.mystery_game_mode_loc.name}}" id="{{form.mystery_game_mode_loc.id_for_label}}" min="0" max="100" value="0" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_game_mode_loc_text" form="none" size="1" value="0" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_game_mode_ia.id_for_label}}" class="form-label mr-2">Ice Age:</label>
+                <input type="range" class="form-range" name="{{form.mystery_game_mode_ia.name}}" id="{{form.mystery_game_mode_ia.id_for_label}}" min="0" max="100" value="0" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_game_mode_ia_text" form="none" size="1" value="0" readonly>
+              </div>
+
+              <h4>Item Difficulty:</h4>
+              <div class="form-group">
+                <label for="{{form.mystery_item_difficulty_easy.id_for_label}}" class="form-label mr-2">Easy:</label>
+                <input type="range" class="form-range" name="{{form.mystery_item_difficulty_easy.name}}" id="{{form.mystery_item_difficulty_easy.id_for_label}}" min="0" max="100" value="15" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_item_difficulty_easy_text" form="none" size="1" value="15" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_item_difficulty_normal.id_for_label}}" class="form-label mr-2">Normal:</label>
+                <input type="range" class="form-range" name="{{form.mystery_item_difficulty_normal.name}}" id="{{form.mystery_item_difficulty_normal.id_for_label}}" min="0" max="100" value="70" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_item_difficulty_normal_text" form="none" size="1" value="70" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_item_difficulty_hard.id_for_label}}" class="form-label mr-2">Hard:</label>
+                <input type="range" class="form-range" name="{{form.mystery_item_difficulty_hard.name}}" id="{{form.mystery_item_difficulty_hard.id_for_label}}" min="0" max="100" value="15" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_item_difficulty_hard_text" form="none" size="1" value="15" readonly>
+              </div>
+
+              <h4>Enemy Difficulty:</h4>
+              <div class="form-group">
+                <label for="{{form.mystery_enemy_difficulty_normal.id_for_label}}" class="form-label mr-2">Normal:</label>
+                <input type="range" class="form-range" name="{{form.mystery_enemy_difficulty_normal.name}}" id="{{form.mystery_enemy_difficulty_normal.id_for_label}}" min="0" max="100" value="75" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_enemy_difficulty_normal_text" form="none" size="1" value="75" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_enemy_difficulty_hard.id_for_label}}" class="form-label mr-2">Hard:</label>
+                <input type="range" class="form-range" name="{{form.mystery_enemy_difficulty_hard.name}}" id="{{form.mystery_enemy_difficulty_hard.id_for_label}}" min="0" max="100" value="25" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_enemy_difficulty_hard_text" form="none" size="1" value="25" readonly>
+              </div>
+
+              <h4>Tech Order:</h4>
+              <div class="form-group">
+                <label for="{{form.mystery_tech_order_normal.id_for_label}}" class="form-label mr-2">Normal:</label>
+                <input type="range" class="form-range" name="{{form.mystery_tech_order_normal.name}}" id="{{form.mystery_tech_order_normal.id_for_label}}" min="0" max="100" value="10" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_tech_order_normal_text" form="none" size="1" value="10" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_tech_order_full_random.id_for_label}}" class="form-label mr-2">Full Random:</label>
+                <input type="range" class="form-range" name="{{form.mystery_tech_order_full_random.name}}" id="{{form.mystery_tech_order_full_random.id_for_label}}" min="0" max="100" value="80" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_tech_order_full_random_text" form="none" size="1" value="80" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_tech_order_balanced_random.id_for_label}}" class="form-label mr-2">Balanced Random:</label>
+                <input type="range" class="form-range" name="{{form.mystery_tech_order_balanced_random.name}}" id="{{form.mystery_tech_order_balanced_random.id_for_label}}" min="0" max="100" value="10" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_tech_order_balanced_random_text" form="none" size="1" value="10" readonly>
+              </div>
+
+              <h4>Shop Prices:</h4>
+              <div class="form-group">
+                <label for="{{form.mystery_shop_prices_normal.id_for_label}}" class="form-label mr-2">Normal:</label>
+                <input type="range" class="form-range" name="{{form.mystery_shop_prices_normal.name}}" id="{{form.mystery_shop_prices_normal.id_for_label}}" min="0" max="100" value="70" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_shop_prices_normal_text" form="none" size="1" value="70" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_shop_prices_random.id_for_label}}" class="form-label mr-2">Random:</label>
+                <input type="range" class="form-range" name="{{form.mystery_shop_prices_random.name}}" id="{{form.mystery_shop_prices_random.id_for_label}}" min="0" max="100" value="10" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_shop_prices_random_text" form="none" size="1" value="10" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_shop_prices_mostly_random.id_for_label}}" class="form-label mr-2">Mostly Random:</label>
+                <input type="range" class="form-range" name="{{form.mystery_shop_prices_mostly_random.name}}" id="{{form.mystery_shop_prices_mostly_random.id_for_label}}" min="0" max="100" value="10" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_shop_prices_mostly_random_text" form="none" size="1" value="10" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_shop_prices_free.id_for_label}}" class="form-label mr-2">Free:</label>
+                <input type="range" class="form-range" name="{{form.mystery_shop_prices_free.name}}" id="{{form.mystery_shop_prices_free.id_for_label}}" min="0" max="100" value="10" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_shop_prices_free_text" form="none" size="1" value="10" readonly>
+              </div>
+
+              <h4>Flag Probabilities:</h4>
+              <div class="form-group">
+                <label for="{{form.mystery_tab_treasures.id_for_label}}" class="form-label mr-2">Tab Treasures:</label>
+                <input type="range" class="form-range" name="{{form.mystery_tab_treasures.name}}" id="{{form.mystery_tab_treasures.id_for_label}}" min="0" max="100" value="10" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_tab_treasures_text" form="none" size="2" value="10%" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_unlock_magic.id_for_label}}" class="form-label mr-2">Unlocked Magic:</label>
+                <input type="range" class="form-range" name="{{form.mystery_unlock_magic.name}}" id="{{form.mystery_unlock_magic.id_for_label}}" min="0" max="100" value="50" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_unlock_magic_text" form="none" size="2" value="50%" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_bucket_fragments.id_for_label}}" class="form-label mr-2">Bucket Fragments:</label>
+                <input type="range" class="form-range" name="{{form.mystery_bucket_fragments.name}}" id="{{form.mystery_bucket_fragments.id_for_label}}" min="0" max="100" value="15" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_bucket_fragments_text" form="none" size="2" value="15%" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_chronosanity.id_for_label}}" class="form-label mr-2">Chronosanity:</label>
+                <input type="range" class="form-range" name="{{form.mystery_chronosanity.name}}" id="{{form.mystery_chronosanity.id_for_label}}" min="0" max="100" value="30" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_chronosanity_text" form="none" size="2" value="30%" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_boss_rando.id_for_label}}" class="form-label mr-2">Boss Rando:</label>
+                <input type="range" class="form-range" name="{{form.mystery_boss_rando.name}}" id="{{form.mystery_boss_rando.id_for_label}}" min="0" max="100" value="50" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_boss_rando_text" form="none" size="2" value="50%" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_boss_scale.id_for_label}}" class="form-label mr-2">Boss Scaling:</label>
+                <input type="range" class="form-range" name="{{form.mystery_boss_scale.name}}" id="{{form.mystery_boss_scale.id_for_label}}" min="0" max="100" value="30" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_boss_scale_text" form="none" size="2" value="30%" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_locked_characters.id_for_label}}" class="form-label mr-2">Locked Characters:</label>
+                <input type="range" class="form-range" name="{{form.mystery_locked_characters.name}}" id="{{form.mystery_locked_characters.id_for_label}}" min="0" max="100" value="25" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_locked_characters_text" form="none" size="2" value="25%" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_duplicate_characters.id_for_label}}" class="form-label mr-2">Duplicate Characters:</label>
+                <input type="range" class="form-range" name="{{form.mystery_duplicate_characters.name}}" id="{{form.mystery_duplicate_characters.id_for_label}}" min="0" max="100" value="25" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_duplicate_characters_text" form="none" size="2" value="25%" readonly>
+              </div>
+
+            </div>
+          </div>
+        </div> <!-- Tab content div -->
+
+        <h2 class="mt-3">Generate Game</h2>
+        <div class="border border-primary rounded p-2 mb-3">
+          <div class="form-group">
+            <label for="{{form.seed.id_for_label}}">Seed (optional):</label>
+            <input class="form-control" name="{{form.seed.name}}" id="{{form.seed.id_for_label}}" type="text">
+          </div>
+
+          <div class="form-group">
+            <input type="checkbox" name="{{form.spoiler_log.name}}" id="{{form.spoiler_log.id_for_label}}" data-toggle="toggle" checked>
+            <label for="{{form.spoiler_log.id_for_label}}">Spoiler Log</label>
+          </div>
+
+          <div class="form-group">
+            <input class="btn btn-primary" type="submit" value="Generate Seed">
+          </div>
+        </div>
+
+      </form> <!-- End game options form -->
+    </div> <!-- End main container div -->
+{% endblock %}

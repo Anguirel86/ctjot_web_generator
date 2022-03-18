@@ -1,0 +1,16 @@
+*.bak
+*.sfc
+*.sqlite3
+
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Randomizer files
+flux/
+jetsoftime/
+patches/
+pickles/
+names.txt
+patch.ips

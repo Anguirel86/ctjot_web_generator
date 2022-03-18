@@ -1,0 +1,28 @@
+{% extends 'generator/base.html' %}
+
+{% block imports %}
+    {% load static %}
+    <script src="{% static 'generator/seed.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+      <div class="pt-2 pb-2">
+        <h1>Download Seed</h1>
+        <h3 class="pb-2"><a target="_blank" href="{% url 'generator:share' share_id %}">Seed share link</a></h3>
+        <form name="seed_form" id="seed_form" action="{% url 'generator:seed' %}" target="_blank" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="form-group">
+            <label class="form-label" for="{{form.rom_file.id_for_label}}">Chrono Trigger ROM</label>
+            <input type="file" class="form-control" id="{{form.rom_file.id_for_label}}" name="{{form.rom_file.name}}"/>
+            <input type="hidden" name="{{form.share_id.name}}" id="{{form.share_id.id_for_label}}" value="{{share_id}}">
+          </div>
+          <button class="btn btn-primary" type="submit" >Download Seed</button>
+        </form>
+        <div>
+
+        </div>
+      </div>
+    </div>
+
+{% endblock %}

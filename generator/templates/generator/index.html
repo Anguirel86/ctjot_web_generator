@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <title>Chrono Trigger: Jets of Time Randomizer</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </head>
+  
+  <body>
+    <div class="container pt-3">
+      <!-- Welcome card -->
+      <div class="card mb-3">
+        <h4 class="card-header">Chrono Trigger: Jets of Time Randomizer</h4>
+        <p class="card-text p-4">Jets of Time is an open world randomizer for Chrono Trigger.  Players jet through time with the Epoch looking for additional characters and key items to open the way to, and ultimately defeat, Lavos.</p>
+      </div>
+      
+      <!-- How to play card -->
+      <div class="card mb-3">
+        <h5 class="card-header">Getting Started</h5>
+        <div class="pl-4">
+          <p class="card-text">Use the online generator to roll up a seed or download the standalone executable from github.</p>
+          <a class="btn btn-primary" href="{% url 'generator:options' %}" role="button">Generate a seed</a>
+          <a class="btn btn-primary" href="https://github.com/Anskiy/jetsoftime/releases" role="button">Get the executable</a>
+        </div>
+        
+        <p class="card-text pl-4 pr-4">A valid US Chrono Trigger SNES ROM is required.</p>
+      </div>
+    
+      <!-- Resources card -->
+      <div class="card mb-3">
+        <h5 class="card-header">Resources</h5>
+        <ul class="card-text">
+		  <li>Check out the <a href="https://www.wiki.ctjot.com">Jets of Time wiki</a></li>
+		  <li>Come join our <a href="https://discord.gg/Tcu4X3sw">discord community</a></li>
+        </ul>
+        <h6 class="card-header">Trackers</h6>
+        <ul class="card-text">
+          <li><a href="https://emotracker.net/">EmoTracker</a></li>
+          <li><a href="{% url 'generator:tracker' %}">Web based tracker</a></li>
+        </ul>
+        <h6 class="card-header">Guides</h6>
+        <ul class="card-text">
+          <li>Check the wiki for a number of <a href="https://wiki.ctjot.com/doku.php?id=guides">useful guides</a></li>
+        </ul>
+      </div>
+    
+      <!-- Old versions card -->
+      <div class="card mb-3">
+        <h5 class="card-header">Old versions</h5>
+        <ul class="card-body">
+          <li>Older versions are available as standalone executables from github <a href="https://github.com/Anskiy/jetsoftime/releases">here</a></li>
+        </ul>
+      </div>
+    </div>
+  </body>
+
+</html>
