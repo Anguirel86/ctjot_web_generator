@@ -33,7 +33,7 @@ def index(request):
 # Tracker for this version of the randomizer.
 #
 def tracker(request):
-    return render(request, 'generator/tracker.html')
+    return render(request, 'tracker/tracker.html')
 
 
 #

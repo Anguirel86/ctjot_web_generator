@@ -1,0 +1,109 @@
+<html>
+  {% load static %}
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script src="{% static 'tracker/logic.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'tracker/trackerstyles.css' %}">
+  </head>
+
+  
+  <body style="background-color:#101010;">
+  
+    <div class="row no-gutters">
+      <div class="col-sm-auto">
+         <img src="{% static 'tracker/images/characters/crono.png' %}" alt="Crono" title="Crono" width="48" height="48" id="Crono" class="tracker-grayscale">
+         <img src="{% static 'tracker/images/characters/lucca.png' %}" alt="Lucca" title="Lucca" width="48" height="48" id="Lucca" class="tracker-grayscale">
+         <img src="{% static 'tracker/images/characters/marle.png' %}" alt="Marle" title="Marle" width="48" height="48" id="Marle" class="tracker-grayscale">
+         <img src="{% static 'tracker/images/characters/frog.png' %}" alt="Frog" title="Frog" width="48" height="48" id="Frog" class="tracker-grayscale">
+         <img src="{% static 'tracker/images/characters/robo.png' %}" alt="Robo" title="Robo" width="48" height="48" id="Robo" class="tracker-grayscale">
+         <img src="{% static 'tracker/images/characters/ayla.png' %}" alt="Ayla" title="Ayla" width="48" height="48" id="Ayla" class="tracker-grayscale">
+         <img src="{% static 'tracker/images/characters/magus.png' %}" alt="Magus" title="Magus" width="48" height="48" id="Magus" class="tracker-grayscale">
+      </div>
+    </div> <!-- Character row -->
+    
+    <div class="row no-gutters">
+      <div class="col-sm-auto">
+         <img src="{% static 'tracker/images/spacer-half.png' %}" width="24" height="48">
+         <img src="{% static 'tracker/images/key_items/benthilt.png' %}" alt="Bent Hilt" title="Bent Hilt" width="48" height="48" id="benthilt" class="tracker-grayscale">
+         <img src="{% static 'tracker/images/key_items/bentsword.png' %}" alt="Bent Sword" title="Bent Sword" width="48" height="48" id="bentsword" class="tracker-grayscale">
+         <img src="{% static 'tracker/images/key_items/melchior.png' %}" alt="Melchior" title="Melchior" width="48" height="48" id="melchior" class="tracker-grayscale">
+         <img src="{% static 'tracker/images/key_items/masamune.png' %}" alt="Grand Leon" title="Grand Leon" width="48" height="48" id="grandleon" class="tracker-grayscale">
+         <img src="{% static 'tracker/images/key_items/herosmedal.png' %}" alt="Hero Medal" title="Hero Medal" width="48" height="48" id="heromedal" class="tracker-grayscale">
+         <img src="{% static 'tracker/images/key_items/robosribbon.png' %}" alt="Robo's Ribbon" title="Robo's Ribbon" width="48" height="48" id="roboribbon" class="tracker-grayscale">
+      </div>
+    </div> <!-- Top item row -->
+    
+    <div class="row no-gutters">
+      <div class="col-sm-auto">
+         <img src="{% static 'tracker/images/spacer-half.png' %}" width="24" height="48">
+         <img src="{% static 'tracker/images/key_items/gatekey.png' %}" alt="Gate Key" title="Gate Key" width="48" height="48" id="gatekey" class="tracker-grayscale">
+         <img src="{% static 'tracker/images/key_items/dreamstone.png' %}" alt="Dreamstone" title="Dreamstone" width="48" height="48" id="dreamstone" class="tracker-grayscale">
+         <img src="{% static 'tracker/images/key_items/rubyknife.png' %}" alt="Ruby Knife" title="Ruby Knife" width="48" height="48" id="rubyknife" class="tracker-grayscale">
+         <img src="{% static 'tracker/images/key_items/prismshard.png' %}" alt="Prism Shard" title="Prism Shard" width="48" height="48" id="prismshard" class="tracker-grayscale">
+         <img src="{% static 'tracker/images/key_items/moonstone.png' %}" alt="Moonstone" title="Moonstone" width="48" height="48" id="moonstone" class="tracker-grayscale">
+         <img src="{% static 'tracker/images/key_items/jerky.png' %}" alt="Jerky" title="Jerky" width="48" height="48" id="jerky" class="tracker-grayscale">
+      </div>
+    </div> <!-- Middle item row -->
+    
+    <div class="row no-gutters">
+      <div class="col-sm-auto">
+         <img src="{% static 'tracker/images/spacer-half.png' %}" width="24" height="48">
+         <img src="{% static 'tracker/images/key_items/pendant.png' %}" alt="Pendant" title="Pendant" width="48" height="48" id="pendant" class="tracker-grayscale">
+         <img src="{% static 'tracker/images/key_items/clone.png' %}" alt="Clone" title="Clone" width="48" height="48" id="clone" class="tracker-grayscale">
+         <img src="{% static 'tracker/images/key_items/ctrigger.png' %}" alt="Chrono Trigger" title="Chrono Trigger" width="48" height="48" id="ctrigger" class="tracker-grayscale">
+         <img src="{% static 'tracker/images/key_items/tomaspop.png' %}" alt="Toma's Pop" title="Toma's Pop" width="48" height="48" id="tomapop" class="tracker-grayscale">
+         <img src="{% static 'tracker/images/key_items/magic.png' %}" alt="Magic" title="Magic" width="48" height="48" id="magic" class="tracker-grayscale">
+         <img src="{% static 'tracker/images/key_items/gomode.png' %}" alt="Go Mode" title="Go Mode" width="48" height="48" id="gomode" class="tracker-grayscale">
+      </div>
+    </div> <!-- Bottom item row -->
+    
+    <br>
+    <div class="row no-gutters">
+      <div class="col-sm-auto">
+         <img src="{% static 'tracker/images/spacer-half.png' %}" width="24" height="48">
+         <img src="{% static 'tracker/images/bosses/yakra.png' %}" alt="Yakra" title="Yakra" width="48" height="48" id="yakra" class="tracker-grayscale"> 
+         <img src="{% static 'tracker/images/bosses/yakraxiii.png' %}" alt="Yakra XIII" title="Yakra XIII" width="48" height="48" id="yakraxiii" class="tracker-grayscale"> 
+         <img src="{% static 'tracker/images/bosses/dragontank.png' %}" alt="Dragon Tank" title="Dragon Tank" width="48" height="48" id="dragontank" class="tracker-grayscale"> 
+         <img src="{% static 'tracker/images/bosses/zombor.png' %}" alt="Zombor" title="Zombor" width="48" height="48" id="zombor" class="tracker-grayscale"> 
+         <img src="{% static 'tracker/images/bosses/retinite.png' %}" alt="Retinite" title="Retinite" width="48" height="48" id="retinite" class="tracker-grayscale"> 
+         <img src="{% static 'tracker/images/bosses/heckran.png' %}" alt="Heckran" title="Heckran" width="48" height="48" id="heckran" class="tracker-grayscale">  
+      </div>
+    </div> <!-- Top boss row -->
+    
+    <div class="row no-gutters">
+      <div class="col-sm-auto">
+         <img src="{% static 'tracker/images/spacer-half.png' %}" width="24" height="48">
+         <img src="{% static 'tracker/images/bosses/blacktyrano.png' %}" alt="Black Tyrano" title="Black Tyrano" width="48" height="48" id="blacktyrano" class="tracker-grayscale"> 
+         <img src="{% static 'tracker/images/bosses/rusttyrano.png' %}" alt="Rust Tyrano" title="Rust Tyrano" width="48" height="48" id="rusttyrano" class="tracker-grayscale"> 
+         <img src="{% static 'tracker/images/bosses/guardian.png' %}" alt="Guardian" title="Guardian" width="48" height="48" id="guardian" class="tracker-grayscale"> 
+         <img src="{% static 'tracker/images/bosses/rseries.png' %}" alt="R-Series" title="R-Series" width="48" height="48" id="rseries" class="tracker-grayscale"> 
+         <img src="{% static 'tracker/images/bosses/masamune.png' %}" alt="Masa & Mune" title="Masa & Mune" width="48" height="48" id="masamune" class="tracker-grayscale"> 
+         <img src="{% static 'tracker/images/bosses/nizbel.png' %}" alt="Nizbel" title="Nizbel" width="48" height="48" id="nizbel" class="tracker-grayscale">  
+      </div>
+    </div> <!-- Middle boss row -->
+    
+    <div class="row no-gutters">
+      <div class="col-sm-auto">
+         <img src="{% static 'tracker/images/spacer-half.png' %}" width="24" height="48">
+         <img src="{% static 'tracker/images/bosses/magus.png' %}" alt="Magus" title="Magus" width="48" height="48" id="magusboss" class="tracker-grayscale"> 
+         <img src="{% static 'tracker/images/bosses/gigagaia.png' %}" alt="Giga Gaia" title="Giga gaia" width="48" height="48" id="gigagaia" class="tracker-grayscale"> 
+         <img src="{% static 'tracker/images/bosses/motherbrain.png' %}" alt="Mother Brain" title="Mother Brain" width="48" height="48" id="motherbrain" class="tracker-grayscale"> 
+         <img src="{% static 'tracker/images/bosses/sonofsun.png' %}" alt="Son of Sun" title="Son of Sun" width="48" height="48" id="sonofsun" class="tracker-grayscale"> 
+         <img src="{% static 'tracker/images/bosses/zeal.png' %}" alt="Zeal" title="Zeal" width="48" height="48" id="zeal" class="tracker-grayscale"> 
+         <img src="{% static 'tracker/images/bosses/golem.png' %}" alt="Golem" title="Golem" width="48" height="48" id="golem" class="tracker-grayscale">  
+      </div>
+    </div> <!-- Bottom boss row -->
+    
+    <br>
+    <!-- control buttons and log -->
+    <div>
+      <button id="autotracker_connect_button" onclick="connectAutotracker()">Connect Autotracker</button>
+      <button onclick="disconnectAutotracker()">Disconnect Autotracker</button>
+      <br>
+      <textarea id="autotracker_log" rows="5" cols="40" readonly></textarea>
+      <!--<p><a href={ url 'setup' }>Setup Instructions</a></p>-->
+    </div>
+  </body>
+</html>
