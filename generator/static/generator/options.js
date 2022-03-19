@@ -222,20 +222,6 @@ function prepareForm() {
 }
 
 /*
- * Closes all game option tabs and opens the specified tab.
- * TODO - Not needed?  Remove this?
- */
-/*function openOptionsTab(event, tabName) {
-  // Hide all spoiler tabs
-  var optionstabs = document.getElementsByClassName("optionstab");
-  for (i = 0; i < optionstabs.length; i++) {
-    optionstabs[i].style.display = "none";
-  }
-  
-  document.getElementById(tabName).style.display = "block";
-}*/
-
-/*
  * Called when a tab range slider is changed.  Update all tab values on the page.
  */
 function updateAllTabValues(adjustMin = false) {

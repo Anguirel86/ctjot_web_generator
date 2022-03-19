@@ -1,5 +1,5 @@
 # Django libraries
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
 from wsgiref.util import FileWrapper
 
@@ -11,6 +11,7 @@ from .models import Game
 # Python standard libraries
 import hashlib
 import io
+import os
 import pickle
 
 # Other libraries
@@ -51,7 +52,7 @@ def generate(request):
     if request.method == 'POST':
         form = GenerateForm(request.POST)
         if form.is_valid():
-            # Generate a seed and create a DB entry  for it.
+            # Generate a seed and create a DB entry for it.
             # Then redirect the user to the seed download page.
             game = handle_seed_generation(form)
             rom_form = RomForm()
@@ -83,7 +84,7 @@ def download_seed(request):
                 interface = RandomizerInterface(rom_bytes)
                 interface.set_settings_and_config(pickle.loads(game.settings), pickle.loads(game.configuration))
                 patched_rom = interface.generate_rom()
-                file_name = share_id + '.sfc'
+                file_name = 'ctjot_' + share_id + '.sfc'
                 content = FileWrapper(io.BytesIO(patched_rom))
                 response = HttpResponse(content, content_type='application/octet-stream')
                 response['Content-Length'] = len(patched_rom)
@@ -99,15 +100,18 @@ def download_seed(request):
 
 
 def download_spoiler_log(request, share_id):
-    # TODO - Error handling
-    game = Game.objects.get(share_id=share_id)  # TODO - What if it doesn't exist
+    try:
+        game = Game.objects.get(share_id=share_id)
+    except Game.DoesNotExist:
+        return HttpResponseNotFound("Seed does not exist.")
+
     if not game.race_seed:
-        spoiler_log = RandomizerInterface.get_spoiler_log(pickle.loads(game.configuration), pickle.loads(game.settings))
-        file_name = share_id + '.txt'
-        content = FileWrapper(spoiler_log)
-        response = HttpResponse(content, content_type='text/plain')
-        response['Content-Length'] = len(spoiler_log)
+        spoiler_log = RandomizerInterface.get_spoiler_log(
+            pickle.loads(game.configuration), pickle.loads(game.settings))
+        file_name = 'spoiler_log_' + share_id + '.txt'
+        response = HttpResponse(content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % file_name
+        response.write(spoiler_log.getvalue())
         return response
     else:
         return HttpResponse("No spoiler log available for this seed.")
@@ -130,16 +134,16 @@ def share(request, share_id):
 #
 # If the ROM is valid, return it as a bytearray.
 #
-def read_and_validate_rom_file(romfile):
+def read_and_validate_rom_file(rom_file):
     # Validate that the file isn't too large to be a CT ROM.
     # Don't waste time reading it if it's not a CT ROM.
-    if romfile.size > 4194816:
+    if rom_file.size > 4194816:
         raise InvalidRomException()
 
     # Strip off the header if this is a headered ROM
-    if romfile.size == 4194816:
-        romfile.seed(0x200)
-    file_bytes = bytearray(romfile.read())
+    if rom_file.size == 4194816:
+        rom_file.seed(0x200)
+    file_bytes = bytearray(rom_file.read())
 
     hasher = hashlib.md5()
     hasher.update(file_bytes)

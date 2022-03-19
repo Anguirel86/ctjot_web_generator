@@ -29,7 +29,8 @@ Copy the following files/folders from jetsoftime/sourcefiles into the webapp's b
  2. patch.ips
  3. flux/
  4. patches/
- 5. pickles
+ 5. pickles/
+
 Copy a valid, headerless ROM to the base directory and name it ct.sfc
 
 ## Run the web generator
@@ -42,4 +43,4 @@ If running and testing locally:
 If running on a VM or server and testing with a browser from a different address:
 `python manage.py runserver 0.0.0.0:8000`
    
-  Open a web browser and browse to localhost:8000 (or the server's address if running on a VM or server)
+Open a web browser and browse to localhost:8000 (or the server's address if running on a VM or server)

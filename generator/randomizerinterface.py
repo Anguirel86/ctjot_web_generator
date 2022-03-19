@@ -1,6 +1,5 @@
 # Python types
 import io
-import json
 import os
 import random
 import sys
@@ -252,8 +251,11 @@ class RandomizerInterface:
     @classmethod
     def get_spoiler_log(cls, config: randoconfig.RandoConfig, settings: rset.Settings):
         spoiler_log = io.StringIO()
-        rando = randomizer.Randomizer(None, is_vanilla=True, settings=settings, config=config)
+        rando = randomizer.Randomizer(cls.get_base_rom(), is_vanilla=True, settings=settings, config=config)
 
+        # The Randomizer.write_spoiler_log method writes directly to a file, so
+        # recreate it here using the helper functions and pass them a StringIO
+        # object instead of a file.
         rando.write_settings_spoilers(spoiler_log)
         rando.write_tab_spoilers(spoiler_log)
         rando.write_key_item_spoilers(spoiler_log)
@@ -296,7 +298,6 @@ class RandomizerInterface:
             spoiler_log['bosses'].append(
                 {'location': str(location), 'boss': str(config.boss_assign_dict[location])})
         return spoiler_log
-        #return json.dumps(spoiler_log)
     # End get_web_spoiler_log
 
     #
