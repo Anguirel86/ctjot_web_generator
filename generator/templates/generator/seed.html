@@ -10,6 +10,9 @@
       <div class="pt-2 pb-2">
         <h1>Download Seed</h1>
         <h3 class="pb-2"><a target="_blank" href="{% url 'generator:share' share_id %}">Seed share link</a></h3>
+        <pre>
+{{ share_info }}
+        </pre>
         <form name="seed_form" id="seed_form" action="{% url 'generator:seed' %}" target="_blank" method="post" enctype="multipart/form-data">
           {% csrf_token %}
           <div class="form-group">

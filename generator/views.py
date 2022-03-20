@@ -55,11 +55,14 @@ def generate(request):
             # Generate a seed and create a DB entry for it.
             # Then redirect the user to the seed download page.
             game = handle_seed_generation(form)
+            share_info = RandomizerInterface.get_share_details(
+                pickle.loads(game.configuration), pickle.loads(game.settings))
             rom_form = RomForm()
             context = {'share_id': game.share_id,
                        'form': rom_form,
                        'spoiler_log': RandomizerInterface.get_web_spoiler_log(pickle.loads(game.configuration)),
-                       'is_race_seed': game.race_seed}
+                       'is_race_seed': game.race_seed,
+                       'share_info': share_info.getvalue()}
             return render(request, 'generator/seed.html', context)
         else:
             # TODO - Form isn't valid, for now just redirect to options
@@ -122,8 +125,21 @@ def download_spoiler_log(request, share_id):
 # Handle a share link for a previously generated game.
 #
 def share(request, share_id):
+    try:
+        game = Game.objects.get(share_id=share_id)
+    except Game.DoesNotExist:
+        return HttpResponseNotFound("Seed does not exist.")
+
+    share_info = RandomizerInterface.get_share_details(
+        pickle.loads(game.configuration), pickle.loads(game.settings))
+
     rom_form = RomForm()
-    context = {'share_id': share_id, 'form': rom_form}
+    context = {'share_id': game.share_id,
+               'form': rom_form,
+               'spoiler_log': RandomizerInterface.get_web_spoiler_log(pickle.loads(game.configuration)),
+               'is_race_seed': game.race_seed,
+               'share_info': share_info.getvalue()}
+
     return render(request, 'generator/seed.html', context)
 
 

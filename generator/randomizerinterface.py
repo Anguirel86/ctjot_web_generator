@@ -327,3 +327,19 @@ class RandomizerInterface:
         with open(str("ct.sfc"), 'rb') as infile:
             rom = bytearray(infile.read())
         return rom
+
+    #
+    # Used to get details about a seed for display on a share page.
+    # Returns a StringIO with data about the seed.
+    #
+    @classmethod
+    def get_share_details(cls, config: randoconfig.RandoConfig, settings: rset.Settings):
+        buffer = io.StringIO()
+        rando = randomizer.Randomizer(cls.get_base_rom(), is_vanilla=True, settings=settings, config=config)
+
+        # For now just use the settings spoiler output for the share link display.
+        # TODO - Make this more comprehensive.
+        rando.write_settings_spoilers(buffer)
+        buffer.write("Seed: " + settings.seed + "\n")
+
+        return buffer
