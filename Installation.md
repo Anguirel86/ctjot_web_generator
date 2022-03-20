@@ -13,6 +13,7 @@ Browse to your working area and:
  2. `virtualenv env`
  3. `source venv/Scripts/activate`
  4. `pip install -r requirements.txt`
+
 **NOTE**: activate script assumes a Windows environment.  It will be venv/bin/activate on Linux.
 
 ### One-time setup for the web generator database
@@ -34,7 +35,7 @@ Copy the following files/folders from jetsoftime/sourcefiles into the webapp's b
 Copy a valid, headerless ROM to the base directory and name it ct.sfc
 
 ## Run the web generator
-Source the environment file is not already done:
+Source the environment file if not already done:
 `source venv/Scripts/activate`
 
 If running and testing locally: 
