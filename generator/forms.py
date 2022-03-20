@@ -39,7 +39,6 @@ class GenerateForm(forms.Form):
 
     # Boss rando tab
     legacy_boss_placement = forms.BooleanField(required=False)
-    enable_sightscope = forms.BooleanField(required=False)
 
     # Tab options tab
     power_tab_min = forms.IntegerField()
@@ -51,6 +50,7 @@ class GenerateForm(forms.Form):
 
     # Quality of life
     sightscope_always_on = forms.BooleanField(required=False)
+    boss_sightscope = forms.BooleanField(required=False)
     fast_tabs = forms.BooleanField(required=False)
 
     # Cosmetic

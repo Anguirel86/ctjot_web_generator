@@ -43,10 +43,10 @@ function resetAll() {
 
   // Boss Rando options
   $('#id_legacy_boss_placement').prop('checked', false).change();
-  $('#id_enable_sightscope').prop('checked', false).change();
 
   // Quality of Life options
   $('#id_sightscope_always_on').prop('checked', false).change();
+  $('#id_boss_sightscope').prop('checked', false).change();
   $('#id_fast_tabs').prop('checked', false).change();
 
   // Cosmetic options

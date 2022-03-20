@@ -155,7 +155,6 @@ class RandomizerInterface:
         # Boss rando settings
         # TODO - Boss and location lists are just default for now. Only update the other options.
         settings.ro_settings.preserve_parts = form.cleaned_data['legacy_boss_placement']
-        settings.ro_settings.enable_sightscope = form.cleaned_data['enable_sightscope']
 
         # Tab randomization settings
         # TODO - Currently defaulting to UNIFORM distribution
@@ -173,6 +172,9 @@ class RandomizerInterface:
         # Quality of life settings
         if form.cleaned_data['sightscope_always_on']:
             settings.gameflags = settings.gameflags | rset.GameFlags.VISIBLE_HEALTH
+
+        if form.cleaned_data['boss_sightscope']:
+            settings.gameflags = settings.gameflags | rset.GameFlags.BOSS_SIGHTSCOPE
 
         if form.cleaned_data['fast_tabs']:
             settings.gameflags = settings.gameflags | rset.GameFlags.FAST_TABS
