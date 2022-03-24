@@ -56,12 +56,42 @@ function resetAll() {
   // Experimental options
   $('#id_guaranteed_drops').prop('checked', false).change();
   $('#id_buff_x_strike').prop('checked', false).change();
+  $('#id_ayla_rebalance').prop('checked', false).change();
   $('#id_bucket_fragments').prop('checked', false).change();
   $('#id_fragments_required').val(20).change();
   $('#id_extra_fragments').val(10).change();
 
   // Mystery Seed options
-  // TODO
+  // game modes
+  $('#id_mystery_game_mode_standard').val(75).change()
+  $('#id_mystery_game_mode_lw').val(25).change()
+  $('#id_mystery_game_mode_loc').val(0).change()
+  $('#id_mystery_game_mode_ia').val(0).change()
+  // item difficulty
+  $('#id_mystery_item_difficulty_easy').val(15).change()
+  $('#id_mystery_item_difficulty_normal').val(70).change()
+  $('#id_mystery_item_difficulty_hard').val(15).change()
+  // enemy difficulty
+  $('#id_mystery_enemy_difficulty_normal').val(75).change()
+  $('#id_mystery_enemy_difficulty_hard').val(25).change()
+  // tech order
+  $('#id_mystery_tech_order_normal').val(10).change()
+  $('#id_mystery_tech_order_full_random').val(80).change()
+  $('#id_mystery_tech_order_balanced_random').val(10).change()
+  // shop prices
+  $('#id_mystery_shop_prices_normal').val(70).change()
+  $('#id_mystery_shop_prices_random').val(10).change()
+  $('#id_mystery_shop_prices_mostly_random').val(10).change()
+  $('#id_mystery_shop_prices_free').val(10).change()
+  // flag probabilities
+  $('#id_mystery_tab_treasures').val(10).change()
+  $('#id_mystery_unlock_magic').val(50).change()
+  $('#id_mystery_bucket_fragments').val(15).change()
+  $('#id_mystery_chronosanity').val(30).change()
+  $('#id_mystery_boss_rando').val(50).change()
+  $('#id_mystery_boss_scale').val(30).change()
+  $('#id_mystery_locked_characters').val(25).change()
+  $('#id_mystery_duplicate_characters').val(25).change()
 }
 
 /*

@@ -204,6 +204,9 @@ class RandomizerInterface:
         if form.cleaned_data['buff_x_strike']:
             settings.gameflags = settings.gameflags | rset.GameFlags.BUFF_XSTRIKE
 
+        if form.cleaned_data['ayla_rebalance']:
+            settings.gameflags = settings.gameflags | rset.GameFlags.AYLA_REBALANCE
+
         # Mystery
         settings.mystery_settings.game_mode_freqs: dict[rset.GameMode, int] = {
             rset.GameMode.STANDARD: form.cleaned_data['mystery_game_mode_standard'],
@@ -337,9 +340,13 @@ class RandomizerInterface:
         buffer = io.StringIO()
         rando = randomizer.Randomizer(cls.get_base_rom(), is_vanilla=True, settings=settings, config=config)
 
-        # For now just use the settings spoiler output for the share link display.
-        # TODO - Make this more comprehensive.
-        rando.write_settings_spoilers(buffer)
-        buffer.write("Seed: " + settings.seed + "\n")
+        if rset.GameFlags.MYSTERY in settings.gameflags:
+            # TODO - Get weights and non-mystery flags
+            buffer.write("Mystery seed!\n")
+        else:
+            # For now just use the settings spoiler output for the share link display.
+            # TODO - Make this more comprehensive.
+            buffer.write("Seed: " + settings.seed + "\n")
+            rando.write_settings_spoilers(buffer)
 
         return buffer

@@ -1,4 +1,5 @@
 # Installation and Running Instructions
+These are the instructions for setting up a test environment for the web generator.
 
 ## Getting started
 This section details how to download and set up the ctjot web generator.
@@ -16,10 +17,6 @@ Browse to your working area and:
 
 **NOTE**: activate script assumes a Windows environment.  It will be venv/bin/activate on Linux.
 
-### One-time setup for the web generator database
-  In the webapp base directory:
-    `python manage.py migrate`
-
 ### Install and prepare the randomizer
 Clone the randomizer into the webapp's base directory (currently Pseudoarc's 3.2 beta)
 `git clone https://github.com/Pseudoarc/jetsoftime.git`
@@ -33,6 +30,10 @@ Copy the following files/folders from jetsoftime/sourcefiles into the webapp's b
  5. pickles/
 
 Copy a valid, headerless ROM to the base directory and name it ct.sfc
+
+### One-time setup for the web generator database
+  In the webapp base directory:
+    `python manage.py migrate`
 
 ## Run the web generator
 Source the environment file if not already done:

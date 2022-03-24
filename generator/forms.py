@@ -61,6 +61,7 @@ class GenerateForm(forms.Form):
     guaranteed_drops = forms.BooleanField(required=False)
     buff_x_strike = forms.BooleanField(required=False)
     bucket_fragments = forms.BooleanField(required=False)
+    ayla_rebalance = forms.BooleanField(required=False)
     fragments_required = forms.IntegerField()
     extra_fragments = forms.IntegerField()
 
