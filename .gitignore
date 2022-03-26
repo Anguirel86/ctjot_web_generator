@@ -3,14 +3,15 @@
 *.sqlite3
 
 venv/
+env/
 __pycache__/
 *.py[cod]
 *$py.class
 
 # Randomizer files
-flux/
-jetsoftime/
-patches/
-pickles/
+flux
+jetsoftime
+patches
+pickles
 names.txt
 patch.ips
