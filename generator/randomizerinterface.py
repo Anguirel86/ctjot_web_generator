@@ -6,7 +6,9 @@ import sys
 
 # Web types
 from .forms import GenerateForm
+from django.apps import apps
 from django.conf import settings as conf
+
 
 # Add the randomizer to the system path here.  This code assumes that the
 # randomizer has been added at the site base path.
@@ -54,7 +56,17 @@ class RandomizerInterface:
 
     def configure_seed(self, form: GenerateForm):
         self.randomizer.settings = self.__convert_form_to_settings(form)
-        self.randomizer.set_random_config()
+        # If this is a race seed, modify the seed value so that before sending it through
+        # the randomizer.  This will ensure that race ROMs and non-race ROMs with the same
+        # seed value are not identical.
+        if form.cleaned_data['spoiler_log']:
+            self.randomizer.set_random_config()
+        else:
+            seed = self.randomizer.settings.seed
+            modifier = apps.get_app_config('generator').RACE_SEED_MODIFIER
+            self.randomizer.settings.seed = seed + modifier
+            self.randomizer.set_random_config()
+            self.randomizer.settings.seed = seed
 
     def generate_rom(self) -> bytearray:
         self.randomizer.generate_rom()
@@ -275,7 +287,7 @@ class RandomizerInterface:
         return spoiler_log
 
     #
-    # Get a JSON string representing the spoiler log data for the given config.
+    # Get a dictionary representing the spoiler log data for the given config.
     #
     @classmethod
     def get_web_spoiler_log(cls, config: randoconfig.RandoConfig):

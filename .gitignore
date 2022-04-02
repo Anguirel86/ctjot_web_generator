@@ -1,6 +1,7 @@
 *.bak
 *.sfc
 *.sqlite3
+.idea
 
 venv/
 env/

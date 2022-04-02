@@ -11,7 +11,6 @@ from .models import Game
 # Python standard libraries
 import hashlib
 import io
-import os
 import pickle
 
 # Other libraries
@@ -66,7 +65,6 @@ def generate(request):
             return render(request, 'generator/seed.html', context)
         else:
             # TODO - Form isn't valid, for now just redirect to options
-            print(form.errors)
             return HttpResponseRedirect('/options/')
     else:
         # This isn't a POST. Redirect to the options page.
@@ -82,7 +80,11 @@ def download_seed(request):
         form = RomForm(request.POST, request.FILES)
         if form.is_valid():
             share_id = form.cleaned_data['share_id']
-            game = Game.objects.get(share_id=share_id)  # TODO - What if it doesn't exist?
+            try:
+                game = Game.objects.get(share_id=share_id)
+            except Game.DoesNotExist:
+                return HttpResponseNotFound("Seed does not exist.")
+
             try:
                 rom_bytes = read_and_validate_rom_file(request.FILES['rom_file'])
                 interface = RandomizerInterface(rom_bytes)
