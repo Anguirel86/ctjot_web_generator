@@ -11,7 +11,7 @@ Browse to your working area and:
 ### Create and set up a virtual environment
 
  1. `cd ctjot_web_generator`
- 2. `virtualenv env`
+ 2. `virtualenv venv`
  3. `source venv/Scripts/activate`
  4. `pip install -r requirements.txt`
 
