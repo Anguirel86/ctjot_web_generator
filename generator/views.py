@@ -40,7 +40,8 @@ def tracker(request):
 #
 def options(request):
     form = GenerateForm()
-    context = {'form': form}
+    context = {'form': form,
+               'version': RandomizerInterface.get_randomizer_version_info()}
     return render(request, 'generator/options.html', context)
 
 

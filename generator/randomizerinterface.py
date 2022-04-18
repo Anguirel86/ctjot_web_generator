@@ -1,6 +1,8 @@
 # Python types
 import io
+import json
 import os
+import os.path
 import random
 import sys
 
@@ -365,3 +367,21 @@ class RandomizerInterface:
             rando.write_settings_spoilers(buffer)
 
         return buffer
+
+    #
+    # Read version_info.json from the webapp root directory and return the
+    # randomizer version information.
+    #
+    # TODO - This is a beta only feature so that users can know which specific version of the
+    #        randomizer is being used by the web generator.  This won't be needed for the
+    #        live version of the site when 3.2 is out of beta.
+    #        The version_info.json file is not part of source control.
+    #
+    @classmethod
+    def get_randomizer_version_info(cls) -> dict[str, str]:
+        if os.path.exists('version_info.json'):
+            with open('version_info.json') as version_file:
+                return json.load(version_file)
+        else:
+            return {'date': 'Unknown', 'hash': 'Unknown'}
+
