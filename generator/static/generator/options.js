@@ -57,6 +57,7 @@ function resetAll() {
   $('#id_guaranteed_drops').prop('checked', false).change();
   $('#id_buff_x_strike').prop('checked', false).change();
   $('#id_ayla_rebalance').prop('checked', false).change();
+  $('#id_black_hole_rework').prop('checked', false).change();
   $('#id_bucket_fragments').prop('checked', false).change();
   $('#id_fragments_required').val(20).change();
   $('#id_extra_fragments').val(10).change();

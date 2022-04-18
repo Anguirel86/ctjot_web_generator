@@ -219,6 +219,9 @@ class RandomizerInterface:
         if form.cleaned_data['ayla_rebalance']:
             settings.gameflags = settings.gameflags | rset.GameFlags.AYLA_REBALANCE
 
+        if form.cleaned_data['black_hole_rework']:
+            settings.gameflags = settings.gameflags | rset.GameFlags.BLACKHOLE_REWORK
+
         # Mystery
         settings.mystery_settings.game_mode_freqs: dict[rset.GameMode, int] = {
             rset.GameMode.STANDARD: form.cleaned_data['mystery_game_mode_standard'],
