@@ -378,7 +378,7 @@ class RandomizerInterface:
     #        The version_info.json file is not part of source control.
     #
     @classmethod
-    def get_randomizer_version_info(cls) -> dict[str, str]:
+    def get_randomizer_version_info(cls):
         if os.path.exists('version_info.json'):
             with open('version_info.json') as version_file:
                 return json.load(version_file)
