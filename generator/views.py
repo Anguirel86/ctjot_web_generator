@@ -162,7 +162,7 @@ def read_and_validate_rom_file(rom_file):
 
     # Strip off the header if this is a headered ROM
     if rom_file.size == 4194816:
-        rom_file.seed(0x200)
+        rom_file.seek(0x200)
     file_bytes = bytearray(rom_file.read())
 
     hasher = hashlib.md5()
