@@ -224,6 +224,9 @@ class RandomizerInterface:
         if form.cleaned_data['black_hole_rework']:
             settings.gameflags = settings.gameflags | rset.GameFlags.BLACKHOLE_REWORK
 
+        if form.cleaned_data['no_crisis_tackle']:
+            settings.gameflags = settings.gameflags | rset.GameFlags.NO_CRISIS_TACKLE
+
         # Mystery
         settings.mystery_settings.game_mode_freqs: dict[rset.GameMode, int] = {
             rset.GameMode.STANDARD: form.cleaned_data['mystery_game_mode_standard'],

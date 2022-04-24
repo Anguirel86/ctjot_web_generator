@@ -63,6 +63,7 @@ class GenerateForm(forms.Form):
     bucket_fragments = forms.BooleanField(required=False)
     ayla_rebalance = forms.BooleanField(required=False)
     black_hole_rework = forms.BooleanField(required=False)
+    no_crisis_tackle = forms.BooleanField(required=False)
     fragments_required = forms.IntegerField()
     extra_fragments = forms.IntegerField()
 
