@@ -133,9 +133,9 @@ function presetLostWorlds() {
   resetAll();
   $('#id_enemy_difficulty').val('normal');
   $('#id_item_difficulty').val('normal');
+  $('#id_game_mode').val('lost_worlds')
   $('#id_disable_glitches').prop('checked', true).change();
   $('#id_zeal').prop('checked', true).change();
-  $('#id_lost_worlds').prop('checked', true).change();
   $('#id_tech_rando').val('fully_random');
 }
 
