@@ -52,6 +52,7 @@ class GenerateForm(forms.Form):
     sightscope_always_on = forms.BooleanField(required=False)
     boss_sightscope = forms.BooleanField(required=False)
     fast_tabs = forms.BooleanField(required=False)
+    free_menu_glitch = forms.BooleanField(required=False)
 
     # Cosmetic
     zenan_alt_battle_music = forms.BooleanField(required=False)
@@ -64,6 +65,8 @@ class GenerateForm(forms.Form):
     ayla_rebalance = forms.BooleanField(required=False)
     black_hole_rework = forms.BooleanField(required=False)
     no_crisis_tackle = forms.BooleanField(required=False)
+    healing_item_rando = forms.BooleanField(required=False)
+    gear_rando = forms.BooleanField(required=False)
     fragments_required = forms.IntegerField()
     extra_fragments = forms.IntegerField()
 

@@ -193,6 +193,9 @@ class RandomizerInterface:
         if form.cleaned_data['fast_tabs']:
             settings.gameflags = settings.gameflags | rset.GameFlags.FAST_TABS
 
+        if form.cleaned_data['free_menu_glitch']:
+            settings.gameflags = settings.gameflags | rset.GameFlags.FREE_MENU_GLITCH
+
         # Cosmetic settings
         if form.cleaned_data['zenan_alt_battle_music']:
             settings.cosmetic_flags = settings.cosmetic_flags | rset.CosmeticFlags.ZENAN_ALT_MUSIC
@@ -226,6 +229,12 @@ class RandomizerInterface:
 
         if form.cleaned_data['no_crisis_tackle']:
             settings.gameflags = settings.gameflags | rset.GameFlags.NO_CRISIS_TACKLE
+
+        if form.cleaned_data['healing_item_rando']:
+            settings.gameflags = settings.gameflags | rset.GameFlags.HEALING_ITEM_RANDO
+
+        if form.cleaned_data['gear_rando']:
+            settings.gameflags = settings.gameflags | rset.GameFlags.GEAR_RANDO
 
         # Mystery
         settings.mystery_settings.game_mode_freqs: dict[rset.GameMode, int] = {
@@ -290,7 +299,7 @@ class RandomizerInterface:
         rando.write_treasure_spoilers(spoiler_log)
         rando.write_drop_charm_spoilers(spoiler_log)
         rando.write_shop_spoilers(spoiler_log)
-        rando.write_price_spoilers(spoiler_log)
+        rando.write_item_stat_spoilers(spoiler_log)
 
         return spoiler_log
 

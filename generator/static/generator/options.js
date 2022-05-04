@@ -48,6 +48,7 @@ function resetAll() {
   $('#id_sightscope_always_on').prop('checked', false).change();
   $('#id_boss_sightscope').prop('checked', false).change();
   $('#id_fast_tabs').prop('checked', false).change();
+  $('#id_free_menu_glitch').prop('checked', false).change();
 
   // Cosmetic options
   $('#id_zenan_alt_battle_music').prop('checked', false).change();
@@ -59,6 +60,8 @@ function resetAll() {
   $('#id_ayla_rebalance').prop('checked', false).change();
   $('#id_black_hole_rework').prop('checked', false).change();
   $('#id_no_crisis_tackle').prop('checked', false).change();
+  $('#id_healing_item_rando').prop('checked', false).change();
+  $('#id_gear_rando').prop('checked', false).change();
   $('#id_bucket_fragments').prop('checked', false).change();
   $('#id_fragments_required').val(20).change();
   $('#id_extra_fragments').val(10).change();

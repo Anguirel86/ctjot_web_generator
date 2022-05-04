@@ -11,7 +11,7 @@
       <h1>Chrono Trigger Jets of Time Randomizer</h1>
       <h4>Based on beta version 3.2.0</h4>
       <h5 class="pl-3">Last update: {{ version.date }}</h5>
-      <h5 class="pl-3">Commit hash: <a href="https://github.com/Anskiy/jetsoftime/tree/{{ version.hash }}" target="_blank">{{ version.hash }}</a></h5>
+      <h5 class="pl-3">Commit hash: <a href="https://github.com/Pseudoarc/jetsoftime/tree/{{ version.hash }}" target="_blank">{{ version.hash }}</a></h5>
 
       <!-- Preset buttons -->
       <h2 class="pt-4">Presets</h2>
@@ -267,6 +267,10 @@
                 <input type="checkbox" name="{{form.fast_tabs.name}}" id="{{form.fast_tabs.id_for_label}}" data-toggle="toggle">
                 <label for="{{form.fast_tabs.id_for_label}}">Fast Tabs</label>
               </div>
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.free_menu_glitch.name}}" id="{{form.free_menu_glitch.id_for_label}}" data-toggle="toggle">
+                <label for="{{form.free_menu_glitch.id_for_label}}">Free Menu Glitch</label>
+              </div>
             </div>
           </div>
 
@@ -306,6 +310,14 @@
               <div class="form-group form-check pl-0">
                 <input type="checkbox" name="{{form.no_crisis_tackle.name}}" id="{{form.no_crisis_tackle.id_for_label}}"  data-toggle="toggle">
                 <label for="{{form.no_crisis_tackle.id_for_label}}">No Robo Tackle On-Hit Effects</label>
+              </div>
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.healing_item_rando.name}}" id="{{form.healing_item_rando.id_for_label}}"  data-toggle="toggle">
+                <label for="{{form.healing_item_rando.id_for_label}}">Randomize Healing Items</label>
+              </div>
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.gear_rando.name}}" id="{{form.gear_rando.id_for_label}}"  data-toggle="toggle">
+                <label for="{{form.gear_rando.id_for_label}}">Randomize Gear</label>
               </div>
               <div class="form-group form-check pl-0">
                 <input type="checkbox" name="{{form.bucket_fragments.name}}" id="{{form.bucket_fragments.id_for_label}}"  data-toggle="toggle">
