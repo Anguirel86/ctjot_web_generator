@@ -85,6 +85,15 @@ class RandomizerInterface:
         return self.randomizer.config
 
     #
+    # Get the ROM name for this seed.
+    #
+    def get_rom_name(self, share_id: str) -> str:
+        if rset.GameFlags.MYSTERY in self.randomizer.settings.gameflags:
+            return "ctjot_mystery_" + share_id + ".sfc"
+        else:
+            return "ctjot_" + self.randomizer.settings.get_flag_string() + "_" + share_id + ".sfc"
+
+    #
     # Convert flag/settings data from the web form into the
     # correct settings object used by the randomizer
     #
@@ -235,6 +244,9 @@ class RandomizerInterface:
 
         if form.cleaned_data['gear_rando']:
             settings.gameflags = settings.gameflags | rset.GameFlags.GEAR_RANDO
+
+        if form.cleaned_data['starters_sufficient']:
+            settings.gameflags = settings.gameflags | rset.GameFlags.FIRST_TWO
 
         # Mystery
         settings.mystery_settings.game_mode_freqs: dict[rset.GameMode, int] = {

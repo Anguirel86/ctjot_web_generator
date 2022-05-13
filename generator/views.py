@@ -91,7 +91,7 @@ def download_seed(request):
                 interface = RandomizerInterface(rom_bytes)
                 interface.set_settings_and_config(pickle.loads(game.settings), pickle.loads(game.configuration))
                 patched_rom = interface.generate_rom()
-                file_name = 'ctjot_' + share_id + '.sfc'
+                file_name = interface.get_rom_name(share_id)
                 content = FileWrapper(io.BytesIO(patched_rom))
                 response = HttpResponse(content, content_type='application/octet-stream')
                 response['Content-Length'] = len(patched_rom)
