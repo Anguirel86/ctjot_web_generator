@@ -63,6 +63,7 @@ function resetAll() {
   $('#id_healing_item_rando').prop('checked', false).change();
   $('#id_gear_rando').prop('checked', false).change();
   $('#id_starters_sufficient').prop('checked', false).change();
+  $('#id_epoch_fail').prop('checked', false).change();
   $('#id_bucket_fragments').prop('checked', false).change();
   $('#id_fragments_required').val(20).change();
   $('#id_extra_fragments').val(10).change();

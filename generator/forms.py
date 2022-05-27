@@ -68,6 +68,7 @@ class GenerateForm(forms.Form):
     healing_item_rando = forms.BooleanField(required=False)
     gear_rando = forms.BooleanField(required=False)
     starters_sufficient = forms.BooleanField(required=False)
+    epoch_fail = forms.BooleanField(required=False)
     fragments_required = forms.IntegerField()
     extra_fragments = forms.IntegerField()
 

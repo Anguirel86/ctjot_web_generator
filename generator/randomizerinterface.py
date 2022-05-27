@@ -26,7 +26,8 @@ game_mode_map = {
     "standard": rset.GameMode.STANDARD,
     "lost_worlds": rset.GameMode.LOST_WORLDS,
     "ice_age": rset.GameMode.ICE_AGE,
-    "legacy_of_cyrus": rset.GameMode.LEGACY_OF_CYRUS
+    "legacy_of_cyrus": rset.GameMode.LEGACY_OF_CYRUS,
+    "vanilla_rando": rset.GameMode.VANILLA_RANDO
 }
 
 shop_price_map = {
@@ -247,6 +248,9 @@ class RandomizerInterface:
 
         if form.cleaned_data['starters_sufficient']:
             settings.gameflags = settings.gameflags | rset.GameFlags.FIRST_TWO
+
+        if form.cleaned_data['epoch_fail']:
+            settings.gameflags = settings.gameflags | rset.GameFlags.EPOCH_FAIL
 
         # Mystery
         settings.mystery_settings.game_mode_freqs: dict[rset.GameMode, int] = {
