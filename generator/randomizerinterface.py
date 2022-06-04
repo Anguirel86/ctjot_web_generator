@@ -252,6 +252,9 @@ class RandomizerInterface:
         if form.cleaned_data['epoch_fail']:
             settings.gameflags = settings.gameflags | rset.GameFlags.EPOCH_FAIL
 
+        if form.cleaned_data['marle_rework']:
+            settings.gameflags = settings.gameflags | rset.GameFlags.MARLE_REWORK
+
         # Mystery
         settings.mystery_settings.game_mode_freqs: dict[rset.GameMode, int] = {
             rset.GameMode.STANDARD: form.cleaned_data['mystery_game_mode_standard'],
