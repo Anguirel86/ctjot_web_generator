@@ -225,9 +225,6 @@ class RandomizerInterface:
         )
 
         # Experimental settings
-        if form.cleaned_data['guaranteed_drops']:
-            settings.gameflags = settings.gameflags | rset.GameFlags.GUARANTEED_DROPS
-
         if form.cleaned_data['buff_x_strike']:
             settings.gameflags = settings.gameflags | rset.GameFlags.BUFF_XSTRIKE
 
@@ -237,8 +234,8 @@ class RandomizerInterface:
         if form.cleaned_data['black_hole_rework']:
             settings.gameflags = settings.gameflags | rset.GameFlags.BLACKHOLE_REWORK
 
-        if form.cleaned_data['no_crisis_tackle']:
-            settings.gameflags = settings.gameflags | rset.GameFlags.NO_CRISIS_TACKLE
+        if form.cleaned_data['robo_rework']:
+            settings.gameflags = settings.gameflags | rset.GameFlags.ROBO_REWORK
 
         if form.cleaned_data['healing_item_rando']:
             settings.gameflags = settings.gameflags | rset.GameFlags.HEALING_ITEM_RANDO

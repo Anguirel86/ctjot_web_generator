@@ -59,12 +59,11 @@ class GenerateForm(forms.Form):
     death_peak_alt_music = forms.BooleanField(required=False)
 
     # Experimental
-    guaranteed_drops = forms.BooleanField(required=False)
     buff_x_strike = forms.BooleanField(required=False)
     bucket_fragments = forms.BooleanField(required=False)
     ayla_rebalance = forms.BooleanField(required=False)
     black_hole_rework = forms.BooleanField(required=False)
-    no_crisis_tackle = forms.BooleanField(required=False)
+    robo_rework = forms.BooleanField(required=False)
     healing_item_rando = forms.BooleanField(required=False)
     gear_rando = forms.BooleanField(required=False)
     starters_sufficient = forms.BooleanField(required=False)

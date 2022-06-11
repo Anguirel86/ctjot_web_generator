@@ -42,6 +42,7 @@ KEY_ITEMS.set("moonstone", {value:0xDE, name:"moonstone", callback:handleMoonsto
 KEY_ITEMS.set("rubyknife", {value:0xE0, name:"rubyknife", callback:handleItemTurnin, address:0x7F00F4, flag:0x80});
 KEY_ITEMS.set("clone", {value:0xE2, name:"clone"});
 KEY_ITEMS.set("tomaspop", {value:0xE3, name:"tomapop", callback:handleItemTurnin, address:0x7F01A3, flag:0x80});
+KEY_ITEMS.set("jetsoftime", {value:0xE9, name:"jetsoftime", callback:handleItemTurnin, address:0x7F00BA, flag:0x80});
 
 
 var gameSocket;
@@ -223,11 +224,11 @@ function handleMoonstone(keyItem) {
   
   if ((readEventAddress(eventBuffer, 0x7F013A) & 0x40) > 0) {
     // Set sunstone acquired
-    $("#" + keyItem.name).attr("src", "/static/generate/images/sunstone.png");
+    $("#" + keyItem.name).attr("src", "/static/tracker/images/key_items/sunstone.png");
     markTrackerIcon(keyItem.name, true);
   } else {
     // check if moonstone is in inventory or dropped off at Sun Keep
-    $("#" + keyItem.name).attr("src", "/static/generate/images/moonstone.png");
+    $("#" + keyItem.name).attr("src", "/static/tracker/images/key_items/moonstone.png");
     var droppedOff = (readEventAddress(eventBuffer, 0x7f013A) & 0x04) > 0;
     if (keyItem.found || droppedOff) {
       // Toggle moonstone on
@@ -345,11 +346,11 @@ function toggleMoonstoneStages(id) {
   
   if (isSunstone) {
     // reset back to uncollected
-    $("#moonstone").attr('src', "/static/generate/images/moonstone.png");
+    $("#moonstone").attr('src', "/static/tracker/images/key_items/moonstone.png");
     markTrackerIcon(id, false);
   } else if(isEnabled) {
     // Item is already enabled, make it the sunstone
-    $("#moonstone").attr('src', "/static/generate/images/sunstone.png");
+    $("#moonstone").attr('src', "/static/tracker/images/key_items/sunstone.png");
   } else {
     // Mark moonstone collected
     markTrackerIcon(id, true);
@@ -389,7 +390,7 @@ function parseEventData(blob) {
     // Middle Ages
     markTrackerIconBitSet("yakra", readEventAddress(bufferView, 0x7F000D), 0x01);
     markTrackerIconBitSet("masamune", readEventAddress(bufferView, 0x7F00F3), 0x20);
-    markTrackerIconBitSet("retinite", readEventAddress(bufferView, 0x7F01AD), 0x04);
+    markTrackerIconBitSet("retinite", readEventAddress(bufferView, 0x7F01A3), 0x01);
     markTrackerIconBitSet("rusttyrano", readEventAddress(bufferView, 0x7F01D2), 0x40);
     markTrackerIconBitSet("magusboss", readEventAddress(bufferView, 0x7F01FF), 0x04);
     // NOTE: This marks complete at the start of the Zombor fight.  There is no flag

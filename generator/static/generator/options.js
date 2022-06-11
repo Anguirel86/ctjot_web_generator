@@ -55,11 +55,10 @@ function resetAll() {
   $('#id_death_peak_alt_music').prop('checked', false).change();
 
   // Experimental options
-  $('#id_guaranteed_drops').prop('checked', false).change();
   $('#id_buff_x_strike').prop('checked', false).change();
   $('#id_ayla_rebalance').prop('checked', false).change();
   $('#id_black_hole_rework').prop('checked', false).change();
-  $('#id_no_crisis_tackle').prop('checked', false).change();
+  $('#id_robo_rework').prop('checked', false).change();
   $('#id_healing_item_rando').prop('checked', false).change();
   $('#id_gear_rando').prop('checked', false).change();
   $('#id_starters_sufficient').prop('checked', false).change();
