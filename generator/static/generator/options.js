@@ -64,6 +64,7 @@ function resetAll() {
   $('#id_starters_sufficient').prop('checked', false).change();
   $('#id_epoch_fail').prop('checked', false).change();
   $('#id_marle_rework').prop('checked', false).change();
+  $('#id_boss_spot_hp').prop('checked', false).change();
   $('#id_bucket_fragments').prop('checked', false).change();
   $('#id_fragments_required').val(20).change();
   $('#id_extra_fragments').val(10).change();

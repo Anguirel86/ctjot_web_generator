@@ -69,6 +69,7 @@ class GenerateForm(forms.Form):
     starters_sufficient = forms.BooleanField(required=False)
     epoch_fail = forms.BooleanField(required=False)
     marle_rework = forms.BooleanField(required=False)
+    boss_spot_hp = forms.BooleanField(required=False)
     fragments_required = forms.IntegerField()
     extra_fragments = forms.IntegerField()
 
