@@ -363,19 +363,9 @@ class RandomizerInterface:
         spoiler_log = io.StringIO()
         rando = randomizer.Randomizer(cls.get_base_rom(), is_vanilla=True, settings=settings, config=config)
 
-        # The Randomizer.write_spoiler_log method writes directly to a file, so
-        # recreate it here using the helper functions and pass them a StringIO
-        # object instead of a file.
-        rando.write_settings_spoilers(spoiler_log)
-        rando.write_tab_spoilers(spoiler_log)
-        rando.write_key_item_spoilers(spoiler_log)
-        rando.write_boss_rando_spoilers(spoiler_log)
-        rando.write_character_spoilers(spoiler_log)
-        rando.write_boss_stat_spoilers(spoiler_log)
-        rando.write_treasure_spoilers(spoiler_log)
-        rando.write_drop_charm_spoilers(spoiler_log)
-        rando.write_shop_spoilers(spoiler_log)
-        rando.write_item_stat_spoilers(spoiler_log)
+        # The Randomizer.write_spoiler_log method writes directly to a file,
+        # but it works if we pass a StringIO instead.
+        rando.write_spoiler_log(spoiler_log)
 
         return spoiler_log
 
