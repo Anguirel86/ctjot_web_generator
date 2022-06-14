@@ -1,5 +1,5 @@
 # Django libraries
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from wsgiref.util import FileWrapper
 
@@ -113,8 +113,7 @@ def download_seed(request):
             try:
                 game = Game.objects.get(share_id=share_id)
             except Game.DoesNotExist:
-                return HttpResponseNotFound("Seed does not exist.")
-
+                return render(request, 'generator/error.html', {'error_text': 'Seed does not exist.'}, status=404)
             try:
                 rom_bytes = read_and_validate_rom_file(request.FILES['rom_file'])
                 interface = RandomizerInterface(rom_bytes)
@@ -127,9 +126,9 @@ def download_seed(request):
                 response['Content-Disposition'] = 'attachment; filename=%s' % file_name
                 return response
             except InvalidRomException:
-                return HttpResponse("You must enter a valid Chrono Trigger ROM file.")
+                return render(request, 'generator/error.html', {'error_text': 'You must enter a valid Chrono Trigger ROM file.'}, status=400)
         else:
-            return HttpResponse("Invalid form?.")
+            return render(request, 'generator/error.html', {'error_text': 'Invalid form: did you select a ROM file?'}, status=400)
     else:
         # This isn't a POST. Redirect to the options page.
         return HttpResponseRedirect('/options/')
@@ -146,7 +145,7 @@ def download_spoiler_log(request, share_id):
     try:
         game = Game.objects.get(share_id=share_id)
     except Game.DoesNotExist:
-        return HttpResponseNotFound("Seed does not exist.")
+        return render(request, 'generator/error.html', {'error_text': 'Seed does not exist.'}, status=404)
 
     if not game.race_seed:
         spoiler_log = RandomizerInterface.get_spoiler_log(
@@ -157,7 +156,7 @@ def download_spoiler_log(request, share_id):
         response.write(spoiler_log.getvalue())
         return response
     else:
-        return HttpResponse("No spoiler log available for this seed.")
+        return render(request, 'generator/error.html', {'error_text': 'No spoiler log available for this seed.'}, status=404)
 
 
 def share(request, share_id):
@@ -171,7 +170,7 @@ def share(request, share_id):
     try:
         game = Game.objects.get(share_id=share_id)
     except Game.DoesNotExist:
-        return HttpResponseNotFound("Seed does not exist.")
+        return render(request, 'generator/error.html', {'error_text': 'Seed does not exist.'}, status=404)
 
     share_info = RandomizerInterface.get_share_details(
         pickle.loads(game.configuration), pickle.loads(game.settings))
