@@ -1,4 +1,5 @@
 # Python types
+from __future__ import annotations
 import io
 import json
 import os
@@ -17,6 +18,7 @@ from django.conf import settings as conf
 sys.path.append(os.path.join(conf.BASE_DIR, 'jetsoftime', 'sourcefiles'))
 
 # Randomizer types
+import ctenums
 import randoconfig
 import randomizer
 import randosettings as rset
@@ -54,10 +56,30 @@ tech_order_map = {
 # This class acts as the interface between the web code and the randomizer.
 #
 class RandomizerInterface:
-    def __init__(self, rom_data):
+    """
+    RandomizerInterface acts as an interface between the web application
+    and the Jets of Time randomizer code.
+
+    All calls to the randomizer or its data are handled through this class.  It contains
+    the appropriate methods for creating randomizer settings/config objects and querying
+    them for information needed on the web generator.
+    """
+    def __init__(self, rom_data: bytearray):
+        """
+        Constructor for the RandomizerInterface class.
+
+        :param rom_data: bytearray containing vanilla ROM data used to construct a randomizer object
+        """
         self.randomizer = randomizer.Randomizer(rom_data, is_vanilla=True)
 
     def configure_seed(self, form: GenerateForm):
+        """
+        Generate a RandoConfig from the provided GenerateForm.
+        This will convert the form data into the appropriate randomizer settings and config
+        objects and then tell the randomizer to generate a seed.
+
+        :param form: GenerateForm with the user's settings
+        """
         self.randomizer.settings = self.__convert_form_to_settings(form)
         # If this is a race seed, modify the seed value so that before sending it through
         # the randomizer.  This will ensure that race ROMs and non-race ROMs with the same
@@ -72,34 +94,62 @@ class RandomizerInterface:
             self.randomizer.settings.seed = seed
 
     def generate_rom(self) -> bytearray:
+        """
+        Create a ROM from the settings and config objects previously generated or set.
+
+        :return: bytearray object with the modified ROM data
+        """
         self.randomizer.generate_rom()
         return self.randomizer.get_generated_rom()
 
     def set_settings_and_config(self, settings: rset.Settings, config: randoconfig.RandoConfig):
+        """
+        Populate the randomizer with a pre-populated RandoSettings object and a
+        preconfigured RandoSettings object.
+
+        :param settings: RandoSettings object
+        :param config: RandoConfig object
+        """
         self.randomizer.settings = settings
         self.randomizer.set_config(config)
 
     def get_settings(self) -> rset.Settings:
+        """
+        Get the settings object used to generate the seed.
+
+        :return: RandoSettings object used to generate the seed
+        """
         return self.randomizer.settings
 
     def get_config(self) -> randoconfig.RandoConfig:
+        """
+        Get the config object used to generate the the seed.
+
+        :return: RandoConfig object used to generate the seed
+        """
         return self.randomizer.config
 
-    #
-    # Get the ROM name for this seed.
-    #
     def get_rom_name(self, share_id: str) -> str:
+        """
+        Get the ROM name for this seed
+
+        :param share_id: Share ID os the seed in question
+        :return: String containing the name of the ROM for this seed
+        """
         if rset.GameFlags.MYSTERY in self.randomizer.settings.gameflags:
             return "ctjot_mystery_" + share_id + ".sfc"
         else:
             return "ctjot_" + self.randomizer.settings.get_flag_string() + "_" + share_id + ".sfc"
 
-    #
-    # Convert flag/settings data from the web form into the
-    # correct settings object used by the randomizer
-    #
     @classmethod
     def __convert_form_to_settings(cls, form: GenerateForm) -> rset.Settings:
+        """
+        Convert flag/settings data from the web form into a RandoSettings object.
+
+        :param form: GenerateForm object from the web interface
+        :return: RandoSettings object with flags/settings from the form applied
+        """
+
         settings = rset.Settings()
 
         # Seed
@@ -302,7 +352,14 @@ class RandomizerInterface:
     # End __convert_form_to_settings
 
     @classmethod
-    def get_spoiler_log(cls, config: randoconfig.RandoConfig, settings: rset.Settings):
+    def get_spoiler_log(cls, config: randoconfig.RandoConfig, settings: rset.Settings) -> io.StringIO:
+        """
+        Get a spoiler log file-like object.
+
+        :param config: RandoConfig object describing the seed
+        :param settings: RandoSettings object describing the seed
+        :return: File-like object with spoiler log data for the given seed data
+        """
         spoiler_log = io.StringIO()
         rando = randomizer.Randomizer(cls.get_base_rom(), is_vanilla=True, settings=settings, config=config)
 
@@ -322,11 +379,14 @@ class RandomizerInterface:
 
         return spoiler_log
 
-    #
-    # Get a dictionary representing the spoiler log data for the given config.
-    #
     @classmethod
-    def get_web_spoiler_log(cls, config: randoconfig.RandoConfig):
+    def get_web_spoiler_log(cls, config: randoconfig.RandoConfig) -> dict[str, list[dict[str, str]]]:
+        """
+        Get a dictionary representing the spoiler log data for the given seed.
+
+        :param config: RandoConfig object describing the seed
+        :return: Dictionary of spoiler data
+        """
         spoiler_log = {
             'characters': [],
             'key_items': [],
@@ -348,48 +408,68 @@ class RandomizerInterface:
 
         # Boss data
         for location in config.boss_assign_dict.keys():
-            spoiler_log['bosses'].append(
-                {'location': str(location), 'boss': str(config.boss_assign_dict[location])})
+            if config.boss_assign_dict[location] == ctenums.BossID.TWIN_BOSS:
+                twin_type = config.boss_data_dict[ctenums.BossID.TWIN_BOSS].scheme.ids[0]
+                twin_name = config.enemy_dict[twin_type].name
+                boss_str = "Twin " + str(twin_name)
+            else:
+                boss_str = str(config.boss_assign_dict[location])
+            spoiler_log['bosses'].append({'location': str(location), 'boss': boss_str})
+
         return spoiler_log
     # End get_web_spoiler_log
 
-    #
-    # Generate a random seed value.
-    #
-    # This requires the names.txt file to be placed in the webapp's BASE_DIR.
-    #
     @classmethod
-    def get_random_seed(cls):
-        p = open("names.txt", "r")
-        names = p.readline()
-        names = names.split(",")
-        p.close()
+    def get_random_seed(cls) -> str:
+        """
+        Get a random seed string for a ROM.
+        This seed string is built up from a list of names bundled with the randomizer.  This method
+        expects the names.txt file to be accessible in the web app's root directory.
+
+        :return: Random seed string.
+        """
+        with open("names.txt", "r") as names_file:
+            names = names_file.readline()
+            names = names.split(",")
         return "".join(random.choice(names) for i in range(2))
 
-    #
-    # Used to read in the server's vanilla ROM to generate the user patch.
-    # The user will still have to provide a ROM when they retrieve the seed.
-    #
-    # This requires a valid, unheadered Chrono Trigger ROM to be placed in the
-    # webapp's BASE_DIR named ct.sfc.
-    #
     @classmethod
-    def get_base_rom(cls):
+    def get_base_rom(cls) -> bytearray:
+        """
+        Read in the server's vanilla ROM as a bytearray.
+        This data is used to create a RandoConfig object to generate a seed.  It should not
+        be used when applying the config and sending the seed to a user.  The user's ROM will
+        be used for that process instead.
+
+        The unheadered, vanilla Chrono Trigger ROM must be located in the web app's BASE_DIR
+        and must be named ct.sfc.
+
+        :return: bytearray containing the vanilla Chrono Trigger ROM data
+        """
         with open(str("ct.sfc"), 'rb') as infile:
             rom = bytearray(infile.read())
         return rom
 
-    #
-    # Used to get details about a seed for display on a share page.
-    # Returns a StringIO with data about the seed.
-    #
     @classmethod
-    def get_share_details(cls, config: randoconfig.RandoConfig, settings: rset.Settings):
+    def get_share_details(cls, config: randoconfig.RandoConfig, settings: rset.Settings) -> io.StringIO:
+        """
+        Get details about a seed for display on the seed share page.  If this is a mystery seed then
+        just display "Mystery seed!".
+
+
+        :param config: RandoConfig object describing this seed
+        :param settings: RandoSettings object describing this seed
+        :return: File-like object with seed share details
+        """
         buffer = io.StringIO()
         rando = randomizer.Randomizer(cls.get_base_rom(), is_vanilla=True, settings=settings, config=config)
 
         if rset.GameFlags.MYSTERY in settings.gameflags:
             # TODO - Get weights and non-mystery flags
+            # NOTE - The randomizer overwrites the settings object when it is a mystery seed and wipes
+            #        out the seed value and most of the probability data.  Either the "before" version
+            #        of this object will need to be stored or the randomizer will need to be modified
+            #        to preserve this information if we want more information here.
             buffer.write("Mystery seed!\n")
         else:
             # For now just use the settings spoiler output for the share link display.
@@ -399,17 +479,22 @@ class RandomizerInterface:
 
         return buffer
 
-    #
-    # Read version_info.json from the webapp root directory and return the
-    # randomizer version information.
-    #
-    # TODO - This is a beta only feature so that users can know which specific version of the
-    #        randomizer is being used by the web generator.  This won't be needed for the
-    #        live version of the site when 3.2 is out of beta.
-    #        The version_info.json file is not part of source control.
-    #
     @classmethod
-    def get_randomizer_version_info(cls):
+    def get_randomizer_version_info(cls) -> dict[str, str]:
+        """
+        Read version_info.json from the webapp root directory and return the
+        randomizer version information.
+
+        This method assumes that the version_info.json file will be present in the
+        web app's BASE_DIR.  If it does not exist, both the date and short hash will
+        return with a value of "Unknown".
+
+        :return: Dictionary with the randomizer version info from version_info.json
+        """
+        # TODO - This is a beta only feature so that users can know which specific version of the
+        #        randomizer is being used by the web generator.  This won't be needed for the
+        #        live version of the site when 3.2 is out of beta.
+        #        The version_info.json file is not part of source control.
         if os.path.exists('version_info.json'):
             with open('version_info.json') as version_file:
                 return json.load(version_file)

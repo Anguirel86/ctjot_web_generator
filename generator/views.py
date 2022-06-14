@@ -18,37 +18,63 @@ import nanoid
 
 
 class InvalidRomException(Exception):
+    """
+    Exception that is raised by the Jets of Time web generator when an
+    invalid ROM is provided by a user during seed generation.
+    """
     pass
 
 
-#
-# Index page for the randomizer.
-#
 def index(request):
+    """
+    Return the Index page for the Jets of Time web generator.
+
+    This is the main page of the webapp and will direct the user to various
+    resources as well as provide a link to the options page of the generator.
+
+    :param request: Django request object
+    :return: Web response with the rendered index page
+    """
     return render(request, 'generator/index.html')
 
 
-#
-# Tracker for this version of the randomizer.
-#
 def tracker(request):
+    """
+    Return the Tracker page for the Jets of Time web generator.
+
+    This page contains the web tracker an associated tracker logic.
+
+    :param request: Django request object
+    :return: Web response with the rendered Tracker page
+    """
     return render(request, 'tracker/tracker.html')
 
 
-#
-# Options page for the seed generator.
-#
 def options(request):
+    """
+    Return the Options page for the Jets of Time web generator.
+
+    This page contains the form that users fill out to generate a seed.
+
+    :param request: Django request object
+    :return: Web response with the rendered Options page
+    """
     form = GenerateForm()
     context = {'form': form,
                'version': RandomizerInterface.get_randomizer_version_info()}
     return render(request, 'generator/options.html', context)
 
 
-#
-# Generate page to take the results from the options page and generate a ROM.
-#
 def generate(request):
+    """
+    Generate a seed based on the user's request in the options form.
+
+    This method will generate a seed and send the user to the seed share page,
+    listing the seeds share info, download link, and spoiler logs if applicable.
+
+    :param request: Django request object
+    :return: Web response with the rendered share page
+    """
     if request.method == 'POST':
         form = GenerateForm(request.POST)
         if form.is_valid():
@@ -72,10 +98,13 @@ def generate(request):
         return HttpResponseRedirect('/options/')
 
 
-#
-# Apply the randomization and send the seed to the user.
-#
 def download_seed(request):
+    """
+    Apply the randomization and send the seed to the user.
+
+    :param request: Django request object
+    :return: Web response with the ROM object
+    """
     # TODO - Error handling
     if request.method == 'POST':
         form = RomForm(request.POST, request.FILES)
@@ -107,6 +136,13 @@ def download_seed(request):
 
 
 def download_spoiler_log(request, share_id):
+    """
+    Create and send a spoiler log to the user for the seed with the given share ID.
+
+    :param request: Django request object
+    :param share_id: Share ID of a previously created seed
+    :return: Web response with the spoiler log object
+    """
     try:
         game = Game.objects.get(share_id=share_id)
     except Game.DoesNotExist:
@@ -124,10 +160,14 @@ def download_spoiler_log(request, share_id):
         return HttpResponse("No spoiler log available for this seed.")
 
 
-#
-# Handle a share link for a previously generated game.
-#
 def share(request, share_id):
+    """
+    Handle a share link for a previously generated game.
+
+    :param request: Django request object
+    :param share_id: Share ID of an existing seed
+    :return: Web response with the rendered share page
+    """
     try:
         game = Game.objects.get(share_id=share_id)
     except Game.DoesNotExist:
@@ -146,15 +186,17 @@ def share(request, share_id):
     return render(request, 'generator/seed.html', context)
 
 
-#
-# Read and validate the user's ROM file.
-# Handles both headered and unheadered ROMS and will raise an
-# InvalidRomException if the ROM does not match a vanilla hash or
-# is too large to be a valid ROM file.
-#
-# If the ROM is valid, return it as a bytearray.
-#
 def read_and_validate_rom_file(rom_file):
+    """
+    Read and validate the user's ROM file.
+
+    Handles both headered and unheadered ROMS and will raise an
+    InvalidRomException if the ROM does not match a vanilla hash or
+    is too large to be a valid ROM file.
+
+    :param rom_file: File object containing a user's ROM
+    :return: bytearray containing ROM data
+    """
     # Validate that the file isn't too large to be a CT ROM.
     # Don't waste time reading it if it's not a CT ROM.
     if rom_file.size > 4194816:
@@ -173,16 +215,27 @@ def read_and_validate_rom_file(rom_file):
     return file_bytes
 
 
-#
-# Create a randomized config based on the user request.
-#
 def handle_seed_generation(form) -> Game:
+    """
+    Create a randomized seed based on the user's request on the options form.
+    The randomized config is given a share ID and stored in the database.
+
+    :param form: Form object with user selections from the options page
+    :return: Game object that has been created and stored in the database
+    """
     # Create a config from the passed in data
     interface = RandomizerInterface(RandomizerInterface.get_base_rom())
     interface.configure_seed(form)
 
+    # Get a new unique share ID for this seed
+    id_exists = True
+    while id_exists:
+        # It is possible, though very unlikely to generate a duplicate share ID.
+        # Verify this ID doesn't already exist in the database before continuing.
+        share_id = nanoid.generate('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 15)
+        id_exists = Game.objects.filter(share_id=share_id).exists()
+
     # Store the newly generated config data in the database with its share ID
-    share_id = nanoid.generate('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 15)
     game = Game.objects.create(
         share_id=share_id,
         race_seed=not form.cleaned_data['spoiler_log'],
