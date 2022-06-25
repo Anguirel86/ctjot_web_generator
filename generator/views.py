@@ -91,11 +91,11 @@ def generate(request):
                        'share_info': share_info.getvalue()}
             return render(request, 'generator/seed.html', context)
         else:
-            # TODO - Form isn't valid, for now just redirect to options
-            #return HttpResponseRedirect('/options/')
+            # TODO: Replace this error handling with something better eventually.
             buffer = io.StringIO()
+            buffer.write("Errors in the following form fields:\n")
             for error in form.errors:
-                buffer.write(str(error))
+                buffer.write(str(error) + "\n")
             return render(request, 'generator/error.html', {'error_text': buffer.getvalue()}, status=404)
     else:
         # This isn't a POST. Redirect to the options page.
