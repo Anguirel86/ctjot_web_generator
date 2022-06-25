@@ -302,7 +302,7 @@ class RandomizerInterface:
             settings.gameflags = settings.gameflags | rset.GameFlags.TACKLE_EFFECTS_ON
 
         if form.cleaned_data['starters_sufficient']:
-            settings.gameflags = settings.gameflags | rset.GameFlags.FIRST_TWO
+            settings.gameflags = settings.gameflags | rset.GameFlags.STARTERS_SUFFICIENT
 
         if form.cleaned_data['epoch_fail']:
             settings.gameflags = settings.gameflags | rset.GameFlags.EPOCH_FAIL
