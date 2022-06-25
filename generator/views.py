@@ -92,7 +92,11 @@ def generate(request):
             return render(request, 'generator/seed.html', context)
         else:
             # TODO - Form isn't valid, for now just redirect to options
-            return HttpResponseRedirect('/options/')
+            #return HttpResponseRedirect('/options/')
+            buffer = io.StringIO()
+            for error in form.errors:
+                buffer.write(str(error))
+            return render(request, 'generator/error.html', {'error_text': buffer.getvalue()}, status=404)
     else:
         # This isn't a POST. Redirect to the options page.
         return HttpResponseRedirect('/options/')
@@ -117,7 +121,7 @@ def download_seed(request):
             try:
                 rom_bytes = read_and_validate_rom_file(request.FILES['rom_file'])
                 interface = RandomizerInterface(rom_bytes)
-                interface.set_settings_and_config(pickle.loads(game.settings), pickle.loads(game.configuration))
+                interface.set_settings_and_config(pickle.loads(game.settings), pickle.loads(game.configuration), form)
                 patched_rom = interface.generate_rom()
                 file_name = interface.get_rom_name(share_id)
                 content = FileWrapper(io.BytesIO(patched_rom))

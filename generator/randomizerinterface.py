@@ -8,7 +8,7 @@ import random
 import sys
 
 # Web types
-from .forms import GenerateForm
+from .forms import GenerateForm, RomForm
 from django.apps import apps
 from django.conf import settings as conf
 
@@ -102,14 +102,35 @@ class RandomizerInterface:
         self.randomizer.generate_rom()
         return self.randomizer.get_generated_rom()
 
-    def set_settings_and_config(self, settings: rset.Settings, config: randoconfig.RandoConfig):
+    def set_settings_and_config(self, settings: rset.Settings, config: randoconfig.RandoConfig, form: RomForm):
         """
         Populate the randomizer with a pre-populated RandoSettings object and a
         preconfigured RandoSettings object.
 
         :param settings: RandoSettings object
         :param config: RandoConfig object
+        :param form: RomForm with cosmetic settings
         """
+        # Cosmetic settings
+        if form.cleaned_data['zenan_alt_battle_music']:
+            settings.cosmetic_flags = settings.cosmetic_flags | rset.CosmeticFlags.ZENAN_ALT_MUSIC
+
+        if form.cleaned_data['death_peak_alt_music']:
+            settings.cosmetic_flags = settings.cosmetic_flags | rset.CosmeticFlags.DEATH_PEAK_ALT_MUSIC
+
+        if form.cleaned_data['quiet_mode']:
+            settings.cosmetic_flags = settings.cosmetic_flags | rset.CosmeticFlags.QUIET_MODE
+
+        # Character/Epoch renames
+        settings.char_names[0] = self.get_character_name(form.cleaned_data['crono_name'], 'Crono')
+        settings.char_names[1] = self.get_character_name(form.cleaned_data['marle_name'], 'Marle')
+        settings.char_names[2] = self.get_character_name(form.cleaned_data['lucca_name'], 'Lucca')
+        settings.char_names[3] = self.get_character_name(form.cleaned_data['robo_name'], 'Robo')
+        settings.char_names[4] = self.get_character_name(form.cleaned_data['frog_name'], 'Frog')
+        settings.char_names[5] = self.get_character_name(form.cleaned_data['ayla_name'], 'Ayla')
+        settings.char_names[6] = self.get_character_name(form.cleaned_data['magus_name'], 'Magus')
+        settings.char_names[7] = self.get_character_name(form.cleaned_data['epoch_name'], 'Epoch')
+
         self.randomizer.settings = settings
         self.randomizer.set_config(config)
 
@@ -174,9 +195,6 @@ class RandomizerInterface:
 
         if form.cleaned_data['disable_glitches']:
             settings.gameflags = settings.gameflags | rset.GameFlags.FIX_GLITCH
-
-        if form.cleaned_data['quiet_mode']:
-            settings.gameflags = settings.gameflags | rset.GameFlags.QUIET_MODE
 
         if form.cleaned_data['boss_rando']:
             settings.gameflags = settings.gameflags | rset.GameFlags.BOSS_RANDO
@@ -255,13 +273,6 @@ class RandomizerInterface:
 
         if form.cleaned_data['free_menu_glitch']:
             settings.gameflags = settings.gameflags | rset.GameFlags.FREE_MENU_GLITCH
-
-        # Cosmetic settings
-        if form.cleaned_data['zenan_alt_battle_music']:
-            settings.cosmetic_flags = settings.cosmetic_flags | rset.CosmeticFlags.ZENAN_ALT_MUSIC
-
-        if form.cleaned_data['death_peak_alt_music']:
-            settings.cosmetic_flags = settings.cosmetic_flags | rset.CosmeticFlags.DEATH_PEAK_ALT_MUSIC
 
         # Bucket Fragments
         if form.cleaned_data['bucket_fragments']:
@@ -468,6 +479,22 @@ class RandomizerInterface:
             rando.write_settings_spoilers(buffer)
 
         return buffer
+
+    @classmethod
+    def get_character_name(cls, name: str, default_name: str):
+        """
+        Given a character name and a default, validate the name and return either the
+        validated name or the default value if the name is invalid.
+
+        Valid names are five characters or less, alphanumeric characters only.
+
+        :param name: Name selected by the user
+        :param default_name: Default name of the character
+        :return: Either the user's selected name or a default if the name is invalid.
+        """
+        if name is None or name == "" or len(name) > 5 or not name.isalnum():
+            return default_name
+        return name
 
     @classmethod
     def get_randomizer_version_info(cls) -> dict[str, str]:

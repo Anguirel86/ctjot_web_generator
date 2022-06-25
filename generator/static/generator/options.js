@@ -18,7 +18,6 @@ function resetAll() {
   $('#id_early_pendant').prop('checked', false).change();
   $('#id_unlocked_magic').prop('checked', false).change();
   $('#id_chronosanity').prop('checked', false).change();
-  $('#id_quiet_mode').prop('checked', false).change();
   $('#id_boss_rando').prop('checked', false).change();
   $('#id_zeal').prop('checked', false).change();
   $('#id_locked_chars').prop('checked', false).change();
@@ -50,10 +49,6 @@ function resetAll() {
   $('#id_fast_tabs').prop('checked', false).change();
   $('#id_free_menu_glitch').prop('checked', false).change();
 
-  // Cosmetic options
-  $('#id_zenan_alt_battle_music').prop('checked', false).change();
-  $('#id_death_peak_alt_music').prop('checked', false).change();
-
   // Experimental options
   $('#id_buff_x_strike').prop('checked', false).change();
   $('#id_ayla_rebalance').prop('checked', false).change();
@@ -66,8 +61,8 @@ function resetAll() {
   $('#id_marle_rework').prop('checked', false).change();
   $('#id_boss_spot_hp').prop('checked', false).change();
   $('#id_bucket_fragments').prop('checked', false).change();
-  $('#id_fragments_required').val(20).change();
-  $('#id_extra_fragments').val(10).change();
+  $('#id_fragments_required').val(10).change();
+  $('#id_extra_fragments').val(5).change();
 
   // Mystery Seed options
   // game modes
@@ -100,6 +95,9 @@ function resetAll() {
   $('#id_mystery_boss_scale').val(30).change()
   $('#id_mystery_locked_characters').val(25).change()
   $('#id_mystery_duplicate_characters').val(25).change()
+  $('#id_mystery_epoch_fail').val(50).change()
+  $('#id_mystery_gear_rando').val(25).change()
+  $('#id_mystery_heal_rando').val(25).change()
 }
 
 /*
@@ -314,7 +312,8 @@ function updateMysterySettings() {
     'mystery_tech_order_normal', 'mystery_tech_order_full_random', 'mystery_tech_order_balanced_random',
     'mystery_shop_prices_normal', 'mystery_shop_prices_random', 'mystery_shop_prices_mostly_random', 'mystery_shop_prices_free'];
   var id_list_percentage = ['mystery_tab_treasures', 'mystery_unlock_magic', 'mystery_bucket_fragments', 'mystery_chronosanity',
-    'mystery_boss_rando', 'mystery_boss_scale', 'mystery_locked_characters', 'mystery_duplicate_characters'];
+    'mystery_boss_rando', 'mystery_boss_scale', 'mystery_locked_characters', 'mystery_duplicate_characters',
+    'mystery_epoch_fail', 'mystery_gear_rando', 'mystery_heal_rando'];
 
   for (const id of id_list_relative) {
     document.getElementById(id + "_text").value = document.getElementById("id_" + id).value

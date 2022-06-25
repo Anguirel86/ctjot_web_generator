@@ -15,7 +15,65 @@
         </pre>
         <form name="seed_form" id="seed_form" action="{% url 'generator:seed' %}" target="_blank" method="post" enctype="multipart/form-data">
           {% csrf_token %}
-          <div class="form-group">
+
+          <!-- Cosmetic options -->
+          <input type="button" class="btn btn-primary" id="cosmetic_options_button" value="Show Cosmetic Options" data-toggle="collapse" data-target="#cosmetic_section" aria-expanded="false" aria-controls="cosmetic_section">
+          <div class="border border-primary rounded p-2 collapse" id="cosmetic_section">
+            <div class="form-group form-check pl-0">
+              <input type="checkbox" name="{{form.quiet_mode.name}}" id="{{form.quiet_mode.id_for_label}}" data-toggle="toggle">
+              <label for="{{form.quiet_mode.id_for_label}}">Quiet Mode - No Music (q)</label>
+            </div>
+
+            <div class="form-group form-check pl-0">
+              <input type="checkbox" name="{{form.zenan_alt_battle_music.name}}" id="{{form.zenan_alt_battle_music.id_for_label}}" data-toggle="toggle">
+              <label for="{{form.zenan_alt_battle_music.id_for_label}}">Zenan Alt Battle Music</label>
+            </div>
+            <div class="form-group form-check pl-0">
+              <input type="checkbox" name="{{form.death_peak_alt_music.name}}" id="{{form.death_peak_alt_music.id_for_label}}" data-toggle="toggle">
+              <label for="{{form.death_peak_alt_music.id_for_label}}">Death Peak Alt Music</label>
+            </div>
+
+            <!-- character/epoch name fields -->
+            <h4>Custom Names:</h4>
+            <div class="form-group">
+                <label for="{{form.crono_name.id_for_label}}">Crono:
+                  <input class="form-control" name="{{form.crono_name.name}}" id="{{form.crono_name.id_for_label}}" type="text" value="Crono">
+                </label>
+
+                <label for="{{form.marle_name.id_for_label}}">Marle:
+                  <input class="form-control" name="{{form.marle_name.name}}" id="{{form.marle_name.id_for_label}}" type="text" value="Marle">
+                </label>
+
+                <label for="{{form.lucca_name.id_for_label}}">Lucca:
+                  <input class="form-control" name="{{form.lucca_name.name}}" id="{{form.lucca_name.id_for_label}}" type="text" value="Lucca">
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="{{form.robo_name.id_for_label}}">Robo:
+                  <input class="form-control" name="{{form.robo_name.name}}" id="{{form.robo_name.id_for_label}}" type="text" value="Robo">
+                </label>
+
+                <label for="{{form.frog_name.id_for_label}}">Frog:
+                  <input class="form-control" name="{{form.frog_name.name}}" id="{{form.frog_name.id_for_label}}" type="text" value="Frog">
+                </label>
+
+                <label for="{{form.ayla_name.id_for_label}}">Ayla:
+                  <input class="form-control" name="{{form.ayla_name.name}}" id="{{form.ayla_name.id_for_label}}" type="text" value="Ayla">
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="{{form.magus_name.id_for_label}}">Magus:
+                  <input class="form-control" name="{{form.magus_name.name}}" id="{{form.magus_name.id_for_label}}" type="text" value="Magus">
+                </label>
+
+                <label for="{{form.epoch_name.id_for_label}}">Epoch:
+                  <input class="form-control" name="{{form.epoch_name.name}}" id="{{form.epoch_name.id_for_label}}" type="text" value="Epoch">
+                </label>
+            </div>
+          </div>
+
+          <!-- ROM input -->
+          <div class="form-group pt-2">
             <label class="form-label" for="{{form.rom_file.id_for_label}}">Chrono Trigger ROM</label>
             <input type="file" class="form-control" id="{{form.rom_file.id_for_label}}" name="{{form.rom_file.name}}"/>
             <input type="hidden" name="{{form.share_id.name}}" id="{{form.share_id.id_for_label}}" value="{{share_id}}">

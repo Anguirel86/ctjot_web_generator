@@ -8,6 +8,19 @@ class RomForm(forms.Form):
     rom_file = forms.FileField(required=True)
     share_id = forms.CharField(widget=forms.HiddenInput(), required=True)
 
+    # Cosmetic
+    zenan_alt_battle_music = forms.BooleanField(required=False)
+    death_peak_alt_music = forms.BooleanField(required=False)
+    quiet_mode = forms.BooleanField(required=False)
+    crono_name = forms.CharField(max_length=5, required=False)
+    marle_name = forms.CharField(max_length=5, required=False)
+    lucca_name = forms.CharField(max_length=5, required=False)
+    robo_name = forms.CharField(max_length=5, required=False)
+    frog_name = forms.CharField(max_length=5, required=False)
+    ayla_name = forms.CharField(max_length=5, required=False)
+    magus_name = forms.CharField(max_length=5, required=False)
+    epoch_name = forms.CharField(max_length=5, required=False)
+
 
 #
 # Form class for version 3.2.0 of the randomizer.
@@ -15,7 +28,6 @@ class RomForm(forms.Form):
 class GenerateForm(forms.Form):
     # Flag options
     disable_glitches = forms.BooleanField(required=False)
-    quiet_mode = forms.BooleanField(required=False)
 
     boss_rando = forms.BooleanField(required=False)
     boss_scaling = forms.BooleanField(required=False)
@@ -53,10 +65,6 @@ class GenerateForm(forms.Form):
     boss_sightscope = forms.BooleanField(required=False)
     fast_tabs = forms.BooleanField(required=False)
     free_menu_glitch = forms.BooleanField(required=False)
-
-    # Cosmetic
-    zenan_alt_battle_music = forms.BooleanField(required=False)
-    death_peak_alt_music = forms.BooleanField(required=False)
 
     # Experimental
     buff_x_strike = forms.BooleanField(required=False)
@@ -108,5 +116,8 @@ class GenerateForm(forms.Form):
     mystery_boss_scale = forms.IntegerField()
     mystery_locked_characters = forms.IntegerField()
     mystery_duplicate_characters = forms.IntegerField()
+    mystery_epoch_fail = forms.IntegerField()
+    mystery_gear_rando = forms.IntegerField()
+    mystery_heal_rando = forms.IntegerField()
 
 
