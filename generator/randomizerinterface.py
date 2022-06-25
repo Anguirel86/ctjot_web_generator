@@ -223,8 +223,11 @@ class RandomizerInterface:
         if form.cleaned_data['duplicate_characters']:
             settings.gameflags = settings.gameflags | rset.GameFlags.DUPLICATE_CHARS
 
-        if form.cleaned_data['duplicate_duals']:
-            settings.gameflags = settings.gameflags | rset.GameFlags.DUPLICATE_TECHS
+        if form.cleaned_data['healing_item_rando']:
+            settings.gameflags = settings.gameflags | rset.GameFlags.HEALING_ITEM_RANDO
+
+        if form.cleaned_data['gear_rando']:
+            settings.gameflags = settings.gameflags | rset.GameFlags.GEAR_RANDO
 
         if form.cleaned_data['mystery_seed']:
             settings.gameflags = settings.gameflags | rset.GameFlags.MYSTERY
@@ -244,9 +247,15 @@ class RandomizerInterface:
                     char_choices[i].append(j)
         settings.char_choices = char_choices
 
+        if form.cleaned_data['duplicate_duals']:
+            settings.gameflags = settings.gameflags | rset.GameFlags.DUPLICATE_TECHS
+
         # Boss rando settings
         # TODO - Boss and location lists are just default for now. Only update the other options.
         settings.ro_settings.preserve_parts = form.cleaned_data['legacy_boss_placement']
+
+        if form.cleaned_data['boss_spot_hp']:
+            settings.gameflags = settings.gameflags | rset.GameFlags.BOSS_SPOT_HP
 
         # Tab randomization settings
         # TODO - Currently defaulting to UNIFORM distribution
@@ -286,23 +295,11 @@ class RandomizerInterface:
         )
 
         # Experimental settings
-        if form.cleaned_data['buff_x_strike']:
-            settings.gameflags = settings.gameflags | rset.GameFlags.BUFF_XSTRIKE
+        if form.cleaned_data['use_antilife']:
+            settings.gameflags = settings.gameflags | rset.GameFlags.USE_ANTILIFE
 
-        if form.cleaned_data['ayla_rebalance']:
-            settings.gameflags = settings.gameflags | rset.GameFlags.AYLA_REBALANCE
-
-        if form.cleaned_data['black_hole_rework']:
-            settings.gameflags = settings.gameflags | rset.GameFlags.BLACKHOLE_REWORK
-
-        if form.cleaned_data['robo_rework']:
-            settings.gameflags = settings.gameflags | rset.GameFlags.ROBO_REWORK
-
-        if form.cleaned_data['healing_item_rando']:
-            settings.gameflags = settings.gameflags | rset.GameFlags.HEALING_ITEM_RANDO
-
-        if form.cleaned_data['gear_rando']:
-            settings.gameflags = settings.gameflags | rset.GameFlags.GEAR_RANDO
+        if form.cleaned_data['tackle_effects']:
+            settings.gameflags = settings.gameflags | rset.GameFlags.TACKLE_EFFECTS_ON
 
         if form.cleaned_data['starters_sufficient']:
             settings.gameflags = settings.gameflags | rset.GameFlags.FIRST_TWO
@@ -310,11 +307,6 @@ class RandomizerInterface:
         if form.cleaned_data['epoch_fail']:
             settings.gameflags = settings.gameflags | rset.GameFlags.EPOCH_FAIL
 
-        if form.cleaned_data['marle_rework']:
-            settings.gameflags = settings.gameflags | rset.GameFlags.MARLE_REWORK
-
-        if form.cleaned_data['boss_spot_hp']:
-            settings.gameflags = settings.gameflags | rset.GameFlags.BOSS_SPOT_HP
 
         # Mystery
         settings.mystery_settings.game_mode_freqs: dict[rset.GameMode, int] = {
@@ -356,7 +348,10 @@ class RandomizerInterface:
             rset.GameFlags.BOSS_RANDO: form.cleaned_data['mystery_boss_rando']/100,
             rset.GameFlags.BOSS_SCALE: form.cleaned_data['mystery_boss_scale']/100,
             rset.GameFlags.LOCKED_CHARS: form.cleaned_data['mystery_locked_characters']/100,
-            rset.GameFlags.DUPLICATE_CHARS: form.cleaned_data['mystery_duplicate_characters']/100
+            rset.GameFlags.DUPLICATE_CHARS: form.cleaned_data['mystery_duplicate_characters']/100,
+            rset.GameFlags.EPOCH_FAIL: form.cleaned_data['mystery_epoch_fail']/100,
+            rset.GameFlags.GEAR_RANDO: form.cleaned_data['mystery_gear_rando']/100,
+            rset.GameFlags.HEALING_ITEM_RANDO: form.cleaned_data['mystery_heal_rando']/100
         }
 
         return settings

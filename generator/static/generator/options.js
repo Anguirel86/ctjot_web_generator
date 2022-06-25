@@ -25,6 +25,8 @@ function resetAll() {
   $('#id_shop_prices').val('normal');
   $('#id_tech_rando').val('normal');
   $('#id_duplicate_characters').prop('checked', false).change();
+  $('#id_healing_item_rando').prop('checked', false).change();
+  $('#id_gear_rando').prop('checked', false).change();
   $('#id_mystery_seed').prop('checked', false).change();
   $('#id_spoiler_log').prop('checked', true).change();
 
@@ -42,6 +44,7 @@ function resetAll() {
 
   // Boss Rando options
   $('#id_legacy_boss_placement').prop('checked', false).change();
+  $('#id_boss_spot_hp').prop('checked', false).change();
 
   // Quality of Life options
   $('#id_sightscope_always_on').prop('checked', false).change();
@@ -50,16 +53,11 @@ function resetAll() {
   $('#id_free_menu_glitch').prop('checked', false).change();
 
   // Experimental options
-  $('#id_buff_x_strike').prop('checked', false).change();
-  $('#id_ayla_rebalance').prop('checked', false).change();
-  $('#id_black_hole_rework').prop('checked', false).change();
-  $('#id_robo_rework').prop('checked', false).change();
-  $('#id_healing_item_rando').prop('checked', false).change();
-  $('#id_gear_rando').prop('checked', false).change();
+  $('#id_use_antilife').prop('checked', false).change();
+  $('#id_tackle_effects').prop('checked', false).change();
   $('#id_starters_sufficient').prop('checked', false).change();
   $('#id_epoch_fail').prop('checked', false).change();
-  $('#id_marle_rework').prop('checked', false).change();
-  $('#id_boss_spot_hp').prop('checked', false).change();
+
   $('#id_bucket_fragments').prop('checked', false).change();
   $('#id_fragments_required').val(10).change();
   $('#id_extra_fragments').val(5).change();

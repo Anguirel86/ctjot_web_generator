@@ -12,14 +12,18 @@ class RomForm(forms.Form):
     zenan_alt_battle_music = forms.BooleanField(required=False)
     death_peak_alt_music = forms.BooleanField(required=False)
     quiet_mode = forms.BooleanField(required=False)
-    crono_name = forms.CharField(max_length=5, required=False)
-    marle_name = forms.CharField(max_length=5, required=False)
-    lucca_name = forms.CharField(max_length=5, required=False)
-    robo_name = forms.CharField(max_length=5, required=False)
-    frog_name = forms.CharField(max_length=5, required=False)
-    ayla_name = forms.CharField(max_length=5, required=False)
-    magus_name = forms.CharField(max_length=5, required=False)
-    epoch_name = forms.CharField(max_length=5, required=False)
+
+    # Actual character name length is limited to 5 characters in game,
+    # but if an invalid name is entered the randomizerinterface will
+    # just use the character's default name.
+    crono_name = forms.CharField(max_length=15, required=False)
+    marle_name = forms.CharField(max_length=15, required=False)
+    lucca_name = forms.CharField(max_length=15, required=False)
+    robo_name = forms.CharField(max_length=15, required=False)
+    frog_name = forms.CharField(max_length=15, required=False)
+    ayla_name = forms.CharField(max_length=15, required=False)
+    magus_name = forms.CharField(max_length=15, required=False)
+    epoch_name = forms.CharField(max_length=15, required=False)
 
 
 #
@@ -39,6 +43,8 @@ class GenerateForm(forms.Form):
     chronosanity = forms.BooleanField(required=False)
     duplicate_characters = forms.BooleanField(required=False)
     mystery_seed = forms.BooleanField(required=False)
+    healing_item_rando = forms.BooleanField(required=False)
+    gear_rando = forms.BooleanField(required=False)
     enemy_difficulty = forms.CharField(max_length=6)
     item_difficulty = forms.CharField(max_length=6)
     shop_prices = forms.CharField(max_length=13)
@@ -51,6 +57,7 @@ class GenerateForm(forms.Form):
 
     # Boss rando tab
     legacy_boss_placement = forms.BooleanField(required=False)
+    boss_spot_hp = forms.BooleanField(required=False)
 
     # Tab options tab
     power_tab_min = forms.IntegerField()
@@ -67,17 +74,11 @@ class GenerateForm(forms.Form):
     free_menu_glitch = forms.BooleanField(required=False)
 
     # Experimental
-    buff_x_strike = forms.BooleanField(required=False)
     bucket_fragments = forms.BooleanField(required=False)
-    ayla_rebalance = forms.BooleanField(required=False)
-    black_hole_rework = forms.BooleanField(required=False)
-    robo_rework = forms.BooleanField(required=False)
-    healing_item_rando = forms.BooleanField(required=False)
-    gear_rando = forms.BooleanField(required=False)
     starters_sufficient = forms.BooleanField(required=False)
     epoch_fail = forms.BooleanField(required=False)
-    marle_rework = forms.BooleanField(required=False)
-    boss_spot_hp = forms.BooleanField(required=False)
+    use_antilife = forms.BooleanField(required=False)
+    tackle_effects = forms.BooleanField(required=False)
     fragments_required = forms.IntegerField()
     extra_fragments = forms.IntegerField()
 
