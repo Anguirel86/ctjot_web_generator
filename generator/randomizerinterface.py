@@ -112,6 +112,9 @@ class RandomizerInterface:
         :param form: RomForm with cosmetic settings
         """
         # Cosmetic settings
+        if form.cleaned_data['reduce_flashes']:
+            settings.cosmetic_flags = settings.cosmetic_flags | rset.CosmeticFlags.REDUCE_FLASH
+
         if form.cleaned_data['zenan_alt_battle_music']:
             settings.cosmetic_flags = settings.cosmetic_flags | rset.CosmeticFlags.ZENAN_ALT_MUSIC
 

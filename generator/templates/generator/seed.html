@@ -21,6 +21,11 @@
           <input type="button" class="btn btn-primary" id="cosmetic_options_button" value="Show Cosmetic Options" data-toggle="collapse" data-target="#cosmetic_section" aria-expanded="false" aria-controls="cosmetic_section">
           <div class="border border-primary rounded p-2 collapse" id="cosmetic_section">
             <div class="form-group form-check pl-0">
+              <input type="checkbox" name="{{form.reduce_flashes.name}}" id="{{form.reduce_flashes.id_for_label}}" data-toggle="toggle">
+              <label for="{{form.reduce_flashes.id_for_label}}">Reduce Flashes</label>
+            </div>
+
+            <div class="form-group form-check pl-0">
               <input type="checkbox" name="{{form.quiet_mode.name}}" id="{{form.quiet_mode.id_for_label}}" data-toggle="toggle">
               <label for="{{form.quiet_mode.id_for_label}}">Quiet Mode - No Music</label>
             </div>
@@ -29,6 +34,7 @@
               <input type="checkbox" name="{{form.zenan_alt_battle_music.name}}" id="{{form.zenan_alt_battle_music.id_for_label}}" data-toggle="toggle">
               <label for="{{form.zenan_alt_battle_music.id_for_label}}">Zenan Alt Battle Music</label>
             </div>
+
             <div class="form-group form-check pl-0">
               <input type="checkbox" name="{{form.death_peak_alt_music.name}}" id="{{form.death_peak_alt_music.id_for_label}}" data-toggle="toggle">
               <label for="{{form.death_peak_alt_music.id_for_label}}">Death Peak Alt Music</label>
