@@ -121,6 +121,12 @@ class RandomizerInterface:
         if form.cleaned_data['quiet_mode']:
             settings.cosmetic_flags = settings.cosmetic_flags | rset.CosmeticFlags.QUIET_MODE
 
+        if form.cleaned_data['background_selection']:
+            menu_background = form.cleaned_data['background_selection']
+            if menu_background < 1 or menu_background > 9:
+                menu_background = 1
+            settings.cosmetic_menu_background = (menu_background - 1)
+
         # Character/Epoch renames
         settings.char_names[0] = self.get_character_name(form.cleaned_data['crono_name'], 'Crono')
         settings.char_names[1] = self.get_character_name(form.cleaned_data['marle_name'], 'Marle')

@@ -3,6 +3,7 @@
 {% block imports %}
     {% load static %}
     <script src="{% static 'generator/seed.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'generator/styles.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -32,6 +33,15 @@
               <input type="checkbox" name="{{form.death_peak_alt_music.name}}" id="{{form.death_peak_alt_music.id_for_label}}" data-toggle="toggle">
               <label for="{{form.death_peak_alt_music.id_for_label}}">Death Peak Alt Music</label>
             </div>
+
+            <!-- Menu background selection -->
+            <div class="form-group">
+              <label for="{{form.background_selection.id_for_label}}" class="form-label mr-2">Background:</label>
+              <input type="range" class="form-range" name="{{form.background_selection.name}}" id="{{form.background_selection.id_for_label}}" min="1" max="8" value="1" oninput="updateBackgroundSelection()" onchange="updateBackgroundSelection()" >
+              <input type="text" id="background_selection_text" form="none" size="1" value="1" readonly>
+            </div>
+            <span id="background_selection_preview" class="menuBackground1"></span>
+
 
             <!-- character/epoch name fields -->
             <h4>Custom Names:</h4>

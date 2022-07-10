@@ -15,3 +15,13 @@ $(document).on('show.bs.collapse', '#cosmetic_section', function(e) {
 $(document).on('hide.bs.collapse', '#cosmetic_section', function(e) {
   document.getElementById('cosmetic_options_button').value = 'Show Cosmetic Options';
 });
+
+/*
+ * Update the background preview and text box.
+ */
+function updateBackgroundSelection() {
+  var selection = document.getElementById('id_background_selection').value;
+  document.getElementById('background_selection_text').value = selection;
+  preview = document.getElementById('background_selection_preview');
+  preview.className = 'menuBackground' + selection;
+}

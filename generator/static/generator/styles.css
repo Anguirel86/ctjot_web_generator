@@ -8,3 +8,67 @@ th,td {
 .errorText {
   color:red;
 }
+
+.menuBackground1 {
+  width: 256px;
+  height: 79px;
+  background-image: url(img/backgrounds_sprite_sheet.png);
+  background-position: -8px -8px;
+  display: block;
+}
+
+.menuBackground2 {
+  width: 256px;
+  height: 79px;
+  background-image: url(img/backgrounds_sprite_sheet.png);
+  background-position: -8px -96px;
+  display: block;
+}
+
+.menuBackground3 {
+  width: 256px;
+  height: 79px;
+  background-image: url(img/backgrounds_sprite_sheet.png);
+  background-position: -8px -184px;
+  display: block;
+}
+
+.menuBackground4 {
+  width: 256px;
+  height: 79px;
+  background-image: url(img/backgrounds_sprite_sheet.png);
+  background-position: -8px -272px;
+  display: block;
+}
+
+.menuBackground5 {
+  width: 256px;
+  height: 79px;
+  background-image: url(img/backgrounds_sprite_sheet.png);
+  background-position: -8px -360px;
+  display: block;
+}
+
+.menuBackground6 {
+  width: 256px;
+  height: 79px;
+  background-image: url(img/backgrounds_sprite_sheet.png);
+  background-position: -8px -448px;
+  display: block;
+}
+
+.menuBackground7 {
+  width: 256px;
+  height: 79px;
+  background-image: url(img/backgrounds_sprite_sheet.png);
+  background-position: -8px -536px;
+  display: block;
+}
+
+.menuBackground8 {
+  width: 256px;
+  height: 79px;
+  background-image: url(img/backgrounds_sprite_sheet.png);
+  background-position: -8px -624px;
+  display: block;
+}

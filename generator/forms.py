@@ -12,6 +12,7 @@ class RomForm(forms.Form):
     zenan_alt_battle_music = forms.BooleanField(required=False)
     death_peak_alt_music = forms.BooleanField(required=False)
     quiet_mode = forms.BooleanField(required=False)
+    background_selection = forms.IntegerField(required=False)
 
     # Actual character name length is limited to 5 characters in game,
     # but if an invalid name is entered the randomizerinterface will
