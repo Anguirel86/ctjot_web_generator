@@ -52,6 +52,10 @@ tech_order_map = {
 }
 
 
+class InvalidSettingsException(Exception):
+    pass
+
+
 #
 # This class acts as the interface between the web code and the randomizer.
 #
@@ -72,7 +76,7 @@ class RandomizerInterface:
         """
         self.randomizer = randomizer.Randomizer(rom_data, is_vanilla=True)
 
-    def configure_seed(self, form: GenerateForm):
+    def configure_seed_from_form(self, form: GenerateForm):
         """
         Generate a RandoConfig from the provided GenerateForm.
         This will convert the form data into the appropriate randomizer settings and config
@@ -81,7 +85,7 @@ class RandomizerInterface:
         :param form: GenerateForm with the user's settings
         """
         self.randomizer.settings = self.__convert_form_to_settings(form)
-        # If this is a race seed, modify the seed value so that before sending it through
+        # If this is a race seed, modify the seed value  before sending it through
         # the randomizer.  This will ensure that race ROMs and non-race ROMs with the same
         # seed value are not identical.
         if form.cleaned_data['spoiler_log']:
@@ -92,6 +96,39 @@ class RandomizerInterface:
             self.randomizer.settings.seed = seed + modifier
             self.randomizer.set_random_config()
             self.randomizer.settings.seed = seed
+
+    def configure_seed_from_settings(self, settings: rset.Settings, is_race_seed: bool):
+        """
+        Generate a RandoConfig from the provided Settings object.
+        This will create a new game based on existing settings.
+
+        This method will fail if the given settings object is for a mystery seed.
+
+        :param settings: Settings object to copy for this new game
+        :param is_race_seed: Whether or not this is a race seed
+        """
+
+        if rset.GameFlags.MYSTERY in settings.gameflags:
+            raise InvalidSettingsException("Mystery seeds cannot be cloned.")
+
+        self.randomizer.settings = settings
+        # get a random seed value to replace the existing one
+        seed = settings.seed
+        new_seed = seed
+        while seed == new_seed:
+            new_seed = self.get_random_seed()
+        settings.seed = new_seed
+
+        # If this is a race seed, modify the seed value  before sending it through
+        # the randomizer.  This will ensure that race ROMs and non-race ROMs with the same
+        # seed value are not identical.
+        if is_race_seed:
+            modifier = apps.get_app_config('generator').RACE_SEED_MODIFIER
+            self.randomizer.settings.seed = new_seed + modifier
+            self.randomizer.set_random_config()
+            self.randomizer.settings.seed = new_seed
+        else:
+            self.randomizer.set_random_config()
 
     def generate_rom(self) -> bytearray:
         """

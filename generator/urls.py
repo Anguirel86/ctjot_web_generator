@@ -9,6 +9,7 @@ urlpatterns = [
     path('options/', views.options, name='options'),
     path('generate-rom/', views.generate, name='generate'),
     path('share/<str:share_id>/', views.share, name='share'),
+    path('practice/<str:share_id>/', views.practice, name='practice'),
     path('seed/', views.download_seed, name='seed'),
     path('spoiler_log/<str:share_id>/', views.download_spoiler_log, name='spoiler_log'),
 ]

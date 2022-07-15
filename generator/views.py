@@ -5,7 +5,7 @@ from wsgiref.util import FileWrapper
 
 # Site libraries
 from .forms import GenerateForm, RomForm
-from .randomizerinterface import RandomizerInterface
+from .randomizerinterface import RandomizerInterface, InvalidSettingsException
 from .models import Game
 
 # Python standard libraries
@@ -21,6 +21,13 @@ class InvalidRomException(Exception):
     """
     Exception that is raised by the Jets of Time web generator when an
     invalid ROM is provided by a user during seed generation.
+    """
+    pass
+
+
+class InvalidGameIdException(Exception):
+    """
+    Exception that is raised when an invalid share ID is provided.
     """
     pass
 
@@ -80,7 +87,7 @@ def generate(request):
         if form.is_valid():
             # Generate a seed and create a DB entry for it.
             # Then redirect the user to the seed download page.
-            game = handle_seed_generation(form)
+            game = generate_seed_from_form(form)
             share_info = RandomizerInterface.get_share_details(
                 pickle.loads(game.configuration), pickle.loads(game.settings))
             rom_form = RomForm()
@@ -189,6 +196,33 @@ def share(request, share_id):
     return render(request, 'generator/seed.html', context)
 
 
+def practice(request, share_id):
+    """
+    Get a practice seed with identical setting to the seed with the given share_id.
+
+    :param request: Django request object
+    :param share_id: Share ID of an existing seed to use as a template for a practice seed
+    :return:
+    """
+    try:
+        game = generate_seed_from_id(share_id)
+    except InvalidGameIdException as e:
+        return render(request, 'generator/error.html', {'error_text': str(e)}, status=404)
+    except InvalidSettingsException as e:
+        return render(request, 'generator/error.html', {'error_text': str(e)}, status=404)
+
+    share_info = RandomizerInterface.get_share_details(
+        pickle.loads(game.configuration), pickle.loads(game.settings))
+    rom_form = RomForm()
+    context = {'share_id': game.share_id,
+               'form': rom_form,
+               'spoiler_log': RandomizerInterface.get_web_spoiler_log(pickle.loads(game.configuration)),
+               'is_race_seed': game.race_seed,
+               'share_info': share_info.getvalue()}
+
+    return render(request, 'generator/seed.html', context)
+
+
 def read_and_validate_rom_file(rom_file):
     """
     Read and validate the user's ROM file.
@@ -218,7 +252,21 @@ def read_and_validate_rom_file(rom_file):
     return file_bytes
 
 
-def handle_seed_generation(form) -> Game:
+def get_share_id() -> str:
+    """
+    Get a unique share ID.
+
+    :return: A unique share ID string
+    """
+    id_exists = True
+    while id_exists:
+        # It is possible, though very unlikely to generate a duplicate share ID.
+        # Verify this ID doesn't already exist in the database before continuing.
+        share_id = share_id = nanoid.generate('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 15)
+        id_exists = Game.objects.filter(share_id=share_id).exists()
+    return share_id
+
+def generate_seed_from_form(form) -> Game:
     """
     Create a randomized seed based on the user's request on the options form.
     The randomized config is given a share ID and stored in the database.
@@ -228,15 +276,10 @@ def handle_seed_generation(form) -> Game:
     """
     # Create a config from the passed in data
     interface = RandomizerInterface(RandomizerInterface.get_base_rom())
-    interface.configure_seed(form)
+    interface.configure_seed_from_form(form)
 
     # Get a new unique share ID for this seed
-    id_exists = True
-    while id_exists:
-        # It is possible, though very unlikely to generate a duplicate share ID.
-        # Verify this ID doesn't already exist in the database before continuing.
-        share_id = nanoid.generate('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 15)
-        id_exists = Game.objects.filter(share_id=share_id).exists()
+    share_id = get_share_id()
 
     # Store the newly generated config data in the database with its share ID
     game = Game.objects.create(
@@ -246,3 +289,31 @@ def handle_seed_generation(form) -> Game:
         configuration=pickle.dumps(interface.get_config()))
 
     return game
+
+
+def generate_seed_from_id(existing_share_id) -> Game:
+    """
+    Generate a new game object from an existing share ID with identical
+    settings and a new seed value.
+
+    :param existing_share_id: Share ID of an existing seed
+    :return: Game object that has been created and stored in the database
+    """
+    try:
+        existing_game = Game.objects.get(share_id=existing_share_id)
+    except Game.DoesNotExist:
+        raise InvalidGameIdException("Share ID " + existing_share_id + " does not exist.")
+
+    new_share_id = get_share_id()
+    interface = RandomizerInterface(RandomizerInterface.get_base_rom())
+    # Currently only used for practice seeds, so force race mode to False.
+    interface.configure_seed_from_settings(pickle.loads(existing_game.settings), False)
+
+    new_game = Game.objects.create(
+        share_id = new_share_id,
+        race_seed = False,
+        settings = pickle.dumps(interface.get_settings()),
+        configuration = pickle.dumps(interface.get_config())
+    )
+
+    return new_game
