@@ -266,6 +266,7 @@ def get_share_id() -> str:
         id_exists = Game.objects.filter(share_id=share_id).exists()
     return share_id
 
+
 def generate_seed_from_form(form) -> Game:
     """
     Create a randomized seed based on the user's request on the options form.
@@ -310,10 +311,10 @@ def generate_seed_from_id(existing_share_id) -> Game:
     interface.configure_seed_from_settings(pickle.loads(existing_game.settings), False)
 
     new_game = Game.objects.create(
-        share_id = new_share_id,
-        race_seed = False,
-        settings = pickle.dumps(interface.get_settings()),
-        configuration = pickle.dumps(interface.get_config())
+        share_id=new_share_id,
+        race_seed=False,
+        settings=pickle.dumps(interface.get_settings()),
+        configuration=pickle.dumps(interface.get_config())
     )
 
     return new_game
