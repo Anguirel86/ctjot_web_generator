@@ -1,9 +1,12 @@
 # Django libraries
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse
 from django.shortcuts import render
 from wsgiref.util import FileWrapper
 
 # Site libraries
+from django.views import View
+from django.views.generic import FormView
+
 from .forms import GenerateForm, RomForm
 from .randomizerinterface import RandomizerInterface, InvalidSettingsException
 from .models import Game
@@ -32,224 +35,186 @@ class InvalidGameIdException(Exception):
     pass
 
 
-def index(request):
+class OptionsView(View):
     """
-    Return the Index page for the Jets of Time web generator.
-
-    This is the main page of the webapp and will direct the user to various
-    resources as well as provide a link to the options page of the generator.
-
-    :param request: Django request object
-    :return: Web response with the rendered index page
-    """
-    return render(request, 'generator/index.html')
-
-
-def tracker(request):
-    """
-    Return the Tracker page for the Jets of Time web generator.
-
-    This page contains the web tracker an associated tracker logic.
-
-    :param request: Django request object
-    :return: Web response with the rendered Tracker page
-    """
-    return render(request, 'tracker/tracker.html')
-
-
-def options(request):
-    """
-    Return the Options page for the Jets of Time web generator.
+    Handle the Options page for the Jets of Time web generator.
 
     This page contains the form that users fill out to generate a seed.
-
-    :param request: Django request object
-    :return: Web response with the rendered Options page
     """
-    form = GenerateForm()
-    context = {'form': form,
-               'version': RandomizerInterface.get_randomizer_version_info()}
-    return render(request, 'generator/options.html', context)
+
+    @classmethod
+    def get(cls, request):
+        form = GenerateForm()
+        context = {'form': form,
+                   'version': RandomizerInterface.get_randomizer_version_info()}
+        return render(request, 'generator/options.html', context)
 
 
-def generate(request):
+class GenerateView(FormView):
     """
     Generate a seed based on the user's request in the options form.
 
-    This method will generate a seed and send the user to the seed share page,
+    This class will generate a seed and send the user to the seed share page
     listing the seeds share info, download link, and spoiler logs if applicable.
-
-    :param request: Django request object
-    :return: Web response with the rendered share page
     """
-    if request.method == 'POST':
-        form = GenerateForm(request.POST)
-        if form.is_valid():
-            # Generate a seed and create a DB entry for it.
-            # Then redirect the user to the seed download page.
-            game = generate_seed_from_form(form)
-            share_info = RandomizerInterface.get_share_details(
-                pickle.loads(game.configuration), pickle.loads(game.settings))
-            rom_form = RomForm()
-            context = {'share_id': game.share_id,
-                       'form': rom_form,
-                       'spoiler_log': RandomizerInterface.get_web_spoiler_log(pickle.loads(game.configuration)),
-                       'is_race_seed': game.race_seed,
-                       'share_info': share_info.getvalue()}
-            return render(request, 'generator/seed.html', context)
-        else:
-            # TODO: Replace this error handling with something better eventually.
-            buffer = io.StringIO()
-            buffer.write("Errors in the following form fields:\n")
-            for error in form.errors:
-                buffer.write(str(error) + "\n")
-            return render(request, 'generator/error.html', {'error_text': buffer.getvalue()}, status=404)
-    else:
-        # This isn't a POST. Redirect to the options page.
-        return HttpResponseRedirect('/options/')
+    form_class = GenerateForm
 
-
-def download_seed(request):
-    """
-    Apply the randomization and send the seed to the user.
-
-    :param request: Django request object
-    :return: Web response with the ROM object
-    """
-    # TODO - Error handling
-    if request.method == 'POST':
-        form = RomForm(request.POST, request.FILES)
-        if form.is_valid():
-            share_id = form.cleaned_data['share_id']
-            try:
-                game = Game.objects.get(share_id=share_id)
-            except Game.DoesNotExist:
-                return render(request, 'generator/error.html', {'error_text': 'Seed does not exist.'}, status=404)
-            try:
-                rom_bytes = read_and_validate_rom_file(request.FILES['rom_file'])
-                interface = RandomizerInterface(rom_bytes)
-                interface.set_settings_and_config(pickle.loads(game.settings), pickle.loads(game.configuration), form)
-                patched_rom = interface.generate_rom()
-                file_name = interface.get_rom_name(share_id)
-                content = FileWrapper(io.BytesIO(patched_rom))
-                response = HttpResponse(content, content_type='application/octet-stream')
-                response['Content-Length'] = len(patched_rom)
-                response['Content-Disposition'] = 'attachment; filename=%s' % file_name
-                return response
-            except InvalidRomException:
-                return render(request, 'generator/error.html', {'error_text': 'You must enter a valid Chrono Trigger ROM file.'}, status=400)
-        else:
-            return render(request, 'generator/error.html', {'error_text': 'Invalid form: did you select a ROM file?'}, status=400)
-    else:
-        # This isn't a POST. Redirect to the options page.
-        return HttpResponseRedirect('/options/')
-
-
-def download_spoiler_log(request, share_id):
-    """
-    Create and send a spoiler log to the user for the seed with the given share ID.
-
-    :param request: Django request object
-    :param share_id: Share ID of a previously created seed
-    :return: Web response with the spoiler log object
-    """
-    try:
-        game = Game.objects.get(share_id=share_id)
-    except Game.DoesNotExist:
-        return render(request, 'generator/error.html', {'error_text': 'Seed does not exist.'}, status=404)
-
-    if not game.race_seed:
-        spoiler_log = RandomizerInterface.get_spoiler_log(
+    def form_valid(self, form):
+        # Generate a seed and create a DB entry for it.
+        # Then redirect the user to the seed download page.
+        game = generate_seed_from_form(form)
+        share_info = RandomizerInterface.get_share_details(
             pickle.loads(game.configuration), pickle.loads(game.settings))
-        file_name = 'spoiler_log_' + share_id + '.txt'
-        response = HttpResponse(content_type='text/plain')
-        response['Content-Disposition'] = 'attachment; filename=%s' % file_name
-        response.write(spoiler_log.getvalue())
-        return response
-    else:
-        return render(request, 'generator/error.html', {'error_text': 'No spoiler log available for this seed.'}, status=404)
+        rom_form = RomForm()
+        context = {'share_id': game.share_id,
+                   'form': rom_form,
+                   'spoiler_log': RandomizerInterface.get_web_spoiler_log(pickle.loads(game.configuration)),
+                   'is_race_seed': game.race_seed,
+                   'share_info': share_info.getvalue()}
+        return render(self.request, 'generator/seed.html', context)
+
+    def form_invalid(self, form):
+        # TODO: Replace this error handling with something better eventually.
+        buffer = io.StringIO()
+        buffer.write("Errors in the following form fields:\n")
+        for error in form.errors:
+            buffer.write(str(error) + "\n")
+        return render(self.request, 'generator/error.html', {'error_text': buffer.getvalue()}, status=404)
 
 
-def share(request, share_id):
+class ShareLinkView(View):
     """
     Handle a share link for a previously generated game.
-
-    :param request: Django request object
-    :param share_id: Share ID of an existing seed
-    :return: Web response with the rendered share page
     """
-    try:
-        game = Game.objects.get(share_id=share_id)
-    except Game.DoesNotExist:
-        return render(request, 'generator/error.html', {'error_text': 'Seed does not exist.'}, status=404)
+    @classmethod
+    def get(cls, request, share_id):
+        try:
+            game = Game.objects.get(share_id=share_id)
+        except Game.DoesNotExist:
+            return render(request, 'generator/error.html', {'error_text': 'Seed does not exist.'}, status=404)
 
-    share_info = RandomizerInterface.get_share_details(
-        pickle.loads(game.configuration), pickle.loads(game.settings))
+        share_info = RandomizerInterface.get_share_details(
+            pickle.loads(game.configuration), pickle.loads(game.settings))
 
-    rom_form = RomForm()
-    context = {'share_id': game.share_id,
-               'form': rom_form,
-               'spoiler_log': RandomizerInterface.get_web_spoiler_log(pickle.loads(game.configuration)),
-               'is_race_seed': game.race_seed,
-               'share_info': share_info.getvalue()}
+        rom_form = RomForm()
+        context = {'share_id': game.share_id,
+                   'form': rom_form,
+                   'spoiler_log': RandomizerInterface.get_web_spoiler_log(pickle.loads(game.configuration)),
+                   'is_race_seed': game.race_seed,
+                   'share_info': share_info.getvalue()}
 
-    return render(request, 'generator/seed.html', context)
+        return render(request, 'generator/seed.html', context)
 
 
-def practice(request, share_id):
+class DownloadSeedView(FormView):
+    """
+    Apply the randomization and send the seed to the user.
+    """
+    form_class = RomForm
+
+    @classmethod
+    def read_and_validate_rom_file(cls, rom_file: bytearray):
+        """
+        Read and validate the user's ROM file.
+
+        Handles both headered and unheadered ROMS and will raise an
+        InvalidRomException if the ROM does not match a vanilla hash or
+        is too large to be a valid ROM file.
+
+        :param rom_file: File object containing a user's ROM
+        :return: bytearray containing ROM data
+        """
+        # Validate that the file isn't too large to be a CT ROM.
+        # Don't waste time reading it if it's not a CT ROM.
+        if rom_file.size > 4194816:
+            raise InvalidRomException()
+
+        # Strip off the header if this is a headered ROM
+        if rom_file.size == 4194816:
+            rom_file.seek(0x200)
+        file_bytes = bytearray(rom_file.read())
+
+        hasher = hashlib.md5()
+        hasher.update(file_bytes)
+        if hasher.hexdigest() != 'a2bc447961e52fd2227baed164f729dc':
+            raise InvalidRomException()
+
+        return file_bytes
+
+    def form_valid(self, form):
+        share_id = form.cleaned_data['share_id']
+        try:
+            game = Game.objects.get(share_id=share_id)
+        except Game.DoesNotExist:
+            return render(self.request, 'generator/error.html', {'error_text': 'Seed does not exist.'}, status=404)
+
+        try:
+            rom_bytes = self.read_and_validate_rom_file(self.request.FILES['rom_file'])
+            interface = RandomizerInterface(rom_bytes)
+            interface.set_settings_and_config(pickle.loads(game.settings), pickle.loads(game.configuration), form)
+            patched_rom = interface.generate_rom()
+            file_name = interface.get_rom_name(share_id)
+            content = FileWrapper(io.BytesIO(patched_rom))
+            response = HttpResponse(content, content_type='application/octet-stream')
+            response['Content-Length'] = len(patched_rom)
+            response['Content-Disposition'] = 'attachment; filename=%s' % file_name
+            return response
+        except InvalidRomException:
+            return render(self.request, 'generator/error.html',
+                          {'error_text': 'You must enter a valid Chrono Trigger ROM file.'}, status=400)
+
+    def form_invalid(self, form):
+        return render(self.request, 'generator/error.html',
+                      {'error_text': 'Invalid form: did you select a ROM file?'}, status=400)
+
+
+class DownloadSpoilerLogView(View):
+    """
+    Create and send a spoiler log to the user for the seed with the given share ID.
+    """
+    @classmethod
+    def get(cls, request, share_id):
+        try:
+            game = Game.objects.get(share_id=share_id)
+        except Game.DoesNotExist:
+            return render(request, 'generator/error.html', {'error_text': 'Seed does not exist.'}, status=404)
+
+        if not game.race_seed:
+            spoiler_log = RandomizerInterface.get_spoiler_log(
+                pickle.loads(game.configuration), pickle.loads(game.settings))
+            file_name = 'spoiler_log_' + share_id + '.txt'
+            response = HttpResponse(content_type='text/plain')
+            response['Content-Disposition'] = 'attachment; filename=%s' % file_name
+            response.write(spoiler_log.getvalue())
+            return response
+        else:
+            return render(request, 'generator/error.html', {'error_text': 'No spoiler log available for this seed.'},
+                          status=404)
+
+
+class PracticeSeedView(View):
     """
     Get a practice seed with identical setting to the seed with the given share_id.
-
-    :param request: Django request object
-    :param share_id: Share ID of an existing seed to use as a template for a practice seed
-    :return:
     """
-    try:
-        game = generate_seed_from_id(share_id)
-    except InvalidGameIdException as e:
-        return render(request, 'generator/error.html', {'error_text': str(e)}, status=404)
-    except InvalidSettingsException as e:
-        return render(request, 'generator/error.html', {'error_text': str(e)}, status=404)
+    @classmethod
+    def get(cls, request, share_id):
+        try:
+            game = generate_seed_from_id(share_id)
+        except InvalidGameIdException as e:
+            return render(request, 'generator/error.html', {'error_text': str(e)}, status=404)
+        except InvalidSettingsException as e:
+            return render(request, 'generator/error.html', {'error_text': str(e)}, status=404)
 
-    share_info = RandomizerInterface.get_share_details(
-        pickle.loads(game.configuration), pickle.loads(game.settings))
-    rom_form = RomForm()
-    context = {'share_id': game.share_id,
-               'form': rom_form,
-               'spoiler_log': RandomizerInterface.get_web_spoiler_log(pickle.loads(game.configuration)),
-               'is_race_seed': game.race_seed,
-               'share_info': share_info.getvalue()}
+        share_info = RandomizerInterface.get_share_details(
+            pickle.loads(game.configuration), pickle.loads(game.settings))
+        rom_form = RomForm()
+        context = {'share_id': game.share_id,
+                   'form': rom_form,
+                   'spoiler_log': RandomizerInterface.get_web_spoiler_log(pickle.loads(game.configuration)),
+                   'is_race_seed': game.race_seed,
+                   'share_info': share_info.getvalue()}
 
-    return render(request, 'generator/seed.html', context)
-
-
-def read_and_validate_rom_file(rom_file):
-    """
-    Read and validate the user's ROM file.
-
-    Handles both headered and unheadered ROMS and will raise an
-    InvalidRomException if the ROM does not match a vanilla hash or
-    is too large to be a valid ROM file.
-
-    :param rom_file: File object containing a user's ROM
-    :return: bytearray containing ROM data
-    """
-    # Validate that the file isn't too large to be a CT ROM.
-    # Don't waste time reading it if it's not a CT ROM.
-    if rom_file.size > 4194816:
-        raise InvalidRomException()
-
-    # Strip off the header if this is a headered ROM
-    if rom_file.size == 4194816:
-        rom_file.seek(0x200)
-    file_bytes = bytearray(rom_file.read())
-
-    hasher = hashlib.md5()
-    hasher.update(file_bytes)
-    if hasher.hexdigest() != 'a2bc447961e52fd2227baed164f729dc':
-        raise InvalidRomException()
-
-    return file_bytes
+        return render(request, 'generator/seed.html', context)
 
 
 def get_share_id() -> str:
@@ -267,7 +232,7 @@ def get_share_id() -> str:
     return share_id
 
 
-def generate_seed_from_form(form) -> Game:
+def generate_seed_from_form(form: GenerateForm) -> Game:
     """
     Create a randomized seed based on the user's request on the options form.
     The randomized config is given a share ID and stored in the database.
@@ -292,7 +257,7 @@ def generate_seed_from_form(form) -> Game:
     return game
 
 
-def generate_seed_from_id(existing_share_id) -> Game:
+def generate_seed_from_id(existing_share_id: str) -> Game:
     """
     Generate a new game object from an existing share ID with identical
     settings and a new seed value.
