@@ -1,0 +1,171 @@
+
+            <div class="border border-primary rounded p-2 mb-3">
+              <h4>Game Modes:</h4>
+              <div class="form-group">
+                <label for="{{form.mystery_game_mode_standard.id_for_label}}" class="form-label mr-2">Standard:</label>
+                <input type="range" class="form-range" name="{{form.mystery_game_mode_standard.name}}" id="{{form.mystery_game_mode_standard.id_for_label}}" min="0" max="100" value="75" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_game_mode_standard_text" form="none" size="1" value="75" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_game_mode_lw.id_for_label}}" class="form-label mr-2">Lost Worlds:</label>
+                <input type="range" class="form-range" name="{{form.mystery_game_mode_lw.name}}" id="{{form.mystery_game_mode_lw.id_for_label}}" min="0" max="100" value="25" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_game_mode_lw_text" form="none" size="1" value="25" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_game_mode_loc.id_for_label}}" class="form-label mr-2">Legacy of Cyrus:</label>
+                <input type="range" class="form-range" name="{{form.mystery_game_mode_loc.name}}" id="{{form.mystery_game_mode_loc.id_for_label}}" min="0" max="100" value="0" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_game_mode_loc_text" form="none" size="1" value="0" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_game_mode_ia.id_for_label}}" class="form-label mr-2">Ice Age:</label>
+                <input type="range" class="form-range" name="{{form.mystery_game_mode_ia.name}}" id="{{form.mystery_game_mode_ia.id_for_label}}" min="0" max="100" value="0" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_game_mode_ia_text" form="none" size="1" value="0" readonly>
+              </div>
+
+              <h4>Item Difficulty:</h4>
+              <div class="form-group">
+                <label for="{{form.mystery_item_difficulty_easy.id_for_label}}" class="form-label mr-2">Easy:</label>
+                <input type="range" class="form-range" name="{{form.mystery_item_difficulty_easy.name}}" id="{{form.mystery_item_difficulty_easy.id_for_label}}" min="0" max="100" value="15" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_item_difficulty_easy_text" form="none" size="1" value="15" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_item_difficulty_normal.id_for_label}}" class="form-label mr-2">Normal:</label>
+                <input type="range" class="form-range" name="{{form.mystery_item_difficulty_normal.name}}" id="{{form.mystery_item_difficulty_normal.id_for_label}}" min="0" max="100" value="70" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_item_difficulty_normal_text" form="none" size="1" value="70" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_item_difficulty_hard.id_for_label}}" class="form-label mr-2">Hard:</label>
+                <input type="range" class="form-range" name="{{form.mystery_item_difficulty_hard.name}}" id="{{form.mystery_item_difficulty_hard.id_for_label}}" min="0" max="100" value="15" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_item_difficulty_hard_text" form="none" size="1" value="15" readonly>
+              </div>
+
+              <h4>Enemy Difficulty:</h4>
+              <div class="form-group">
+                <label for="{{form.mystery_enemy_difficulty_normal.id_for_label}}" class="form-label mr-2">Normal:</label>
+                <input type="range" class="form-range" name="{{form.mystery_enemy_difficulty_normal.name}}" id="{{form.mystery_enemy_difficulty_normal.id_for_label}}" min="0" max="100" value="75" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_enemy_difficulty_normal_text" form="none" size="1" value="75" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_enemy_difficulty_hard.id_for_label}}" class="form-label mr-2">Hard:</label>
+                <input type="range" class="form-range" name="{{form.mystery_enemy_difficulty_hard.name}}" id="{{form.mystery_enemy_difficulty_hard.id_for_label}}" min="0" max="100" value="25" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_enemy_difficulty_hard_text" form="none" size="1" value="25" readonly>
+              </div>
+
+              <h4>Tech Order:</h4>
+              <div class="form-group">
+                <label for="{{form.mystery_tech_order_normal.id_for_label}}" class="form-label mr-2">Normal:</label>
+                <input type="range" class="form-range" name="{{form.mystery_tech_order_normal.name}}" id="{{form.mystery_tech_order_normal.id_for_label}}" min="0" max="100" value="10" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_tech_order_normal_text" form="none" size="1" value="10" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_tech_order_full_random.id_for_label}}" class="form-label mr-2">Full Random:</label>
+                <input type="range" class="form-range" name="{{form.mystery_tech_order_full_random.name}}" id="{{form.mystery_tech_order_full_random.id_for_label}}" min="0" max="100" value="80" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_tech_order_full_random_text" form="none" size="1" value="80" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_tech_order_balanced_random.id_for_label}}" class="form-label mr-2">Balanced Random:</label>
+                <input type="range" class="form-range" name="{{form.mystery_tech_order_balanced_random.name}}" id="{{form.mystery_tech_order_balanced_random.id_for_label}}" min="0" max="100" value="10" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_tech_order_balanced_random_text" form="none" size="1" value="10" readonly>
+              </div>
+
+              <h4>Shop Prices:</h4>
+              <div class="form-group">
+                <label for="{{form.mystery_shop_prices_normal.id_for_label}}" class="form-label mr-2">Normal:</label>
+                <input type="range" class="form-range" name="{{form.mystery_shop_prices_normal.name}}" id="{{form.mystery_shop_prices_normal.id_for_label}}" min="0" max="100" value="70" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_shop_prices_normal_text" form="none" size="1" value="70" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_shop_prices_random.id_for_label}}" class="form-label mr-2">Random:</label>
+                <input type="range" class="form-range" name="{{form.mystery_shop_prices_random.name}}" id="{{form.mystery_shop_prices_random.id_for_label}}" min="0" max="100" value="10" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_shop_prices_random_text" form="none" size="1" value="10" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_shop_prices_mostly_random.id_for_label}}" class="form-label mr-2">Mostly Random:</label>
+                <input type="range" class="form-range" name="{{form.mystery_shop_prices_mostly_random.name}}" id="{{form.mystery_shop_prices_mostly_random.id_for_label}}" min="0" max="100" value="10" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_shop_prices_mostly_random_text" form="none" size="1" value="10" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_shop_prices_free.id_for_label}}" class="form-label mr-2">Free:</label>
+                <input type="range" class="form-range" name="{{form.mystery_shop_prices_free.name}}" id="{{form.mystery_shop_prices_free.id_for_label}}" min="0" max="100" value="10" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_shop_prices_free_text" form="none" size="1" value="10" readonly>
+              </div>
+
+              <h4>Flag Probabilities:</h4>
+              <div class="form-group">
+                <label for="{{form.mystery_tab_treasures.id_for_label}}" class="form-label mr-2">Tab Treasures:</label>
+                <input type="range" class="form-range" name="{{form.mystery_tab_treasures.name}}" id="{{form.mystery_tab_treasures.id_for_label}}" min="0" max="100" value="10" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_tab_treasures_text" form="none" size="2" value="10%" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_unlock_magic.id_for_label}}" class="form-label mr-2">Unlocked Magic:</label>
+                <input type="range" class="form-range" name="{{form.mystery_unlock_magic.name}}" id="{{form.mystery_unlock_magic.id_for_label}}" min="0" max="100" value="50" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_unlock_magic_text" form="none" size="2" value="50%" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_bucket_fragments.id_for_label}}" class="form-label mr-2">Bucket Fragments:</label>
+                <input type="range" class="form-range" name="{{form.mystery_bucket_fragments.name}}" id="{{form.mystery_bucket_fragments.id_for_label}}" min="0" max="100" value="15" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_bucket_fragments_text" form="none" size="2" value="15%" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_chronosanity.id_for_label}}" class="form-label mr-2">Chronosanity:</label>
+                <input type="range" class="form-range" name="{{form.mystery_chronosanity.name}}" id="{{form.mystery_chronosanity.id_for_label}}" min="0" max="100" value="30" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_chronosanity_text" form="none" size="2" value="30%" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_boss_rando.id_for_label}}" class="form-label mr-2">Boss Rando:</label>
+                <input type="range" class="form-range" name="{{form.mystery_boss_rando.name}}" id="{{form.mystery_boss_rando.id_for_label}}" min="0" max="100" value="50" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_boss_rando_text" form="none" size="2" value="50%" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_boss_scale.id_for_label}}" class="form-label mr-2">Boss Scaling:</label>
+                <input type="range" class="form-range" name="{{form.mystery_boss_scale.name}}" id="{{form.mystery_boss_scale.id_for_label}}" min="0" max="100" value="30" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_boss_scale_text" form="none" size="2" value="30%" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_locked_characters.id_for_label}}" class="form-label mr-2">Locked Characters:</label>
+                <input type="range" class="form-range" name="{{form.mystery_locked_characters.name}}" id="{{form.mystery_locked_characters.id_for_label}}" min="0" max="100" value="25" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_locked_characters_text" form="none" size="2" value="25%" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_duplicate_characters.id_for_label}}" class="form-label mr-2">Duplicate Characters:</label>
+                <input type="range" class="form-range" name="{{form.mystery_duplicate_characters.name}}" id="{{form.mystery_duplicate_characters.id_for_label}}" min="0" max="100" value="25" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_duplicate_characters_text" form="none" size="2" value="25%" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_duplicate_characters.id_for_label}}" class="form-label mr-2">Epoch Fail:</label>
+                <input type="range" class="form-range" name="{{form.mystery_epoch_fail.name}}" id="{{form.mystery_epoch_fail.id_for_label}}" min="0" max="100" value="50" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_epoch_fail_text" form="none" size="2" value="50%" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_duplicate_characters.id_for_label}}" class="form-label mr-2">Gear Rando:</label>
+                <input type="range" class="form-range" name="{{form.mystery_gear_rando.name}}" id="{{form.mystery_gear_rando.id_for_label}}" min="0" max="100" value="25" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_gear_rando_text" form="none" size="2" value="25%" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.mystery_duplicate_characters.id_for_label}}" class="form-label mr-2">Heal Rando:</label>
+                <input type="range" class="form-range" name="{{form.mystery_heal_rando.name}}" id="{{form.mystery_heal_rando.id_for_label}}" min="0" max="100" value="25" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_heal_rando_text" form="none" size="2" value="25%" readonly>
+              </div>
+
+            </div>

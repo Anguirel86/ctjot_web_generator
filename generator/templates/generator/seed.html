@@ -18,75 +18,7 @@
           {% csrf_token %}
 
           <!-- Cosmetic options -->
-          <input type="button" class="btn btn-primary" id="cosmetic_options_button" value="Show Cosmetic Options" data-toggle="collapse" data-target="#cosmetic_section" aria-expanded="false" aria-controls="cosmetic_section">
-          <div class="border border-primary rounded p-2 collapse" id="cosmetic_section">
-            <div class="form-group form-check pl-0">
-              <input type="checkbox" name="{{form.reduce_flashes.name}}" id="{{form.reduce_flashes.id_for_label}}" data-toggle="toggle">
-              <label for="{{form.reduce_flashes.id_for_label}}">Reduce Flashes</label>
-            </div>
-
-            <div class="form-group form-check pl-0">
-              <input type="checkbox" name="{{form.quiet_mode.name}}" id="{{form.quiet_mode.id_for_label}}" data-toggle="toggle">
-              <label for="{{form.quiet_mode.id_for_label}}">Quiet Mode - No Music</label>
-            </div>
-
-            <div class="form-group form-check pl-0">
-              <input type="checkbox" name="{{form.zenan_alt_battle_music.name}}" id="{{form.zenan_alt_battle_music.id_for_label}}" data-toggle="toggle">
-              <label for="{{form.zenan_alt_battle_music.id_for_label}}">Zenan Alt Battle Music</label>
-            </div>
-
-            <div class="form-group form-check pl-0">
-              <input type="checkbox" name="{{form.death_peak_alt_music.name}}" id="{{form.death_peak_alt_music.id_for_label}}" data-toggle="toggle">
-              <label for="{{form.death_peak_alt_music.id_for_label}}">Death Peak Alt Music</label>
-            </div>
-
-            <!-- Menu background selection -->
-            <div class="form-group">
-              <label for="{{form.background_selection.id_for_label}}" class="form-label mr-2">Background:</label>
-              <input type="range" class="form-range" name="{{form.background_selection.name}}" id="{{form.background_selection.id_for_label}}" min="1" max="8" value="1" oninput="updateBackgroundSelection()" onchange="updateBackgroundSelection()" >
-              <input type="text" id="background_selection_text" form="none" size="1" value="1" readonly>
-            </div>
-            <span id="background_selection_preview" class="menuBackground1"></span>
-
-
-            <!-- character/epoch name fields -->
-            <h4>Custom Names:</h4>
-            <div class="form-group">
-                <label for="{{form.crono_name.id_for_label}}">Crono:
-                  <input class="form-control" name="{{form.crono_name.name}}" id="{{form.crono_name.id_for_label}}" type="text" value="Crono">
-                </label>
-
-                <label for="{{form.marle_name.id_for_label}}">Marle:
-                  <input class="form-control" name="{{form.marle_name.name}}" id="{{form.marle_name.id_for_label}}" type="text" value="Marle">
-                </label>
-
-                <label for="{{form.lucca_name.id_for_label}}">Lucca:
-                  <input class="form-control" name="{{form.lucca_name.name}}" id="{{form.lucca_name.id_for_label}}" type="text" value="Lucca">
-                </label>
-            </div>
-            <div class="form-group">
-                <label for="{{form.robo_name.id_for_label}}">Robo:
-                  <input class="form-control" name="{{form.robo_name.name}}" id="{{form.robo_name.id_for_label}}" type="text" value="Robo">
-                </label>
-
-                <label for="{{form.frog_name.id_for_label}}">Frog:
-                  <input class="form-control" name="{{form.frog_name.name}}" id="{{form.frog_name.id_for_label}}" type="text" value="Frog">
-                </label>
-
-                <label for="{{form.ayla_name.id_for_label}}">Ayla:
-                  <input class="form-control" name="{{form.ayla_name.name}}" id="{{form.ayla_name.id_for_label}}" type="text" value="Ayla">
-                </label>
-            </div>
-            <div class="form-group">
-                <label for="{{form.magus_name.id_for_label}}">Magus:
-                  <input class="form-control" name="{{form.magus_name.name}}" id="{{form.magus_name.id_for_label}}" type="text" value="Magus">
-                </label>
-
-                <label for="{{form.epoch_name.id_for_label}}">Epoch:
-                  <input class="form-control" name="{{form.epoch_name.name}}" id="{{form.epoch_name.id_for_label}}" type="text" value="Epoch">
-                </label>
-            </div>
-          </div>
+          {% include "generator/seed/cosmetic_options.html" %}
 
           <!-- ROM input -->
           <div class="form-group pt-2">
@@ -98,69 +30,7 @@
         </form>
 
         {% if not is_race_seed %}
-        <div class="pt-2">
-          <input type="button" class="btn btn-primary" id="spoiler_log_button" value="Show Spoiler Log" data-toggle="collapse" data-target="#spoiler_section" aria-expanded="false" aria-controls="spoiler_section">
-          <button class="btn btn-primary" type="button" onclick="window.open('/spoiler_log/{{share_id}}')">Download Spoiler Log</button>
-        </div>
-
-        <div class="tab-content collapse border border-primary rounded p-3" id="spoiler_section">
-
-          <ul class="nav nav-tabs">
-            <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#spoiler_keys">Key Items</a></li>
-            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#spoiler_chars">Characters</a></li>
-            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#spoiler_bosses">Bosses</a></li>
-          </ul>
-
-          <!-- Key Items tab -->
-          <div class="tab-pane fade show active" id="spoiler_keys">
-            <table class="table" id="key_item_table">
-              <tr>
-                <th style="width:50%;">Location</th>
-                <th>Key Item</th>
-              </tr>
-              {% for entry in spoiler_log.key_items %}
-                <tr>
-                  <td>{{entry.location}}</td>
-                  <td>{{entry.key}}</td>
-                </tr>
-              {% endfor %}
-            </table>
-          </div>
-
-          <!-- Characters tab -->
-          <div class="tab-pane fade show" id="spoiler_chars">
-            <table class="table" id="character_table">
-              <tr>
-                <th style="width:33%;">Location</th>
-                <th style="width:33%;">Character</th>
-                <th>Becomes</th>
-              </tr>
-              {% for entry in spoiler_log.characters %}
-                <tr>
-                  <td>{{entry.location}}</td>
-                  <td>{{entry.character}}</td>
-                  <td>{{entry.reassign}}</td>
-                </tr>
-              {% endfor %}
-            </table>
-          </div>
-
-          <!-- Bosses tab -->
-          <div class="tab-pane fade show" id="spoiler_bosses">
-            <table class="table" id="boss_table">
-              <tr>
-                <th style="width:50%;">Location</th>
-                <th>Boss</th>
-              </tr>
-              {% for entry in spoiler_log.bosses %}
-                <tr>
-                  <td>{{entry.location}}</td>
-                  <td>{{entry.boss}}</td>
-                </tr>
-              {% endfor %}
-            </table>
-          </div>
-        </div> <!-- End spoiler log div -->
+          {% include "generator/seed/spoiler_log_section.html" %}
         {% endif %}
       </div>
     </div>

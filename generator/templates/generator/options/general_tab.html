@@ -1,0 +1,124 @@
+
+            <!-- Game Flags -->
+            <div class="border border-primary rounded p-2">
+              <div class="row">
+                <!-- Left column flags -->
+                <div class="col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{form.enemy_difficulty.id_for_label}}">Enemy Difficulty:</label>
+                    <select class="form-control" name="{{form.enemy_difficulty.name}}" id="{{form.enemy_difficulty.id_for_label}}">
+                      <option value="normal" selected>Normal</option>
+                      <option value="hard">Hard</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group mb-4">
+                    <label for="{{form.game_mode.id_for_label}}">Game Mode:</label>
+                    <select class="form-control" name="{{form.game_mode.name}}" id="{{form.game_mode.id_for_label}}">
+                      <option value="standard" selected>Standard</option>
+                      <option value="lost_worlds">Lost Worlds</option>
+                      <option value="ice_age">Ice Age</option>
+                      <option value="legacy_of_cyrus">Legacy of Cyrus</option>
+                      <option value="vanilla_rando">Vanilla Rando</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.disable_glitches.name}}" id="{{form.disable_glitches.id_for_label}}" data-toggle="toggle">
+                    <label for="{{form.disable_glitches.id_for_label}}">Disable Glitches (g)</label>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.boss_scaling.name}}" id="{{form.boss_scaling.id_for_label}}" data-toggle="toggle">
+                    <label for="{{form.boss_scaling.id_for_label}}">Boss Scaling (b)</label>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.early_pendant.name}}" id="{{form.early_pendant.id_for_label}}" data-toggle="toggle">
+                    <label for="{{form.early_pendant.id_for_label}}">Early Pendant Charge (p)</label>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.unlocked_magic.name}}" id="{{form.unlocked_magic.id_for_label}}" data-toggle="toggle">
+                    <label for="{{form.unlocked_magic.id_for_label}}">Unlocked Magic (m)</label>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.chronosanity.name}}" id="{{form.chronosanity.id_for_label}}" data-toggle="toggle">
+                    <label for="{{form.chronosanity.id_for_label}}">Chronosanity (cr)</label>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.mystery_seed.name}}" id="{{form.mystery_seed.id_for_label}}"  data-toggle="toggle">
+                    <label for="{{form.mystery_seed.id_for_label}}">Mystery Seed</label>
+                  </div>
+                </div>
+
+                <!-- Right column flags -->
+                <div class="col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{form.item_difficulty.id_for_label}}">Item Difficulty:</label>
+                    <select class="form-control" name="{{form.item_difficulty.name}}" id="{{form.item_difficulty.id_for_label}}">
+                      <option value="easy">Easy</option>
+                      <option value="normal" selected>Normal</option>
+                      <option value="hard">Hard</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.boss_rando.name}}" id="{{form.boss_rando.id_for_label}}" data-toggle="toggle">
+                    <label for="{{form.boss_rando.id_for_label}}">Randomize Bosses (ro)</label>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.zeal.name}}" id="{{form.zeal.id_for_label}}" data-toggle="toggle">
+                    <label for="{{form.zeal.id_for_label}}">Zeal 2 Counts As Last Boss (z)</label>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.locked_chars.name}}" id="{{form.locked_chars.id_for_label}}" data-toggle="toggle">
+                    <label for="{{form.locked_chars.id_for_label}}">Locked Characters (c)</label>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.tab_treasures.name}}" id="{{form.tab_treasures.id_for_label}}" data-toggle="toggle">
+                    <label for="{{form.tab_treasures.id_for_label}}">Make all treasures tabs (tb)</label>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.duplicate_characters.name}}" id="{{form.duplicate_characters.id_for_label}}"  data-toggle="toggle">
+                    <label for="{{form.duplicate_characters.id_for_label}}">Duplicate Characters (dc)</label>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.gear_rando.name}}" id="{{form.gear_rando.id_for_label}}"  data-toggle="toggle">
+                    <label for="{{form.gear_rando.id_for_label}}">Randomize Gear</label>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.healing_item_rando.name}}" id="{{form.healing_item_rando.id_for_label}}"  data-toggle="toggle">
+                    <label for="{{form.healing_item_rando.id_for_label}}">Randomize Healing Items</label>
+                  </div>
+
+                </div>
+              </div> <!-- End flag rows -->
+
+              <div class="form-group">
+                <label for="{{form.shop_prices.id_for_label}}">Shop Prices:</label>
+                <select class="form-control" name="{{form.shop_prices.name}}" id="{{form.shop_prices.id_for_label}}">
+                  <option value="normal" selected>Normal</option>
+                  <option value="free">Free</option>
+                  <option value="mostly_random">Mostly Random</option>
+                  <option value="fully_random">Fully Random</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.tech_rando.id_for_label}}">Tech Randomization:</label>
+                <select class="form-control" name="{{form.tech_rando.name}}" id="{{form.tech_rando.id_for_label}}">
+                  <option value="normal" selected>Normal</option>
+                  <option value="balanced_random">Balanced Random</option>
+                  <option value="fully_random">Fully Random</option>
+                </select>
+              </div>
+            </div> <!-- End Game Flags -->

@@ -1,0 +1,33 @@
+
+            <div class="border border-primary rounded p-2 mb-3">
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.use_antilife.name}}" id="{{form.use_antilife.id_for_label}}"  data-toggle="toggle">
+                <label for="{{form.use_antilife.id_for_label}}">Use Anti-Life</label>
+              </div>
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.tackle_effects.name}}" id="{{form.tackle_effects.id_for_label}}"  data-toggle="toggle">
+                <label for="{{form.tackle_effects.id_for_label}}">Tackle On-Hit Effects</label>
+              </div>
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.starters_sufficient.name}}" id="{{form.starters_sufficient.id_for_label}}"  data-toggle="toggle">
+                <label for="{{form.starters_sufficient.id_for_label}}">Starters Sufficient</label>
+              </div>
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.epoch_fail.name}}" id="{{form.epoch_fail.id_for_label}}"  data-toggle="toggle">
+                <label for="{{form.epoch_fail.id_for_label}}">Epoch Fail</label>
+              </div>
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.bucket_fragments.name}}" id="{{form.bucket_fragments.id_for_label}}"  data-toggle="toggle">
+                <label for="{{form.bucket_fragments.id_for_label}}">Bucket Fragments</label>
+              </div>
+              <div class="form-group">
+                <label for="{{form.fragments_required.id_for_label}}" class="form-label mr-2">Required Fragments:</label>
+                <input type="range" class="form-range" name="{{form.fragments_required.name}}" id="{{form.fragments_required.id_for_label}}" min="0" max="50" value="10" oninput="setFragmentsRequired()" onchange="setFragmentsRequired()" >
+                <input type="text" id="fragments_required_text" form="none" size="1" value="10" readonly>
+              </div>
+              <div class="form-group">
+                <label for="{{form.extra_fragments.id_for_label}}" class="form-label mr-2">Extra Fragments:</label>
+                <input type="range" class="form-range" name="{{form.extra_fragments.name}}" id="{{form.extra_fragments.id_for_label}}" min="0" max="50" value="5" oninput="setExtraFragments()" onchange="setExtraFragments()" >
+                <input type="text" id="extra_fragments_text" form="none" size="1" value="5" readonly>
+              </div>
+            </div>
