@@ -13,10 +13,9 @@ class RomForm(forms.Form):
     death_peak_alt_music = forms.BooleanField(required=False)
     quiet_mode = forms.BooleanField(required=False)
     reduce_flashes = forms.BooleanField(required=False)
-    background_selection = forms.IntegerField(required=False)
 
     # Actual character name length is limited to 5 characters in game,
-    # but if an invalid name is entered the randomizerinterface will
+    # but if an invalid name is entered the randomizer interface will
     # just use the character's default name.
     crono_name = forms.CharField(max_length=15, required=False)
     marle_name = forms.CharField(max_length=15, required=False)
@@ -26,6 +25,17 @@ class RomForm(forms.Form):
     ayla_name = forms.CharField(max_length=15, required=False)
     magus_name = forms.CharField(max_length=15, required=False)
     epoch_name = forms.CharField(max_length=15, required=False)
+
+    # In-game options
+    stereo_audio = forms.BooleanField(required=False)
+    save_menu_cursor = forms.BooleanField(required=False)
+    save_battle_cursor = forms.BooleanField(required=False)
+    save_skill_item_cursor = forms.BooleanField(required=False)
+    skill_item_info = forms.BooleanField(required=False)
+    background_selection = forms.IntegerField(required=False)
+    battle_speed = forms.IntegerField(required=False)
+    battle_message_speed = forms.IntegerField(required=False)
+    battle_gauge_style = forms.IntegerField(required=False)
 
 
 #
@@ -122,5 +132,3 @@ class GenerateForm(forms.Form):
     mystery_epoch_fail = forms.IntegerField()
     mystery_gear_rando = forms.IntegerField()
     mystery_heal_rando = forms.IntegerField()
-
-

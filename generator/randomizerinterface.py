@@ -161,12 +161,6 @@ class RandomizerInterface:
         if form.cleaned_data['quiet_mode']:
             settings.cosmetic_flags = settings.cosmetic_flags | rset.CosmeticFlags.QUIET_MODE
 
-        if form.cleaned_data['background_selection']:
-            menu_background = form.cleaned_data['background_selection']
-            if menu_background < 1 or menu_background > 9:
-                menu_background = 1
-            settings.cosmetic_menu_background = (menu_background - 1)
-
         # Character/Epoch renames
         settings.char_names[0] = self.get_character_name(form.cleaned_data['crono_name'], 'Crono')
         settings.char_names[1] = self.get_character_name(form.cleaned_data['marle_name'], 'Marle')
@@ -176,6 +170,40 @@ class RandomizerInterface:
         settings.char_names[5] = self.get_character_name(form.cleaned_data['ayla_name'], 'Ayla')
         settings.char_names[6] = self.get_character_name(form.cleaned_data['magus_name'], 'Magus')
         settings.char_names[7] = self.get_character_name(form.cleaned_data['epoch_name'], 'Epoch')
+
+        # In-game options
+        # Boolean options
+        if form.cleaned_data['stereo_audio'] is not None:
+            self.randomizer.settings.ctoptions.stereo_audio(form.cleaned_data['stereo_audio'])
+
+        if form.cleaned_data['save_menu_cursor'] is not None:
+            self.randomizer.settings.ctoptions.save_menu_cursor(form.cleaned_data['save_menu_cursor'])
+
+        if form.cleaned_data['save_battle_cursor'] is not None:
+            self.randomizer.settings.ctoptions.save_battle_cursor(form.cleaned_data['save_battle_cursor'])
+
+        if form.cleaned_data['skill_item_info'] is not None:
+            self.randomizer.settings.ctoptions.skill_item_info(form.cleaned_data['skill_item_info'])
+
+        if form.cleaned_data['active_battle'] is not None:
+            self.randomizer.settings.ctoptions.active_battle(form.cleaned_data['active_battle'])
+
+        # Integer options
+        if form.cleaned_data['battle_speed']:
+            self.randomizer.settings.ctoptions.battle_speed(
+                self.clamp((form.cleaned_data['battle_speed'] - 1), 0, 7))
+
+        if form.cleaned_data['background_selection']:
+            self.randomizer.settings.ctoptions.menu_background(
+                self.clamp((form.cleaned_data['background_selection'] - 1), 0, 7))
+
+        if form.cleaned_data['battle_msg_speed']:
+            self.randomizer.settings.ctoptions.battle_msg_speed(
+                self.clamp((form.cleaned_data['battle_msg_speed'] - 1), 0, 7))
+
+        if form.cleaned_data['battle_gauge_style']:
+            self.randomizer.settings.ctoptions.battle_gauge_style(
+                self.clamp((form.cleaned_data['battle_gauge_style']), 0, 2))
 
         self.randomizer.settings = settings
         self.randomizer.set_config(config)
@@ -420,8 +448,8 @@ class RandomizerInterface:
 
         return spoiler_log
 
-    @classmethod
-    def get_web_spoiler_log(cls, config: randoconfig.RandoConfig) -> dict[str, list[dict[str, str]]]:
+    @staticmethod
+    def get_web_spoiler_log(config: randoconfig.RandoConfig) -> dict[str, list[dict[str, str]]]:
         """
         Get a dictionary representing the spoiler log data for the given seed.
 
@@ -460,8 +488,8 @@ class RandomizerInterface:
         return spoiler_log
     # End get_web_spoiler_log
 
-    @classmethod
-    def get_random_seed(cls) -> str:
+    @staticmethod
+    def get_random_seed() -> str:
         """
         Get a random seed string for a ROM.
         This seed string is built up from a list of names bundled with the randomizer.  This method
@@ -474,8 +502,8 @@ class RandomizerInterface:
             names = names.split(",")
         return "".join(random.choice(names) for i in range(2))
 
-    @classmethod
-    def get_base_rom(cls) -> bytearray:
+    @staticmethod
+    def get_base_rom() -> bytearray:
         """
         Read in the server's vanilla ROM as a bytearray.
         This data is used to create a RandoConfig object to generate a seed.  It should not
@@ -520,8 +548,8 @@ class RandomizerInterface:
 
         return buffer
 
-    @classmethod
-    def get_character_name(cls, name: str, default_name: str):
+    @staticmethod
+    def get_character_name(name: str, default_name: str):
         """
         Given a character name and a default, validate the name and return either the
         validated name or the default value if the name is invalid.
@@ -536,8 +564,12 @@ class RandomizerInterface:
             return default_name
         return name
 
-    @classmethod
-    def get_randomizer_version_info(cls) -> dict[str, str]:
+    @staticmethod
+    def clamp(value, min_val, max_val):
+        return max(min_val, min(value, max_val))
+
+    @staticmethod
+    def get_randomizer_version_info() -> dict[str, str]:
         """
         Read version_info.json from the webapp root directory and return the
         randomizer version information.

@@ -227,7 +227,7 @@ def get_share_id() -> str:
     while id_exists:
         # It is possible, though very unlikely to generate a duplicate share ID.
         # Verify this ID doesn't already exist in the database before continuing.
-        share_id = share_id = nanoid.generate('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 15)
+        share_id = nanoid.generate('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 15)
         id_exists = Game.objects.filter(share_id=share_id).exists()
     return share_id
 
