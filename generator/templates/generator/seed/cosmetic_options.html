@@ -1,38 +1,98 @@
 
           <input type="button" class="btn btn-primary" id="cosmetic_options_button" value="Show Cosmetic Options" data-toggle="collapse" data-target="#cosmetic_section" aria-expanded="false" aria-controls="cosmetic_section">
-          <div class="border border-primary rounded p-2 collapse" id="cosmetic_section">
-            <div class="form-group form-check pl-0">
-              <input type="checkbox" name="{{form.reduce_flashes.name}}" id="{{form.reduce_flashes.id_for_label}}" data-toggle="toggle">
-              <label for="{{form.reduce_flashes.id_for_label}}">Reduce Flashes</label>
-            </div>
 
-            <div class="form-group form-check pl-0">
-              <input type="checkbox" name="{{form.quiet_mode.name}}" id="{{form.quiet_mode.id_for_label}}" data-toggle="toggle">
-              <label for="{{form.quiet_mode.id_for_label}}">Quiet Mode - No Music</label>
-            </div>
+          <div class="tab-content border border-primary rounded p-2 collapse" id="cosmetic_section">
+            <ul class="nav nav-tabs">
+              <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#cosmetic_general">General</a></li>
+              <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#cosmetic_in_game_options">In-Game Options</a></li>
+              <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#cosmetic_names">Names</a></li>
+            </ul>
 
-            <div class="form-group form-check pl-0">
-              <input type="checkbox" name="{{form.zenan_alt_battle_music.name}}" id="{{form.zenan_alt_battle_music.id_for_label}}" data-toggle="toggle">
-              <label for="{{form.zenan_alt_battle_music.id_for_label}}">Zenan Alt Battle Music</label>
-            </div>
+            <!-- General Cosmetic Options -->
+            <div class="tab-pane fade show active" id="cosmetic_general">
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.reduce_flashes.name}}" id="{{form.reduce_flashes.id_for_label}}" data-toggle="toggle">
+                <label for="{{form.reduce_flashes.id_for_label}}">Reduce Flashes</label>
+              </div>
 
-            <div class="form-group form-check pl-0">
-              <input type="checkbox" name="{{form.death_peak_alt_music.name}}" id="{{form.death_peak_alt_music.id_for_label}}" data-toggle="toggle">
-              <label for="{{form.death_peak_alt_music.id_for_label}}">Death Peak Alt Music</label>
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.quiet_mode.name}}" id="{{form.quiet_mode.id_for_label}}" data-toggle="toggle">
+                <label for="{{form.quiet_mode.id_for_label}}">Quiet Mode - No Music</label>
+              </div>
+
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.zenan_alt_battle_music.name}}" id="{{form.zenan_alt_battle_music.id_for_label}}" data-toggle="toggle">
+                <label for="{{form.zenan_alt_battle_music.id_for_label}}">Zenan Alt Battle Music</label>
+              </div>
+
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.death_peak_alt_music.name}}" id="{{form.death_peak_alt_music.id_for_label}}" data-toggle="toggle">
+                <label for="{{form.death_peak_alt_music.id_for_label}}">Death Peak Alt Music</label>
+              </div>
             </div>
 
             <!-- Menu background selection -->
-            <div class="form-group">
-              <label for="{{form.background_selection.id_for_label}}" class="form-label mr-2">Background:</label>
-              <input type="range" class="form-range" name="{{form.background_selection.name}}" id="{{form.background_selection.id_for_label}}" min="1" max="8" value="1" oninput="updateBackgroundSelection()" onchange="updateBackgroundSelection()" >
-              <input type="text" id="background_selection_text" form="none" size="1" value="1" readonly>
+            <div class="tab-pane fade show" id="cosmetic_in_game_options">
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.stereo_audio.name}}" id="{{form.stereo_audio.id_for_label}}" data-toggle="toggle" checked>
+                <label for="{{form.stereo_audio.id_for_label}}">Stereo Audio</label>
+              </div>
+
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.save_menu_cursor.name}}" id="{{form.save_menu_cursor.id_for_label}}" data-toggle="toggle">
+                <label for="{{form.save_menu_cursor.id_for_label}}">Save Menu Cursor</label>
+              </div>
+
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.save_battle_cursor.name}}" id="{{form.save_battle_cursor.id_for_label}}" data-toggle="toggle">
+                <label for="{{form.save_battle_cursor.id_for_label}}">Save Battle Cursor</label>
+              </div>
+
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.save_skill_item_cursor.name}}" id="{{form.save_skill_item_cursor.id_for_label}}" data-toggle="toggle" checked>
+                <label for="{{form.save_skill_item_cursor.id_for_label}}">Save Skill/Item Cursor</label>
+              </div>
+
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.skill_item_info.name}}" id="{{form.skill_item_info.id_for_label}}" data-toggle="toggle" checked>
+                <label for="{{form.skill_item_info.id_for_label}}">Skill/Item Info</label>
+              </div>
+
+              <div class="form-group form-check pl-0">
+                <input type="checkbox" name="{{form.consistent_paging.name}}" id="{{form.consistent_paging.id_for_label}}" data-toggle="toggle">
+                <label for="{{form.consistent_paging.id_for_label}}">Consistent Paging</label>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.battle_speed.id_for_label}}" class="form-label mr-2">Battle Speed:</label>
+                <input type="range" class="form-range" name="{{form.battle_speed.name}}" id="{{form.battle_speed.id_for_label}}" min="1" max="8" value="5" oninput="updateGameOptions()" onchange="updateGameOptions()" >
+                <input type="text" id="battle_speed_text" form="none" size="1" value="5" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.battle_message_speed.id_for_label}}" class="form-label mr-2">Battle Message Speed:</label>
+                <input type="range" class="form-range" name="{{form.battle_message_speed.name}}" id="{{form.battle_message_speed.id_for_label}}" min="1" max="8" value="5" oninput="updateGameOptions()" onchange="updateGameOptions()" >
+                <input type="text" id="battle_message_speed_text" form="none" size="1" value="5" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.battle_gauge_style.id_for_label}}" class="form-label mr-2">Battle Gauge Style:</label>
+                <input type="range" class="form-range" name="{{form.battle_gauge_style.name}}" id="{{form.battle_gauge_style.id_for_label}}" min="0" max="2" value="1" oninput="updateGameOptions()" onchange="updateGameOptions()" >
+                <input type="text" id="battle_gauge_style_text" form="none" size="1" value="1" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="{{form.background_selection.id_for_label}}" class="form-label mr-2">Background:</label>
+                <input type="range" class="form-range" name="{{form.background_selection.name}}" id="{{form.background_selection.id_for_label}}" min="1" max="8" value="1" oninput="updateGameOptions()" onchange="updateGameOptions()" >
+                <input type="text" id="background_selection_text" form="none" size="1" value="1" readonly>
+              </div>
+              <span id="background_selection_preview" class="menuBackground1"></span>
             </div>
-            <span id="background_selection_preview" class="menuBackground1"></span>
 
 
             <!-- character/epoch name fields -->
-            <h4>Custom Names:</h4>
-            <div class="form-group">
+            <div class="tab-pane fade show" id="cosmetic_names">
+              <div class="form-group">
                 <label for="{{form.crono_name.id_for_label}}">Crono:
                   <input class="form-control" name="{{form.crono_name.name}}" id="{{form.crono_name.id_for_label}}" type="text" value="Crono">
                 </label>
@@ -44,8 +104,8 @@
                 <label for="{{form.lucca_name.id_for_label}}">Lucca:
                   <input class="form-control" name="{{form.lucca_name.name}}" id="{{form.lucca_name.id_for_label}}" type="text" value="Lucca">
                 </label>
-            </div>
-            <div class="form-group">
+              </div>
+              <div class="form-group">
                 <label for="{{form.robo_name.id_for_label}}">Robo:
                   <input class="form-control" name="{{form.robo_name.name}}" id="{{form.robo_name.id_for_label}}" type="text" value="Robo">
                 </label>
@@ -57,8 +117,8 @@
                 <label for="{{form.ayla_name.id_for_label}}">Ayla:
                   <input class="form-control" name="{{form.ayla_name.name}}" id="{{form.ayla_name.id_for_label}}" type="text" value="Ayla">
                 </label>
-            </div>
-            <div class="form-group">
+              </div>
+              <div class="form-group">
                 <label for="{{form.magus_name.id_for_label}}">Magus:
                   <input class="form-control" name="{{form.magus_name.name}}" id="{{form.magus_name.id_for_label}}" type="text" value="Magus">
                 </label>
@@ -66,5 +126,6 @@
                 <label for="{{form.epoch_name.id_for_label}}">Epoch:
                   <input class="form-control" name="{{form.epoch_name.name}}" id="{{form.epoch_name.id_for_label}}" type="text" value="Epoch">
                 </label>
+              </div>
             </div>
           </div>

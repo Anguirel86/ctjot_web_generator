@@ -32,6 +32,7 @@ class RomForm(forms.Form):
     save_battle_cursor = forms.BooleanField(required=False)
     save_skill_item_cursor = forms.BooleanField(required=False)
     skill_item_info = forms.BooleanField(required=False)
+    consistent_paging = forms.BooleanField(required=False)
     background_selection = forms.IntegerField(required=False)
     battle_speed = forms.IntegerField(required=False)
     battle_message_speed = forms.IntegerField(required=False)

@@ -174,36 +174,36 @@ class RandomizerInterface:
         # In-game options
         # Boolean options
         if form.cleaned_data['stereo_audio'] is not None:
-            self.randomizer.settings.ctoptions.stereo_audio(form.cleaned_data['stereo_audio'])
+            settings.ctoptions.stereo_audio = form.cleaned_data['stereo_audio']
 
         if form.cleaned_data['save_menu_cursor'] is not None:
-            self.randomizer.settings.ctoptions.save_menu_cursor(form.cleaned_data['save_menu_cursor'])
+            settings.ctoptions.save_menu_cursor = form.cleaned_data['save_menu_cursor']
 
         if form.cleaned_data['save_battle_cursor'] is not None:
-            self.randomizer.settings.ctoptions.save_battle_cursor(form.cleaned_data['save_battle_cursor'])
+            settings.ctoptions.save_battle_cursor = form.cleaned_data['save_battle_cursor']
 
         if form.cleaned_data['skill_item_info'] is not None:
-            self.randomizer.settings.ctoptions.skill_item_info(form.cleaned_data['skill_item_info'])
+            settings.ctoptions.skill_item_info = form.cleaned_data['skill_item_info']
 
-        if form.cleaned_data['active_battle'] is not None:
-            self.randomizer.settings.ctoptions.active_battle(form.cleaned_data['active_battle'])
+        if form.cleaned_data['consistent_paging'] is not None:
+            settings.ctoptions.consistent_paging = form.cleaned_data['consistent_paging']
 
         # Integer options
         if form.cleaned_data['battle_speed']:
-            self.randomizer.settings.ctoptions.battle_speed(
-                self.clamp((form.cleaned_data['battle_speed'] - 1), 0, 7))
+            settings.ctoptions.battle_speed = \
+                self.clamp((form.cleaned_data['battle_speed'] - 1), 0, 7)
 
         if form.cleaned_data['background_selection']:
-            self.randomizer.settings.ctoptions.menu_background(
-                self.clamp((form.cleaned_data['background_selection'] - 1), 0, 7))
+            settings.ctoptions.menu_background = \
+                self.clamp((form.cleaned_data['background_selection'] - 1), 0, 7)
 
-        if form.cleaned_data['battle_msg_speed']:
-            self.randomizer.settings.ctoptions.battle_msg_speed(
-                self.clamp((form.cleaned_data['battle_msg_speed'] - 1), 0, 7))
+        if form.cleaned_data['battle_message_speed']:
+            settings.ctoptions.battle_msg_speed = \
+                self.clamp((form.cleaned_data['battle_message_speed'] - 1), 0, 7)
 
-        if form.cleaned_data['battle_gauge_style']:
-            self.randomizer.settings.ctoptions.battle_gauge_style(
-                self.clamp((form.cleaned_data['battle_gauge_style']), 0, 2))
+        if form.cleaned_data['battle_gauge_style'] is not None:
+            settings.ctoptions.battle_gauge_style = \
+                self.clamp((form.cleaned_data['battle_gauge_style']), 0, 2)
 
         self.randomizer.settings = settings
         self.randomizer.set_config(config)

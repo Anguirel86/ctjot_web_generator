@@ -17,11 +17,18 @@ $(document).on('hide.bs.collapse', '#cosmetic_section', function(e) {
 });
 
 /*
- * Update the background preview and text box.
+ * Update the game options section of the seed page.
  */
-function updateBackgroundSelection() {
+function updateGameOptions() {
+
+  // Update the slider text boxes
+  var id_list = ['battle_speed', 'battle_message_speed', 'battle_gauge_style', 'background_selection']
+  for (const id of id_list) {
+    document.getElementById(id + "_text").value = document.getElementById("id_" + id).value
+  }
+
+  // Display the chosen background type.
   var selection = document.getElementById('id_background_selection').value;
-  document.getElementById('background_selection_text').value = selection;
   preview = document.getElementById('background_selection_preview');
   preview.className = 'menuBackground' + selection;
 }
