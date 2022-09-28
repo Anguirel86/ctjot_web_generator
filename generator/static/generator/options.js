@@ -156,7 +156,6 @@ function presetHard() {
  */
  function presetTourney() {
   resetAll();
-  $('#id_enemy_difficulty').val('hard');
   $('#id_item_difficulty').val('normal');
   $('#id_tech_rando').val('fully_random');
   $('#id_shop_prices').val('normal');
