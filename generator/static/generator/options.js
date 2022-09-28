@@ -146,7 +146,7 @@ function presetHard() {
   $('#id_enemy_difficulty').val('hard');
   $('#id_item_difficulty').val('hard');
   $('#id_disable_glitches').prop('checked', true).change();
-  $('#id_zeal').prop('checked', true).change();
+  $('#id_boss_scaling').prop('checked', true).change();
   $('#id_locked_chars').prop('checked', true).change();
   $('#id_tech_rando').val('balanced_random');
 }
@@ -161,6 +161,7 @@ function presetHard() {
   $('#id_tech_rando').val('fully_random');
   $('#id_shop_prices').val('normal');
   $('#id_disable_glitches').prop('checked', true).change();
+  $('#id_zeal').prop('checked', true).change();
   $('#id_early_pendant').prop('checked', true).change();
   $('#id_boss_rando').prop('checked', true).change();
   $('#id_boss_spot_hp').prop('checked', true).change();
