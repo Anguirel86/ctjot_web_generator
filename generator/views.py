@@ -239,7 +239,7 @@ class SeedImageView(View):
             for y in range(0, 200, squaresize):
                 # Draw a square in a random color
                 d.polygon([(x,y),(x+squaresize,y),(x+squaresize,y+squaresize),(x,y+squaresize)],
-                        fill=(rgen.randint(0,255), rgen.randint(0,255), rgen.randint(0,255)))
+                        fill=(rgen.randint(0,31)*8, rgen.randint(0,31)*8, rgen.randint(0,31)*8))
 
         with io.BytesIO() as f:
             img.save(f, 'PNG')
