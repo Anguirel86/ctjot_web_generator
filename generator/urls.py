@@ -12,6 +12,7 @@ urlpatterns = [
     path('generate-rom/', views.GenerateView.as_view(), name='generate'),
     path('share/<str:share_id>/', views.ShareLinkView.as_view(), name='share'),
     path('practice/<str:share_id>/', views.PracticeSeedView.as_view(), name='practice'),
+    path('seedimg/<str:share_id>.png', views.SeedImageView.as_view(), name='seedimg'),
     path('seed/', views.DownloadSeedView.as_view(), name='seed'),
     path('spoiler_log/<str:share_id>/', views.DownloadSpoilerLogView.as_view(), name='spoiler_log'),
 ]

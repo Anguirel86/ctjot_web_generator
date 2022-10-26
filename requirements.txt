@@ -3,3 +3,4 @@ Django==4.0.1
 nanoid==2.0.0
 sqlparse==0.4.2
 tzdata==2021.5
+Pillow==9.2.0
