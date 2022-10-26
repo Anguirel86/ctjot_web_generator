@@ -101,6 +101,7 @@ class ShareLinkView(View):
         rom_form = RomForm()
         context = {'share_id': game.share_id,
                    'is_permalink': True,
+                   'base_uri': request.build_absolute_uri(''),
                    'form': rom_form,
                    'spoiler_log': RandomizerInterface.get_web_spoiler_log(pickle.loads(game.configuration)),
                    'is_race_seed': game.race_seed,
