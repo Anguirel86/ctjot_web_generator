@@ -191,6 +191,25 @@ class DownloadSpoilerLogView(View):
             return render(request, 'generator/error.html', {'error_text': 'No spoiler log available for this seed.'},
                           status=404)
 
+class DownloadJSONSpoilerLogView(View):
+    """
+    Create and send a JSON spoiler log to the user for the seed with the given share ID.
+    """
+    @classmethod
+    def get(cls, request, share_id):
+        try:
+            game = Game.objects.get(share_id=share_id)
+        except Game.DoesNotExist:
+            return render(request, 'generator/error.html', {'error_text': 'Seed does not exist.'}, status=404)
+
+        response = HttpResponse(content_type='application/json')
+        if not game.race_seed:
+            spoiler_log = RandomizerInterface.get_json_spoiler_log(
+                pickle.loads(game.configuration), pickle.loads(game.settings))
+            response.write(spoiler_log.getvalue())
+        else:
+            response.write(b'{"cheating": "not_allowed"}')
+        return response
 
 class PracticeSeedView(View):
     """

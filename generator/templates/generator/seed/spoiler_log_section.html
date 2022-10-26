@@ -1,7 +1,7 @@
 
         <div class="pt-2">
           <input type="button" class="btn btn-primary" id="spoiler_log_button" value="Show Spoiler Log" data-toggle="collapse" data-target="#spoiler_section" aria-expanded="false" aria-controls="spoiler_section">
-          <button class="btn btn-primary" type="button" onclick="window.open('/spoiler_log/{{share_id}}')">Download Spoiler Log</button>
+	  <a class="btn btn-primary" href="{% url 'generator:spoiler_log' share_id %}" target="_blank">Download Spoiler Log</a>
         </div>
 
         <div class="tab-content collapse border border-primary rounded p-3" id="spoiler_section">
