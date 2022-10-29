@@ -1,6 +1,6 @@
 # Django libraries
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from wsgiref.util import FileWrapper
 
 # Site libraries
@@ -71,7 +71,7 @@ class GenerateView(FormView):
                    'spoiler_log': RandomizerInterface.get_web_spoiler_log(pickle.loads(game.configuration)),
                    'is_race_seed': game.race_seed,
                    'share_info': share_info.getvalue()}
-        return render(self.request, 'generator/seed.html', context)
+        return redirect('/share/' + game.share_id)
 
     def form_invalid(self, form):
         # TODO: Replace this error handling with something better eventually.
@@ -214,7 +214,7 @@ class PracticeSeedView(View):
                    'is_race_seed': game.race_seed,
                    'share_info': share_info.getvalue()}
 
-        return render(request, 'generator/seed.html', context)
+        return redirect('/share/' + game.share_id)
 
 
 def get_share_id() -> str:
