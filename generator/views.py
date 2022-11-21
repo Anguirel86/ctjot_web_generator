@@ -63,14 +63,6 @@ class GenerateView(FormView):
         # Generate a seed and create a DB entry for it.
         # Then redirect the user to the seed download page.
         game = generate_seed_from_form(form)
-        share_info = RandomizerInterface.get_share_details(
-            pickle.loads(game.configuration), pickle.loads(game.settings))
-        rom_form = RomForm()
-        context = {'share_id': game.share_id,
-                   'form': rom_form,
-                   'spoiler_log': RandomizerInterface.get_web_spoiler_log(pickle.loads(game.configuration)),
-                   'is_race_seed': game.race_seed,
-                   'share_info': share_info.getvalue()}
         return redirect('/share/' + game.share_id)
 
     def form_invalid(self, form):
@@ -204,15 +196,6 @@ class PracticeSeedView(View):
             return render(request, 'generator/error.html', {'error_text': str(e)}, status=404)
         except InvalidSettingsException as e:
             return render(request, 'generator/error.html', {'error_text': str(e)}, status=404)
-
-        share_info = RandomizerInterface.get_share_details(
-            pickle.loads(game.configuration), pickle.loads(game.settings))
-        rom_form = RomForm()
-        context = {'share_id': game.share_id,
-                   'form': rom_form,
-                   'spoiler_log': RandomizerInterface.get_web_spoiler_log(pickle.loads(game.configuration)),
-                   'is_race_seed': game.race_seed,
-                   'share_info': share_info.getvalue()}
 
         return redirect('/share/' + game.share_id)
 
