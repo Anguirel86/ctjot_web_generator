@@ -448,6 +448,24 @@ class RandomizerInterface:
 
         return spoiler_log
 
+    @classmethod
+    def get_json_spoiler_log(cls, config: randoconfig.RandoConfig, settings: rset.Settings) -> io.StringIO:
+        """
+        Get a spoiler log file-like object.
+
+        :param config: RandoConfig object describing the seed
+        :param settings: RandoSettings object describing the seed
+        :return: File-like object with spoiler log data for the given seed data
+        """
+        spoiler_log = io.StringIO()
+        rando = randomizer.Randomizer(cls.get_base_rom(), is_vanilla=True, settings=settings, config=config)
+
+        # The Randomizer.write_spoiler_log method writes directly to a file,
+        # but it works if we pass a StringIO instead.
+        rando.write_json_spoiler_log(spoiler_log)
+
+        return spoiler_log
+
     @staticmethod
     def get_web_spoiler_log(config: randoconfig.RandoConfig) -> dict[str, list[dict[str, str]]]:
         """

@@ -170,6 +170,12 @@ function presetHard() {
   $('#id_gear_rando').prop('checked', true).change();
  }
 
+ function presetTourneyTop8() {
+   presetTourney();
+   $('#id_item_difficulty').val('hard');
+   $('#id_free_menu_glitch').prop('checked', false).change();
+ }
+
 /*
  * Check all of the duplicate character boxes.
  */
