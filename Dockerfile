@@ -7,8 +7,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN git clone https://github.com/Pseudoarc/jetsoftime.git /usr/src/jetsoftime && \
-    ln -s ../jetsoftime jetsoftime && \
+RUN ln -s ../jetsoftime jetsoftime && \
     ln -s ../jetsoftime/sourcefiles/names.txt names.txt && \
     ln -s ../jetsoftime/sourcefiles/patch.ips patch.ips && \
     ln -s ../jetsoftime/sourcefiles/flux flux && \

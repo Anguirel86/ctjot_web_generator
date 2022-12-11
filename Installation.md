@@ -17,11 +17,9 @@ Browse to your working area and:
 
 **NOTE**: activate script assumes a Windows environment.  It will be venv/bin/activate on Linux.
 
-### Install and prepare the randomizer
-Clone the randomizer into the webapp's base directory (currently Pseudoarc's 3.2 beta)
-`git clone https://github.com/Pseudoarc/jetsoftime.git`
+### Prepare the randomizer
 
-Copy the following files/folders from jetsoftime/sourcefiles into the webapp's base directory:
+Copy or link the following files/folders from jetsoftime/sourcefiles into the webapp's base directory:
 
  1. names.txt
  2. patch.ips
