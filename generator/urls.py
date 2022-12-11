@@ -13,5 +13,6 @@ urlpatterns = [
     path('share/<str:share_id>/', views.ShareLinkView.as_view(), name='share'),
     path('practice/<str:share_id>/', views.PracticeSeedView.as_view(), name='practice'),
     path('seed/', views.DownloadSeedView.as_view(), name='seed'),
-    path('spoiler_log/<str:share_id>/', views.DownloadSpoilerLogView.as_view(), name='spoiler_log'),
+    path('spoiler_log/<str:share_id>.txt', views.DownloadSpoilerLogView.as_view(), name='spoiler_log'),
+    path('spoiler_log/<str:share_id>.json', views.DownloadJSONSpoilerLogView.as_view(), name='json_spoiler_log'),
 ]
