@@ -4,3 +4,4 @@ nanoid==2.0.0
 sqlparse==0.4.2
 django-cors-headers==3.13.0
 tzdata==2021.5
+Pillow==9.2.0

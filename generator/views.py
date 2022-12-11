@@ -15,10 +15,11 @@ from .models import Game
 import hashlib
 import io
 import pickle
+import random
 
 # Other libraries
 import nanoid
-
+from PIL import Image, ImageDraw
 
 class InvalidRomException(Exception):
     """
@@ -90,6 +91,8 @@ class ShareLinkView(View):
 
         rom_form = RomForm()
         context = {'share_id': game.share_id,
+                   'is_permalink': True,
+                   'base_uri': request.build_absolute_uri(''),
                    'form': rom_form,
                    'spoiler_log': RandomizerInterface.get_web_spoiler_log(pickle.loads(game.configuration)),
                    'is_race_seed': game.race_seed,
@@ -218,6 +221,34 @@ class PracticeSeedView(View):
 
         return redirect('/share/' + game.share_id)
 
+class SeedImageView(View):
+    """
+    Handle creating a random image to represent a previously-generated seed.
+    """
+    @classmethod
+    def get(cls, request, share_id):
+        try:
+            game = Game.objects.get(share_id=share_id)
+        except Game.DoesNotExist:
+            return render(request, 'generator/error.html', {'error_text': 'Seed does not exist.'}, status=404)
+
+        rgen = random.Random(share_id)
+        img = Image.new('RGB', (200,200))
+        d = ImageDraw.Draw(img)
+        squaresize = 50
+        for x in range(0,200,squaresize):
+            for y in range(0, 200, squaresize):
+                # Draw a square in a random color
+                d.polygon([(x,y),(x+squaresize,y),(x+squaresize,y+squaresize),(x,y+squaresize)],
+                        fill=(rgen.randint(0,31)*8, rgen.randint(0,31)*8, rgen.randint(0,31)*8))
+
+        with io.BytesIO() as f:
+            img.save(f, 'PNG')
+            l = len(f.getvalue())
+            response = HttpResponse(content_type='image/png')
+            response['Content-Length'] = l
+            response.write(f.getbuffer())
+            return response
 
 def get_share_id() -> str:
     """
