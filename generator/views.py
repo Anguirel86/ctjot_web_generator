@@ -1,6 +1,6 @@
 # Django libraries
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from wsgiref.util import FileWrapper
 
 # Site libraries
@@ -63,15 +63,7 @@ class GenerateView(FormView):
         # Generate a seed and create a DB entry for it.
         # Then redirect the user to the seed download page.
         game = generate_seed_from_form(form)
-        share_info = RandomizerInterface.get_share_details(
-            pickle.loads(game.configuration), pickle.loads(game.settings))
-        rom_form = RomForm()
-        context = {'share_id': game.share_id,
-                   'form': rom_form,
-                   'spoiler_log': RandomizerInterface.get_web_spoiler_log(pickle.loads(game.configuration)),
-                   'is_race_seed': game.race_seed,
-                   'share_info': share_info.getvalue()}
-        return render(self.request, 'generator/seed.html', context)
+        return redirect('/share/' + game.share_id)
 
     def form_invalid(self, form):
         # TODO: Replace this error handling with something better eventually.
@@ -205,16 +197,7 @@ class PracticeSeedView(View):
         except InvalidSettingsException as e:
             return render(request, 'generator/error.html', {'error_text': str(e)}, status=404)
 
-        share_info = RandomizerInterface.get_share_details(
-            pickle.loads(game.configuration), pickle.loads(game.settings))
-        rom_form = RomForm()
-        context = {'share_id': game.share_id,
-                   'form': rom_form,
-                   'spoiler_log': RandomizerInterface.get_web_spoiler_log(pickle.loads(game.configuration)),
-                   'is_race_seed': game.race_seed,
-                   'share_info': share_info.getvalue()}
-
-        return render(request, 'generator/seed.html', context)
+        return redirect('/share/' + game.share_id)
 
 
 def get_share_id() -> str:
