@@ -275,7 +275,7 @@ def generate_seed_from_form(form: GenerateForm) -> Game:
     """
     # Create a config from the passed in data
     interface = RandomizerInterface(RandomizerInterface.get_base_rom())
-    interface.configure_seed_from_form(form)
+    nonce = interface.configure_seed_from_form(form)
 
     # Get a new unique share ID for this seed
     share_id = get_share_id()
@@ -284,6 +284,7 @@ def generate_seed_from_form(form: GenerateForm) -> Game:
     game = Game.objects.create(
         share_id=share_id,
         race_seed=not form.cleaned_data['spoiler_log'],
+        seed_nonce=nonce,
         settings=pickle.dumps(interface.get_settings()),
         configuration=pickle.dumps(interface.get_config()))
 
@@ -306,11 +307,12 @@ def generate_seed_from_id(existing_share_id: str) -> Game:
     new_share_id = get_share_id()
     interface = RandomizerInterface(RandomizerInterface.get_base_rom())
     # Currently only used for practice seeds, so force race mode to False.
-    interface.configure_seed_from_settings(pickle.loads(existing_game.settings), False)
+    nonce = interface.configure_seed_from_settings(pickle.loads(existing_game.settings), False)
 
     new_game = Game.objects.create(
         share_id=new_share_id,
         race_seed=False,
+        seed_nonce=nonce,
         settings=pickle.dumps(interface.get_settings()),
         configuration=pickle.dumps(interface.get_config())
     )

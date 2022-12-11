@@ -11,4 +11,5 @@ class Game(models.Model):
     race_seed = models.BooleanField(default=False)
     configuration = models.BinaryField()
     creation_date = models.DateTimeField(auto_now=True)
+    seed_nonce = models.CharField(max_length=15, blank=True, default='')
 

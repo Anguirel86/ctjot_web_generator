@@ -6,6 +6,7 @@ import os
 import os.path
 import random
 import sys
+import datetime
 
 # Web types
 from .forms import GenerateForm, RomForm
@@ -76,28 +77,33 @@ class RandomizerInterface:
         """
         self.randomizer = randomizer.Randomizer(rom_data, is_vanilla=True)
 
-    def configure_seed_from_form(self, form: GenerateForm):
+    def configure_seed_from_form(self, form: GenerateForm) -> str:
         """
         Generate a RandoConfig from the provided GenerateForm.
         This will convert the form data into the appropriate randomizer settings and config
         objects and then tell the randomizer to generate a seed.
 
         :param form: GenerateForm with the user's settings
+
+        :return: string of a nonce, if any, that was used to obfuscate the seed
         """
         self.randomizer.settings = self.__convert_form_to_settings(form)
+        nonce = ''
         # If this is a race seed, modify the seed value  before sending it through
         # the randomizer.  This will ensure that race ROMs and non-race ROMs with the same
         # seed value are not identical.
         if form.cleaned_data['spoiler_log']:
             self.randomizer.set_random_config()
         else:
+            # Use the current timestamp's number of microseconds as an arbitrary nonce value
+            nonce = str(datetime.datetime.now().microsecond)
             seed = self.randomizer.settings.seed
-            modifier = apps.get_app_config('generator').RACE_SEED_MODIFIER
-            self.randomizer.settings.seed = seed + modifier
+            self.randomizer.settings.seed = seed + nonce
             self.randomizer.set_random_config()
             self.randomizer.settings.seed = seed
+        return nonce
 
-    def configure_seed_from_settings(self, settings: rset.Settings, is_race_seed: bool):
+    def configure_seed_from_settings(self, settings: rset.Settings, is_race_seed: bool) -> str:
         """
         Generate a RandoConfig from the provided Settings object.
         This will create a new game based on existing settings.
@@ -106,6 +112,8 @@ class RandomizerInterface:
 
         :param settings: Settings object to copy for this new game
         :param is_race_seed: Whether or not this is a race seed
+
+        :return: string of a nonce, if any, that was used to obfuscate the seed
         """
 
         if rset.GameFlags.MYSTERY in settings.gameflags:
@@ -118,17 +126,19 @@ class RandomizerInterface:
         while seed == new_seed:
             new_seed = self.get_random_seed()
         settings.seed = new_seed
+        nonce = ''
 
         # If this is a race seed, modify the seed value  before sending it through
         # the randomizer.  This will ensure that race ROMs and non-race ROMs with the same
         # seed value are not identical.
         if is_race_seed:
-            modifier = apps.get_app_config('generator').RACE_SEED_MODIFIER
-            self.randomizer.settings.seed = new_seed + modifier
+            nonce = str(datetime.datetime.now().microsecond)
+            self.randomizer.settings.seed = new_seed + nonce
             self.randomizer.set_random_config()
             self.randomizer.settings.seed = new_seed
         else:
             self.randomizer.set_random_config()
+        return nonce
 
     def generate_rom(self) -> bytearray:
         """
