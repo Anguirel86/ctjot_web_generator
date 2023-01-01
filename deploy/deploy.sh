@@ -107,7 +107,7 @@ deploy_production() {
 #
 # Deploy the staging version of the web generator.
 # This uses the staging version of the letsencrypt API and does not
-# include the extra sanity checks for things like passords and keys.
+# include the extra sanity checks for things like passwords and keys.
 #
 deploy_staging() {
 
@@ -199,7 +199,7 @@ fi
 # Check if the jetsoftime submodule is initialized and 
 # initialize/update it if it isn't.
 submodule_status=$(git submodule status | grep jetsoftime)
-if [[ $submodule_status =~ "^-.*" ]]; then
+if [[ $submodule_status =~ ^-.* ]]; then
   echo "Initializing jetsoftime submodule..."
   git submodule init
   git submodule update
@@ -218,7 +218,7 @@ deploy_wiki=0
 shutdown=0
 rerun_deployment=0
 
-# Figure out what type of deployment we're spinnign up
+# Figure out what type of deployment we're spinning up
 while getopts pdskrw: flag
 do
   case "${flag}" in
