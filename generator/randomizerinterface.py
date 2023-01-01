@@ -596,24 +596,3 @@ class RandomizerInterface:
     def clamp(value, min_val, max_val):
         return max(min_val, min(value, max_val))
 
-    @staticmethod
-    def get_randomizer_version_info() -> dict[str, str]:
-        """
-        Read version_info.json from the webapp root directory and return the
-        randomizer version information.
-
-        This method assumes that the version_info.json file will be present in the
-        web app's BASE_DIR.  If it does not exist, both the date and short hash will
-        return with a value of "Unknown".
-
-        :return: Dictionary with the randomizer version info from version_info.json
-        """
-        # TODO - This is a beta only feature so that users can know which specific version of the
-        #        randomizer is being used by the web generator.  This won't be needed for the
-        #        live version of the site when 3.2 is out of beta.
-        #        The version_info.json file is not part of source control.
-        if os.path.exists('version_info.json'):
-            with open('version_info.json') as version_file:
-                return json.load(version_file)
-        else:
-            return {'date': 'Unknown', 'hash': 'Unknown'}

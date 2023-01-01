@@ -3,6 +3,7 @@
 *.sqlite3
 .idea
 deploy/wiki_config/
+deploy/docker-compose.yml
 
 venv/
 env/

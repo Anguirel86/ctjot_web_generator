@@ -46,8 +46,7 @@ class OptionsView(View):
     @classmethod
     def get(cls, request):
         form = GenerateForm()
-        context = {'form': form,
-                   'version': RandomizerInterface.get_randomizer_version_info()}
+        context = {'form': form}
         return render(request, 'generator/options.html', context)
 
 
