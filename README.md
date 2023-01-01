@@ -1,6 +1,11 @@
 # Chrono Trigger: Jets of Time Web Generator
 
-This project is a web based interface for the Chrono Trigger: Jets of Time randomizer version 3.2.
+This project is a web interface for the Chrono Trigger: Jets of Time randomizer.
 
-Get Pseudoarc's Jets of Time 3.2 beta [here](https://github.com/Pseudoarc/jetsoftime).
+Jets of Time is an open world randomizer for Chrono Trigger. Players jet through time with the Epoch looking for additional characters and key items to open the way to, and ultimately defeat, Lavos.
+
+#####Get started at the [Jets of Time web generator](https://ctjot.com/).
+#####Come join our [Discord community](https://discord.gg/Tcu4X3sw).
+#####Check out the [Jets of Time Wiki](https://www.wiki.ctjot.com/).
+#####Get the standalone randomizer [here](https://github.com/Anskiy/jetsoftime).
 
