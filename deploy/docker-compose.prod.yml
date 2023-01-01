@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  web-generator:
+    build: 
+      context: ../
+      dockerfile: deploy/Dockerfile
+    command: gunicorn ctjot.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - ../ct.sfc:/home/ctjot/web/ct.sfc
+      - static_volume:/home/ctjot/web/staticfiles
+    expose:
+      - 8000
+    env_file:
+      - ./.env.prod
+      - ./.env.prod.db
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13.0-alpine
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.prod.db
+
+  nginx-proxy:
+    container_name: nginx-proxy
+    build: nginx
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - static_volume:/home/ctjot/web/staticfiles
+      - certs:/etc/nginx/certs
+      - html:/usr/share/nginx/html
+      - vhost:/etc/nginx/vhost.d
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    labels:
+      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy"
+    depends_on:
+      - web-generator
+
+  letsencrypt: 
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    env_file:
+      - ./.env.prod.letsencrypt
+    volumes:
+      - certs:/etc/nginx/certs
+      - html:/usr/share/nginx/html
+      - acme:/etc/acme.sh
+      - vhost:/etc/nginx/vhost.d
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - nginx-proxy
+
+  ctjot_wiki:
+    image: lscr.io/linuxserver/dokuwiki:latest
+    container_name: dokuwiki
+    env_file:
+      - ./.env.prod.wiki
+    volumes:
+      - ./wiki_config:/config
+    expose:
+      - 80
+
+volumes:
+  db_data:
+  static_volume:
+  certs:
+  html:
+  vhost:
+  acme:
+

@@ -2,6 +2,7 @@
 *.sfc
 *.sqlite3
 .idea
+deploy/wiki_config/
 
 venv/
 env/

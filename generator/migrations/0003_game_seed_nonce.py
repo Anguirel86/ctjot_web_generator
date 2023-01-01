@@ -15,5 +15,5 @@ class Migration(migrations.Migration):
             name='seed_nonce',
             field=models.CharField(blank=True, default='', max_length=15),
         ),
-        migrations.RunSQL("UPDATE generator_game SET seed_nonce = 'race123' WHERE race_seed = 1;"),
+        #migrations.RunSQL("UPDATE generator_game SET seed_nonce = 'race123' WHERE race_seed = 1;"),
     ]

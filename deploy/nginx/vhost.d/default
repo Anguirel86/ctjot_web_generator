@@ -1,0 +1,4 @@
+location /static/ {
+  alias /home/ctjot/web/staticfiles/;
+  add_header Access-Control-Allow-Origin *;
+}

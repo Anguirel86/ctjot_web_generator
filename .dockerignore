@@ -1,6 +1,7 @@
 *.bak
 *.sfc
 *.sqlite3
+deploy/wiki_config/
 
 venv/
 env/
@@ -10,7 +11,6 @@ __pycache__/
 
 # Randomizer files
 flux
-jetsoftime
 patches
 pickles
 names.txt
