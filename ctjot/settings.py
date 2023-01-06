@@ -26,7 +26,11 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.environ.get("DEBUG", default=0))
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+# If DJANGO_ALLOWED_HOSTS doesn't exist then assume we're running a local test server.
+if os.environ.get("DJANGO_ALLOWED_HOSTS") is None:
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+else:
+    ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
