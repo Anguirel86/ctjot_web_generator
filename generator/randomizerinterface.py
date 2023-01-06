@@ -1,8 +1,6 @@
 # Python types
 from __future__ import annotations
 import io
-import json
-import os
 import os.path
 import random
 import sys
@@ -10,9 +8,7 @@ import datetime
 
 # Web types
 from .forms import GenerateForm, RomForm
-from django.apps import apps
 from django.conf import settings as conf
-
 
 # Add the randomizer to the system path here.  This code assumes that the
 # randomizer has been added at the site base path.
@@ -57,9 +53,6 @@ class InvalidSettingsException(Exception):
     pass
 
 
-#
-# This class acts as the interface between the web code and the randomizer.
-#
 class RandomizerInterface:
     """
     RandomizerInterface acts as an interface between the web application

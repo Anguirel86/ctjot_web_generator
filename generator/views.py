@@ -21,6 +21,7 @@ import random
 import nanoid
 from PIL import Image, ImageDraw
 
+
 class InvalidRomException(Exception):
     """
     Exception that is raised by the Jets of Time web generator when an
@@ -185,6 +186,7 @@ class DownloadSpoilerLogView(View):
             return render(request, 'generator/error.html', {'error_text': 'No spoiler log available for this seed.'},
                           status=404)
 
+
 class DownloadJSONSpoilerLogView(View):
     """
     Create and send a JSON spoiler log to the user for the seed with the given share ID.
@@ -205,6 +207,7 @@ class DownloadJSONSpoilerLogView(View):
             response.write(b'{"cheating": "not_allowed"}')
         return response
 
+
 class PracticeSeedView(View):
     """
     Get a practice seed with identical setting to the seed with the given share_id.
@@ -219,6 +222,7 @@ class PracticeSeedView(View):
             return render(request, 'generator/error.html', {'error_text': str(e)}, status=404)
 
         return redirect('/share/' + game.share_id)
+
 
 class SeedImageView(View):
     """
@@ -248,6 +252,7 @@ class SeedImageView(View):
             response['Content-Length'] = l
             response.write(f.getbuffer())
             return response
+
 
 def get_share_id() -> str:
     """
