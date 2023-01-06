@@ -7,5 +7,5 @@ Jets of Time is an open world randomizer for Chrono Trigger. Players jet through
 ##### Get started at the [Jets of Time web generator](https://ctjot.com/).
 ##### Come join our [Discord community](https://discord.gg/Tcu4X3sw).
 ##### Check out the [Jets of Time Wiki](https://www.wiki.ctjot.com/).
-##### Get the standalone randomizer [here](https://github.com/Anskiy/jetsoftime).
+##### Get the standalone randomizer [here](https://github.com/Pseudoarc/jetsoftime).
 
