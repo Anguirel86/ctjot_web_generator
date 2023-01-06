@@ -65,9 +65,6 @@ There are three supported deployment types:
  3. Production
     1. Runs the full production setup with the live letsencrypt API and full environment checks
 
-### Initial Setup
-1. Copy an unheadered Chrono Trigger ROM to the repo base directory and name it ct.sfc
-
 #### Development
 This is a configuration is meant for local testing of the web generator.  It launches a minimal subset
 of containers needed for testing, and is not suited for use in a production environment. 
