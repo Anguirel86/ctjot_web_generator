@@ -152,7 +152,24 @@ function presetHard() {
 }
 
 /*
+ *Populate the options form with the settings for a hard seed.
+ */
+function presetLegacyOfCyrus() {
+  resetAll();
+  $('#id_enemy_difficulty').val('normal');
+  $('#id_item_difficulty').val('normal');
+  $('#id_disable_glitches').prop('checked', true).change();
+  $('#id_early_pendant').prop('checked', true).change();
+  $('#id_unlocked_magic').prop('checked', true).change();
+  $('#id_gear_rando').prop('checked', true).change();
+  $('#id_fast_tabs').prop('checked', true).change();
+  $('#id_tech_rando').val('fully_random');
+}
+
+/*
  * Populate the options form with the settings for a Catalack Cup tournament seed.
+ * The Catalack Cup preset buttons have been removed, but the functions are being left
+ * in in case they are ever needed again.
  */
  function presetTourney() {
   resetAll();

@@ -16,11 +16,10 @@
       <div class="border border-primary rounded p-3">
         <button class="btn btn-primary" type="button" onclick="resetAll()">Reset All</button>
         <button class="btn btn-primary" type="button" onclick="presetRace()">Race</button>
-        <button class="btn btn-primary" type="button" onclick="presetTourney()">Catalack Cup</button>
-        <button class="btn btn-primary" type="button" onclick="presetTourneyTop8()">Catalack Cup Top 8</button>
         <button class="btn btn-primary" type="button" onclick="presetNewPlayer()">New Player</button>
         <button class="btn btn-primary" type="button" onclick="presetLostWorlds()">Lost Worlds</button>
         <button class="btn btn-primary" type="button" onclick="presetHard()">Hard</button>
+        <button class="btn btn-primary" type="button" onclick="presetLegacyOfCyrus()">Legacy of Cyrus</button>
       </div> <!-- End preset buttons -->
       
       <form name="game_options_form" id="game_options_form" action="{% url 'generator:generate' %}" method="post" enctype="multipart/form-data" onsubmit="return prepareForm()">
