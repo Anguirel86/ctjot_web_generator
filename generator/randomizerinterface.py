@@ -309,6 +309,9 @@ class RandomizerInterface:
         if form.cleaned_data['mystery_seed']:
             settings.gameflags = settings.gameflags | rset.GameFlags.MYSTERY
 
+        if form.cleaned_data['epoch_fail']:
+            settings.gameflags = settings.gameflags | rset.GameFlags.EPOCH_FAIL
+
         # Duplicate characters
         char_choices = []
         duplicate_char_assignments = form.cleaned_data['duplicate_char_assignments']
@@ -371,7 +374,7 @@ class RandomizerInterface:
             needed_fragments=form.cleaned_data['fragments_required']
         )
 
-        # Experimental settings
+        # Extra settings
         if form.cleaned_data['use_antilife']:
             settings.gameflags = settings.gameflags | rset.GameFlags.USE_ANTILIFE
 
@@ -380,9 +383,6 @@ class RandomizerInterface:
 
         if form.cleaned_data['starters_sufficient']:
             settings.gameflags = settings.gameflags | rset.GameFlags.STARTERS_SUFFICIENT
-
-        if form.cleaned_data['epoch_fail']:
-            settings.gameflags = settings.gameflags | rset.GameFlags.EPOCH_FAIL
 
         # Mystery
         settings.mystery_settings.game_mode_freqs: dict[rset.GameMode, int] = {

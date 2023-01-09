@@ -58,6 +58,7 @@ class GenerateForm(forms.Form):
     mystery_seed = forms.BooleanField(required=False)
     healing_item_rando = forms.BooleanField(required=False)
     gear_rando = forms.BooleanField(required=False)
+    epoch_fail = forms.BooleanField(required=False)
     enemy_difficulty = forms.CharField(max_length=6)
     item_difficulty = forms.CharField(max_length=6)
     shop_prices = forms.CharField(max_length=13)
@@ -86,10 +87,9 @@ class GenerateForm(forms.Form):
     fast_tabs = forms.BooleanField(required=False)
     free_menu_glitch = forms.BooleanField(required=False)
 
-    # Experimental
+    # Extra
     bucket_fragments = forms.BooleanField(required=False)
     starters_sufficient = forms.BooleanField(required=False)
-    epoch_fail = forms.BooleanField(required=False)
     use_antilife = forms.BooleanField(required=False)
     tackle_effects = forms.BooleanField(required=False)
     fragments_required = forms.IntegerField()

@@ -29,6 +29,7 @@ function resetAll() {
   $('#id_gear_rando').prop('checked', false).change();
   $('#id_mystery_seed').prop('checked', false).change();
   $('#id_spoiler_log').prop('checked', true).change();
+  $('#id_epoch_fail').prop('checked', false).change();
 
   // Tabs options
   $('#id_power_tab_min').val(2).change();
@@ -52,11 +53,10 @@ function resetAll() {
   $('#id_fast_tabs').prop('checked', false).change();
   $('#id_free_menu_glitch').prop('checked', false).change();
 
-  // Experimental options
+  // Extra options
   $('#id_use_antilife').prop('checked', false).change();
   $('#id_tackle_effects').prop('checked', false).change();
   $('#id_starters_sufficient').prop('checked', false).change();
-  $('#id_epoch_fail').prop('checked', false).change();
 
   $('#id_bucket_fragments').prop('checked', false).change();
   $('#id_fragments_required').val(10).change();
