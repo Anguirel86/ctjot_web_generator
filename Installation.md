@@ -92,13 +92,13 @@ certificates, so browsers will give security warnings.
 
 #### Production
 This configuration deploys a full production version of the web generator.
-1. Set an email address in deploy/.env.staging.letsencrypt
+1. Set an email address in deploy/.env.prod.letsencrypt
     1. This is the email address used to register the certificates
 2. Set a password for the database in deploy/.env.prod.db
 3. (Optional) Update the hostnames in the following environment files if not using ctjot.com
-   1. deploy/.env.staging
+   1. deploy/.env.prod
       1. Update DJANGO_ALLOWED_HOSTS, VIRTUAL_HOST, and LETSENCRYPT_HOST with the new hostname
-   2. deploy/.env.staging.wiki
+   2. deploy/.env.prod.wiki
       1. Update VIRTUAL_HOST and LETSENCRYPT_HOST with the new hostname
 4. `./deploy/deploy.sh -p`
 5. Open a web browser and point it to the webapp
@@ -110,7 +110,7 @@ The deploy.sh script has options to stop and restart the last run configuration.
 1. `./deploy/deploy.sh -k` will shut down the web generator.
 2. `./deploy/deploy.sh -r` will rerun the last run configuration
 
-The docker-compose used for the last run configuration is linked in deploy/docker-compose.yml.
+The docker-compose yaml file used for the last run configuration is linked in deploy/docker-compose.yml.
 This can be used for any manual docker-compose commands.
 
 #### Wiki data migration

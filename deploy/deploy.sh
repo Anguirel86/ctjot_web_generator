@@ -2,7 +2,7 @@
 
 #
 # This script performs setup and deployment of the web generator in Docker containers.
-# It allows for either a production or development deployment.
+# It allows for either a production, staging, or development deployment.
 #
 
 
@@ -36,8 +36,8 @@ migrate_dokuwiki_data() {
     exit 1
   fi
 
-  # array of data directories we need to copy our wiki data into
-  # These directories won't need root access to copy
+  # Array of data directories we need to copy our wiki data into
+  # Some of these directories need root access to copy
   declare -a dokudirs=("pages" "attic" "meta" "media" "media_attic" "media_meta")
 
   echo "Copying wiki data..."
