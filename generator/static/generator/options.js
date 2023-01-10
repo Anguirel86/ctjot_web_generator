@@ -156,6 +156,7 @@ function presetHard() {
  */
 function presetLegacyOfCyrus() {
   resetAll();
+  $('#id_game_mode').val('legacy_of_cyrus')
   $('#id_enemy_difficulty').val('normal');
   $('#id_item_difficulty').val('normal');
   $('#id_disable_glitches').prop('checked', true).change();
