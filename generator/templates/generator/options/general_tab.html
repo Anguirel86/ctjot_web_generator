@@ -1,6 +1,18 @@
 
             <!-- Game Flags -->
             <div class="border border-primary rounded p-2">
+
+              <div class="form-group mb-4">
+                <label for="{{form.game_mode.id_for_label}}">Game Mode:</label>
+                <select class="form-control" name="{{form.game_mode.name}}" id="{{form.game_mode.id_for_label}}">
+                  <option value="standard" selected>Standard</option>
+                  <option value="lost_worlds">Lost Worlds</option>
+                  <option value="ice_age">Ice Age</option>
+                  <option value="legacy_of_cyrus">Legacy of Cyrus</option>
+                  <option value="vanilla_rando">Vanilla Rando</option>
+                </select>
+              </div>
+
               <div class="row">
                 <!-- Left column flags -->
                 <div class="col-sm-6">
@@ -9,17 +21,6 @@
                     <select class="form-control" name="{{form.enemy_difficulty.name}}" id="{{form.enemy_difficulty.id_for_label}}">
                       <option value="normal" selected>Normal</option>
                       <option value="hard">Hard</option>
-                    </select>
-                  </div>
-
-                  <div class="form-group mb-4">
-                    <label for="{{form.game_mode.id_for_label}}">Game Mode:</label>
-                    <select class="form-control" name="{{form.game_mode.name}}" id="{{form.game_mode.id_for_label}}">
-                      <option value="standard" selected>Standard</option>
-                      <option value="lost_worlds">Lost Worlds</option>
-                      <option value="ice_age">Ice Age</option>
-                      <option value="legacy_of_cyrus">Legacy of Cyrus</option>
-                      <option value="vanilla_rando">Vanilla Rando</option>
                     </select>
                   </div>
 
@@ -46,6 +47,11 @@
                   <div class="form-group form-check pl-0">
                     <input type="checkbox" name="{{form.chronosanity.name}}" id="{{form.chronosanity.id_for_label}}" data-toggle="toggle">
                     <label for="{{form.chronosanity.id_for_label}}">Chronosanity</label>
+                  </div>
+
+                  <div class="form-group form-check pl-0">
+                    <input type="checkbox" name="{{form.healing_item_rando.name}}" id="{{form.healing_item_rando.id_for_label}}"  data-toggle="toggle">
+                    <label for="{{form.healing_item_rando.id_for_label}}">Randomize Healing Items</label>
                   </div>
 
                   <div class="form-group form-check pl-0">
@@ -93,11 +99,6 @@
                   <div class="form-group form-check pl-0">
                     <input type="checkbox" name="{{form.gear_rando.name}}" id="{{form.gear_rando.id_for_label}}"  data-toggle="toggle">
                     <label for="{{form.gear_rando.id_for_label}}">Randomize Gear</label>
-                  </div>
-
-                  <div class="form-group form-check pl-0">
-                    <input type="checkbox" name="{{form.healing_item_rando.name}}" id="{{form.healing_item_rando.id_for_label}}"  data-toggle="toggle">
-                    <label for="{{form.healing_item_rando.id_for_label}}">Randomize Healing Items</label>
                   </div>
 
                   <div class="form-group form-check pl-0">
