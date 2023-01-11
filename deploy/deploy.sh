@@ -53,6 +53,10 @@ migrate_dokuwiki_data() {
     sudo cp -r ${WIKIDATA}/data/${dir}/* deploy/wiki_config/dokuwiki/data/${dir}/
   done
 
+  # Files will be owned by a mix of root and the docker container user.
+  # Chown the copied files to the container user to avoid permissions issues.
+  sudo chown 1000:911 -R deploy/wiki_config/dokuwiki/data
+
   # Copy over the conf directory (wiki config, user data, etc)
   # This requires root
   echo "Copying ${WIKIDATA}/conf..."
@@ -63,6 +67,7 @@ migrate_dokuwiki_data() {
   # Does not require root
   echo "Copying ${WIKIDATA}/lib..."
   cp -r ${WIKIDATA}/lib/* deploy/wiki_config/dokuwiki/lib/
+  sudo chown -R 1000:911 deploy/wiki_config/dokuwiki/lib/
 }
 
 #
