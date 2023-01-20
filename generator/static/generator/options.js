@@ -397,6 +397,7 @@ const objectiveDict = {
     "Random Boss (Includes Go Mode Dungeons)": "boss_any",
     "Random Boss from Go Mode Dungeon": "boss_go",
     "Random Boss (No Go Mode Dungeons)": "boss_nogo",
+    "Recruit a Random Gated Character": "recruit_gated",
     "Recruit 3 Characters (Total 5)": "recruit_3",
     "Recruit 4 Characters (Total 6)": "recruit_4",
     "Recruit 5 Characters (Total 7)": "recruit_5",
@@ -466,7 +467,18 @@ const objectiveDict = {
     "Defeat TerraMutant": "boss_terramutant",
     "Defeat Yakra": "boss_yakra",
     "Defeat Yakra XIII": "boss_yakraxiii",
-    "Defeat Zombor": "boss_zombor"
+    "Defeat Zombor": "boss_zombor",
+    "Recruit Crono": "recruit_crono",
+    "Recruit Marle": "recruit_marle",
+    "Recruit Lucca": "recruit_lucca",
+    "Recruit Robo": "recruit_robo",
+    "Recruit Frog": "recruit_frog",
+    "Recruit Ayla": "recruit_ayla",
+    "Recruit Magus": "recruit_magus",
+    "Recruit the Guardia Castle Character": "recruit_castle",
+    "Recruit the Dactyl Nest Character": "recruit_dactyl",
+    "Recruit the Proto Dome Character": "recruit_proto",
+    "Recruit the Frog's Burrow Character": "recruit_burrow"
 }
 
 // All quest name tags allowed by the parser.
