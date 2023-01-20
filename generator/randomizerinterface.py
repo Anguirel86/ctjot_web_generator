@@ -16,6 +16,7 @@ sys.path.append(os.path.join(conf.BASE_DIR, 'jetsoftime', 'sourcefiles'))
 
 # Randomizer types
 import ctenums
+import bossrandotypes as rotypes
 import randoconfig
 import randomizer
 import randosettings as rset
@@ -209,7 +210,7 @@ class RandomizerInterface:
                 self.clamp((form.cleaned_data['battle_gauge_style']), 0, 2)
 
         self.randomizer.settings = settings
-        self.randomizer.set_config(config)
+        self.randomizer.config = config
 
     def get_settings(self) -> rset.Settings:
         """
@@ -363,15 +364,26 @@ class RandomizerInterface:
         if form.cleaned_data['free_menu_glitch']:
             settings.gameflags = settings.gameflags | rset.GameFlags.FREE_MENU_GLITCH
 
-        # Bucket Fragments
-        if form.cleaned_data['bucket_fragments']:
-            settings.gameflags = settings.gameflags | rset.GameFlags.BUCKET_FRAGMENTS
+        # Bucket List
+        if form.cleaned_data['bucket_list']:
+            settings.gameflags = settings.gameflags | rset.GameFlags.BUCKET_LIST
 
-        num_fragments = \
-            form.cleaned_data['fragments_required'] + form.cleaned_data['extra_fragments']
+        disable_other_go_modes = form.cleaned_data['bucket_disable_go_modes']
+        objectives_win = form.cleaned_data['bucket_obj_win_game']
+        num_objectives = form.cleaned_data['bucket_num_objs']
+        num_objectives_needed = form.cleaned_data['bucket_num_objs_req']
+
+        hints = [
+            form.cleaned_data['bucket_objective'+str(ind+1)]
+            for ind in range(num_objectives)
+        ]
+
         settings.bucket_settings = rset.BucketSettings(
-            num_fragments=num_fragments,
-            needed_fragments=form.cleaned_data['fragments_required']
+            disable_other_go_modes=disable_other_go_modes,
+            objectives_win=objectives_win,
+            num_objectives=num_objectives,
+            num_objectives_needed=num_objectives_needed,
+            hints=hints
         )
 
         # Extra settings
@@ -419,7 +431,7 @@ class RandomizerInterface:
         settings.mystery_settings.flag_prob_dict: dict[rset.GameFlags, int] = {
             rset.GameFlags.TAB_TREASURES: form.cleaned_data['mystery_tab_treasures']/100,
             rset.GameFlags.UNLOCKED_MAGIC: form.cleaned_data['mystery_unlock_magic']/100,
-            rset.GameFlags.BUCKET_FRAGMENTS: form.cleaned_data['mystery_bucket_fragments']/100,
+            rset.GameFlags.BUCKET_LIST: form.cleaned_data['mystery_bucket_list']/100,
             rset.GameFlags.CHRONOSANITY: form.cleaned_data['mystery_chronosanity']/100,
             rset.GameFlags.BOSS_RANDO: form.cleaned_data['mystery_boss_rando']/100,
             rset.GameFlags.BOSS_SCALE: form.cleaned_data['mystery_boss_scale']/100,
@@ -486,9 +498,10 @@ class RandomizerInterface:
         # Character data
         for recruit_spot in config.char_assign_dict.keys():
             held_char = config.char_assign_dict[recruit_spot].held_char
+            reassign_char = config.pcstats.get_character_assignment(held_char)
             char_data = {'location': str(f"{recruit_spot}"),
                          'character': str(f"{held_char}"),
-                         'reassign': str(f"{config.char_manager.pcs[held_char].assigned_char}")}
+                         'reassign': str(f"{reassign_char}")}
             spoiler_log['characters'].append(char_data)
 
         # Key item data
@@ -498,8 +511,8 @@ class RandomizerInterface:
 
         # Boss data
         for location in config.boss_assign_dict.keys():
-            if config.boss_assign_dict[location] == ctenums.BossID.TWIN_BOSS:
-                twin_type = config.boss_data_dict[ctenums.BossID.TWIN_BOSS].scheme.ids[0]
+            if config.boss_assign_dict[location] == rotypes.BossID.TWIN_BOSS:
+                twin_type = config.boss_data_dict[rotypes.BossID.TWIN_BOSS].parts[0].enemy_id
                 twin_name = config.enemy_dict[twin_type].name
                 boss_str = "Twin " + str(twin_name)
             else:
