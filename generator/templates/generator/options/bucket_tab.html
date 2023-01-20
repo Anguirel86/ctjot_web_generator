@@ -8,6 +8,7 @@
                 <option value="Random Boss (Includes Go Mode Dungeons)">
                 <option value="Random Boss from Go Mode Dungeon">
                 <option value="Random Boss (No Go Mode Dungeons)">
+                <option value="Recruit a Random Gated Character">
                 <option value="Recruit 3 Characters (Total 5)">
                 <option value="Recruit 4 Characters (Total 6)">
                 <option value="Recruit 5 Characters (Total 7)">
@@ -78,6 +79,17 @@
                 <option value="Defeat Yakra">
                 <option value="Defeat Yakra XIII">
                 <option value="Defeat Zombor">
+                <option value="Recruit Crono">
+                <option value="Recruit Marle">
+                <option value="Recruit Lucca">
+                <option value="Recruit Robo">
+                <option value="Recruit Frog">
+                <option value="Recruit Ayla">
+                <option value="Recruit Magus">
+                <option value="Recruit the Guardia Castle Character">
+                <option value="Recruit the Dactyl Nest Character">
+                <option value="Recruit the Proto Dome Character">
+                <option value="Recruit the Frog's Burrow Character">
               </datalist>
               <div>
               <label for="{{form.bucket_num_objs.id_for_label}}"> Number of Objectives</label>
@@ -85,7 +97,7 @@
               <input type="text" id="numObjectivesDisp" form="none" size="1" value="5" readonly>
             </div>
             <div>
-              <label for="{{form.bucket_num_objs_req.id_for_label}}"> Number Required </label>
+              <label for="{{form.bucket_num_objs_req.id_for_label}}"> Number Required</label>
               <input type="range" name="{{form.bucket_num_objs_req.name}}" id="{{form.bucket_num_objs_req.id_for_label}}" min="1" max="8" value="4" oninput="updateObjectiveCount(true)" onchange="updateObjectiveCount(true)" >
               <input type="text" id="numObjectivesRequiredDisp" form="none" size="1" value="4" readonly>
             </div>
