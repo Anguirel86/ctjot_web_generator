@@ -96,6 +96,12 @@ function resetAll() {
   $('#id_mystery_epoch_fail').val(50).change()
   $('#id_mystery_gear_rando').val(25).change()
   $('#id_mystery_heal_rando').val(25).change()
+  
+  // Bucket Settings
+  $('#id_bucket_num_objs').val(5).change()
+  $('#id_bucket_num_objs_req').val(4).change()
+  updateObjectiveCount()
+  
 }
 
 /*
@@ -295,6 +301,8 @@ function prepareForm() {
     return false;
   }
   encodeDuplicateCharacterChoices();
+  
+  if (!validateAndUpdateObjectives()){return false}
   return true;
 }
 
@@ -363,4 +371,343 @@ function updateMysterySettings() {
   for (const id of id_list_percentage) {
     document.getElementById(id + "_text").value = document.getElementById("id_" + id).value + "%"
   }
+}
+
+// All broken code goes below this line
+// Adding Bucket-specific functions and data
+
+/*
+ * Ensure that the number of objectives and the
+ */
+function updateObjectiveCount(adjustingRequired = false){
+
+    numObjs = document.getElementById("id_bucket_num_objs").value
+    reqObjs = document.getElementById("id_bucket_num_objs_req").value
+    
+    if (reqObjs > numObjs){
+        if (adjustingRequired) {numObjs = reqObjs}
+        else {reqObjs = numObjs}
+    }
+    
+    document.getElementById("id_bucket_num_objs").value = numObjs
+    document.getElementById("numObjectivesDisp").value = numObjs
+    document.getElementById("id_bucket_num_objs_req").value = reqObjs
+    document.getElementById("numObjectivesRequiredDisp").value = reqObjs
+    
+    // Now enable/disable the objective entries according to numObjs
+    for(var i=0; i<8; i++){
+        var isDisabled = true
+        if (i < numObjs){isDisabled = false}
+        document.getElementById("objEntry"+(i+1)).disabled = isDisabled
+    }
+}
+
+// Parsing objectives
+const objectiveDict = {
+    "Random": "65:quest_gated, 30:boss_nogo, 15:recruit_gated",
+    "Random Gated Quest": "quest_gated",
+    "Random Hard Quest": "quest_late",
+    "Random Go Mode Quest": "quest_go",
+    "Random Gated Character Recruit": "recruit_gated",
+    "Random Boss (Includes Go Mode Dungeons)": "boss_any",
+    "Random Boss from Go Mode Dungeon": "boss_go",
+    "Random Boss (No Go Mode Dungeons)": "boss_nogo",
+    "Recruit 3 Characters (Total 5)": "recruit_3",
+    "Recruit 4 Characters (Total 6)": "recruit_4",
+    "Recruit 5 Characters (Total 7)": "recruit_5",
+    "Collect 10 of 20 Fragments": "collect_fragments_10_10",
+    "Collect 10 of 30 Fragments": "collect_fragments_10_20",
+    "Collect 3 Rocks": "collect_rocks_3",
+    "Collect 4 Rocks": "collect_rocks_4",
+    "Collect 5 Rocks": "collect_rocks_5",
+    "Forge the Masamune": "quest_forge",
+    "Charge the Moonstone": "quest_moonstone",
+    "Trade the Jerky Away": "quest_jerky",
+    "Defeat the Arris Dome Boss": "quest_arris",
+    "Visit Cyrus's Grave with Frog": "quest_cyrus",
+    "Defeat the Boss of Death's Peak": "quest_deathpeak",
+    "Defeat the Boss of Denadoro Mountains": "quest_denadoro",
+    "Gain Epoch Flight": "quest_epoch",
+    "Defeat the Boss of the Factory Ruins": "quest_factory",
+    "Defeat the Boss of the Geno Dome": "quest_geno",
+    "Defeat the Boss of the Giant's Claw": "quest_claw",
+    "Defeat the Boss of Heckran's Cave": "quest_heckran",
+    "Defeat the Boss of the King's Trial": "quest_shard",
+    "Defeat the Boss of Manoria Cathedral": "quest_cathedral",
+    "Defeat the Boss of Mount Woe": "quest_woe",
+    "Defeat the Boss of the Pendant Trial": "quest_pendant",
+    "Defeat the Boss of the Reptite Lair": "quest_reptite",
+    "Defeat the Boss of the Sun Palace": "quest_sunpalace",
+    "Defeat the Boss of the Sunken Desert": "quest_desert",
+    "Defeat the Boss in the Zeal Throneroom": "quest_zealthrone",
+    "Defeat the Boss of Zenan Bridge": "quest_zenan",
+    "Defeat the Black Tyrano": "quest_blacktyrano",
+    "Defeat the Tyrano Lair Midboss": "quest_tyranomid",
+    "Defeat the Boss in Flea's Spot": "quest_flea",
+    "Defeat the Boss in Slash's Spot": "quest_slash",
+    "Defeat Magus in Magus's Castle": "quest_magus",
+    "Defeat the Boss in the GigaMutant Spot": "quest_omengiga",
+    "Defeat the Boss in the TerraMutant Spot": "quest_omenterra",
+    "Defeat the Boss in the ElderSpawn Spot": "quest_omenelder",
+    "Defeat the Boss in the Twin Golem Spot": "quest_twinboss",
+    "Beat Johnny in a Race": "quest_johnny",
+    "Bet on a Fair Race and Win": "quest_fairrace",
+    "Play the Fair Drinking Game": "quest_soda",
+    "Defeat AtroposXR": "boss_atropos",
+    "Defeat DaltonPlus": "boss_dalton",
+    "Defeat DragonTank": "boss_dragontank",
+    "Defeat ElderSpawn": "boss_elderspawn",
+    "Defeat Flea": "boss_flea",
+    "Defeat Flea Plus": "boss_fleaplus",
+    "Defeat Giga Gaia": "boss_gigagaia",
+    "Defeat GigaMutant": "boss_gigamutant",
+    "Defeat Golem": "boss_golem",
+    "Defeat Golem Boss": "boss_golemboss",
+    "Defeat Guardian": "boss_guardian",
+    "Defeat Heckran": "boss_heckran",
+    "Defeat LavosSpawn": "boss_lavosspawn",
+    "Defeat Magus (North Cape)": "boss_magusnc",
+    "Defeat Masamune": "boss_masamune",
+    "Defeat Mother Brain": "boss_motherbrain",
+    "Defeat Mud Imp": "boss_mudimp",
+    "Defeat Nizbel": "boss_nizbel",
+    "Defeat Nizbel II": "boss_nizbel2",
+    "Defeat R-Series": "boss_rseries",
+    "Defeat Retinite": "boss_retinite",
+    "Defeat RustTyrano": "boss_rusttyrano",
+    "Defeat Slash": "boss_slash",
+    "Defeat Son of Sun": "boss_sonofsun",
+    "Defeat Super Slash": "boss_superslash",
+    "Defeat TerraMutant": "boss_terramutant",
+    "Defeat Yakra": "boss_yakra",
+    "Defeat Yakra XIII": "boss_yakraxiii",
+    "Defeat Zombor": "boss_zombor"
+}
+
+// All quest name tags allowed by the parser.
+const allowedQuestTags = [
+    'free', 'gated', 'late', 'go',
+    'repairmasamune', 'masamune', 'masa', 'forge',
+    'chargemoon', 'moon', 'moonstone',
+    'arris',
+    'jerky',
+    'deathpeak', 'death',
+    'denadoro',
+    'epoch', 'flight', 'epochflight',
+    'factory', 'factoryruins',
+    'geno', 'genodome',
+    'claw', 'giantsclaw',
+    'heckran', 'heckranscave', 'heckrancave',
+    'kingstrial', 'shard', 'shardtrial', 'prismshard',
+    'cathedral', 'cath', 'manoria',
+    'woe', 'mtwoe',
+    'ocean', 'oceanpalace',
+    'ozzie', 'fort', 'ozziefort', 'ozziesfort',
+    'pendant', 'pendanttrial',
+    'reptite', 'reptitelair',
+    'sunpalace', 'sun',
+    'desert', 'sunkendesert',
+    'zealthrone', 'zealpalace', 'golemspot',
+    'zenan', 'bridge', 'zenanbridge',
+    'tyrano', 'blacktyrano', 'azala',
+    'tyranomid', 'nizbel2spot',
+    'magus', 'maguscastle',
+    'omengiga', 'gigamutant', 'gigaspot',
+    'omenterra', 'terramutant', 'terraspot',
+    'flea', 'magusflea',
+    'slash', 'magusslash',
+    'omenelder', 'elderspawn', 'elderspot',
+    'twinboss', 'twingolem', 'twinspot',
+    'cyrus', 'nr', 'northernruins',
+    'johnny', 'johnnyrace',
+    'fairrace', 'fairbet',
+    'soda', 'drink',
+]
+
+/*
+ * Helper function to parse a quest objective.
+ * param questParts, Array: An objective (e.g. 'Quest_ZenanBridge') has been cleaned and turned into 
+ * the array ['quest', 'zenanbridge'] which is passed in as questParts.
+ */
+function validateQuestObjective(questParts){
+
+    if (questParts.length != 2){
+        return false
+    }       
+    if (!allowedQuestTags.includes(questParts[1])){
+        return false
+    }
+
+    return true
+}
+
+/*
+ * Helper function to parse a boss objective.
+ * param bossParts, Array: An objective (e.g. 'Boss_MotherBrain') has been 
+ * cleaned and turned into the array ['boss', 'motherbrain'] which is passed 
+ * in as bossParts.
+ */
+const allowedBossNames = [
+    'any', 'go', 'nogo',
+    'atropos', 'atroposxr', 'dalton', 'daltonplus', 'dalton+',
+    'dragontank', 'dtank', 'elderspawn', 'elder', 'flea', 'fleaplus', 'flea+',
+    'gigagaia', 'gg', 'gigamutant', 'golem', 'bossgolem', 'golemboss',
+    'guardian', 'heckran', 'lavosspawn', 'magusnc', 'ncmagus', 'masamune', 'masa&mune',
+    'megamutant', 'motherbrain', 'mudimp', 'nizbel', 'nizbel2', 'nizbelii',
+    'rseries', 'retinite', 'rusty', 'rusttyrano', 'slash', 'sos', 'sonofsun',
+    'superslash', 'terramutant', // 'twinboss', handled in quests
+    'yakra', 'yakraxiii', 'yakra13', 'zombor'
+]
+
+function validateBossObjective(bossParts){
+    if (bossParts.length != 2){
+        return false
+    }
+
+    return allowedBossNames.includes(bossParts[1])
+}
+
+const allowedRecruitNames = [
+    'any', 'gated',
+    'crono', 'marle', 'lucca', 'robo', 'frog', 'ayla', 'magus',
+    'castle', 'dactyl', 'proto', 'burrow',
+    '1', '2', '3', '4', '5'
+]
+
+/*
+ * Helper function to parse a recruit objective.
+ * param recruitParts, Array: An objective (e.g. 'Recruit_Crono') has been 
+ * cleaned and split into an array (['recruit', 'crono']) which is passed 
+ * in as recruitParts.
+ */
+ function validateRecruitObjective(recruitParts){
+    if (recruitParts.length != 2){return false}
+ 
+    return allowedRecruitNames.includes(recruitParts[1])
+ }
+
+/*
+ * function which determines whether the given string is actually an integer
+ * which is strictly greater than some threshold (param greaterThan)
+ */
+function isInteger(string){
+    const num = Number(string)
+    return Number.isInteger(num)
+}
+
+/*
+ * Helper function to parse a recruit objective.
+ * param collectParts, Array: An objective (e.g. 'Collect_5_Fragments_5') has 
+ * been cleaned and split into an array (['collect', '5', 'fragments', '5']) 
+ * which is passed in as recruitParts.
+ */
+function validateCollectObjective(collectParts){
+    if (collectParts.length < 2){
+        return false
+    }   
+    collectType = collectParts[2]
+    if (collectType == 'rocks'){
+        if (collectParts.length != 3){return false}
+        numRocks = Number(collectParts[1])
+        if (!Number.isInteger(numRocks) || numRocks < 1){return false}
+    } else if (collectType == 'fragments'){
+        if (collectParts.length != 4){return false}
+        
+        fragsNeeded = Number(collectParts[1])
+        extraFrags = Number(collectParts[3])
+        
+        if (!Number.isInteger(fragsNeeded) || fragsNeeded < 0){return false}
+        if (!Number.isInteger(extraFrags) || extraFrags < 0){return false}
+    } else {
+        // Unrecognized collection type
+        return false
+    }
+    return true
+}
+
+/*
+ * Validate a single objective hint.
+ */
+function validateObjective(objective){
+    // If the user used a preset in the entry box, then use the dict above to resolve it.
+    cleanedObjective = objective.toLowerCase()
+    for(var key in objectiveDict){
+        if (objectiveDict.hasOwnProperty(key) && key.toLowerCase() == cleanedObjective){
+            return {isValid: true, result: objectiveDict[key]}
+        }
+    }
+   
+    // Otherwise, parse the objective
+    cleanedObjective = objective.replace(/\s/g,'')
+    
+    if (cleanedObjective == ''){
+        // Do something to display an error on the page for an empty objective string
+        return {isValid: false, result: "Empty objective string."}
+    }
+    
+    objectiveParts = cleanedObjective.split(',')
+    for (var i = 0; i < objectiveParts.length; i++){
+        objectivePart = objectiveParts[i]
+        // split into weight:objective if possible
+        weightSplit = objectivePart.split(':')
+        if (weightSplit.length > 2){
+            // Some error message about unexpected ':'
+            return {isValid: false, result: "Too many ':' in "+objectivePart}
+        } else if (weightSplit.length == 2) {
+            // If there was a weight, verify it's an integer
+            weight = weightSplit[0]
+            if (!isInteger(weight) || Number(weight) < 0){
+                return {isValid: false, result: "Weight "+weight+" is not a positive integer"}
+            }
+            // Overwrite objectivePart with just the objective, not the weight
+            objectivePart = weightSplit[1]
+        }
+        
+        splitObjective = objectivePart.split('_')
+        objectiveType = splitObjective[0]
+        
+        if (objectiveType == 'quest'){
+            ret = validateQuestObjective(splitObjective)
+        } else if (objectiveType == 'boss'){
+            ret = validateBossObjective(splitObjective)
+        } else if (objectiveType == 'recruit'){
+            ret = validateRecruitObjective(splitObjective)
+        } else if (objectiveType == 'collect'){
+            ret = validateCollectObjective(splitObjective)
+        } else {
+            // invalid objective type
+            return {isValid: false, result: "Invalid objective type: "+objectiveType}
+        }
+        if (!ret){return {isValid: false, result: "Could not resolve "+objectivePart}}
+    }
+    
+    return {isValid: true, result: cleanedObjective}
+}
+
+/*
+ * Get the objectives from the entries, parse them, and put them in the actual
+ * form fields.
+ */
+function validateAndUpdateObjectives(){
+    var numObjs = document.getElementById("id_bucket_num_objs").value
+
+    for(var i = 0; i<Number(numObjs); i++){
+        elementId = 'objEntry'+(i+1)
+        objective = document.getElementById(elementId).value
+        const parse = validateObjective(objective)
+        const isValid = parse.isValid
+        const result = parse.result
+        
+        if (isValid){
+            formElementId = 'id_bucket_objective'+(i+1)
+            document.getElementById(formElementId).value = result
+            console.log(result)
+        }
+        else{
+            // Set some error text
+            return false
+        }
+            
+    }
+    return true
 }
