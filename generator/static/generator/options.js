@@ -58,10 +58,8 @@ function resetAll() {
   $('#id_tackle_effects').prop('checked', false).change();
   $('#id_starters_sufficient').prop('checked', false).change();
 
-  $('#id_bucket_fragments').prop('checked', false).change();
-  $('#id_fragments_required').val(10).change();
-  $('#id_extra_fragments').val(5).change();
-
+  $('#id_bucket_list').prop('checked', false).change();
+  
   // Mystery Seed options
   // game modes
   $('#id_mystery_game_mode_standard').val(75).change()
@@ -87,7 +85,7 @@ function resetAll() {
   // flag probabilities
   $('#id_mystery_tab_treasures').val(10).change()
   $('#id_mystery_unlock_magic').val(50).change()
-  $('#id_mystery_bucket_fragments').val(15).change()
+  $('#id_mystery_bucket_list').val(15).change()
   $('#id_mystery_chronosanity').val(30).change()
   $('#id_mystery_boss_rando').val(50).change()
   $('#id_mystery_boss_scale').val(30).change()
@@ -338,20 +336,6 @@ function updateTabValuesFromRange(rangeMin, rangeMax, textMin, textMax, adjustMi
 }
 
 /*
- * Update the text box for the number of required bucket fragments on change of the range slider.
- */
-function setFragmentsRequired() {
-  document.getElementById("fragments_required_text").value = document.getElementById("id_fragments_required").value
-}
-
-/*
- * Update the text box for the number of extra bucket fragments on change of the range slider.
- */
-function setExtraFragments() {
-  document.getElementById("extra_fragments_text").value = document.getElementById("id_extra_fragments").value
-}
-
-/*
  * Update the mystery flags slider text boxes.
  */
 function updateMysterySettings() {
@@ -360,7 +344,7 @@ function updateMysterySettings() {
     'mystery_enemy_difficulty_normal', 'mystery_enemy_difficulty_hard',
     'mystery_tech_order_normal', 'mystery_tech_order_full_random', 'mystery_tech_order_balanced_random',
     'mystery_shop_prices_normal', 'mystery_shop_prices_random', 'mystery_shop_prices_mostly_random', 'mystery_shop_prices_free'];
-  var id_list_percentage = ['mystery_tab_treasures', 'mystery_unlock_magic', 'mystery_bucket_fragments', 'mystery_chronosanity',
+  var id_list_percentage = ['mystery_tab_treasures', 'mystery_unlock_magic', 'mystery_bucket_list', 'mystery_chronosanity',
     'mystery_boss_rando', 'mystery_boss_scale', 'mystery_locked_characters', 'mystery_duplicate_characters',
     'mystery_epoch_fail', 'mystery_gear_rando', 'mystery_heal_rando'];
 
@@ -369,6 +353,7 @@ function updateMysterySettings() {
   }
 
   for (const id of id_list_percentage) {
+    console.log(id)
     document.getElementById(id + "_text").value = document.getElementById("id_" + id).value + "%"
   }
 }
@@ -701,13 +686,17 @@ function validateAndUpdateObjectives(){
         if (isValid){
             formElementId = 'id_bucket_objective'+(i+1)
             document.getElementById(formElementId).value = result
-            console.log(result)
         }
         else{
             // Set some error text
             return false
         }
             
+    }
+    
+    for(var i=Number(numObjs); i<8; i++){
+        formElementId = 'id_bucket_objective'+(i+1)
+        document.getElementById(formElementId).value = 'None'
     }
     return true
 }

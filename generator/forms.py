@@ -88,12 +88,10 @@ class GenerateForm(forms.Form):
     free_menu_glitch = forms.BooleanField(required=False)
 
     # Extra
-    bucket_fragments = forms.BooleanField(required=False)
+    bucket_list = forms.BooleanField(required=False)
     starters_sufficient = forms.BooleanField(required=False)
     use_antilife = forms.BooleanField(required=False)
     tackle_effects = forms.BooleanField(required=False)
-    fragments_required = forms.IntegerField()
-    extra_fragments = forms.IntegerField()
 
     # seed and spoiler log
     seed = forms.CharField(max_length=25, required=False)
@@ -124,7 +122,7 @@ class GenerateForm(forms.Form):
     #  Flags
     mystery_tab_treasures = forms.IntegerField()
     mystery_unlock_magic = forms.IntegerField()
-    mystery_bucket_fragments = forms.IntegerField()
+    mystery_bucket_list = forms.IntegerField()
     mystery_chronosanity = forms.IntegerField()
     mystery_boss_rando = forms.IntegerField()
     mystery_boss_scale = forms.IntegerField()
@@ -137,8 +135,8 @@ class GenerateForm(forms.Form):
     # bucket
     bucket_num_objs = forms.IntegerField()
     bucket_num_objs_req = forms.IntegerField()
-    bucket_disable_go_modes = forms.BooleanField()
-    bucket_obj_win_game = forms.BooleanField()
+    bucket_disable_go_modes = forms.BooleanField(required=False)
+    bucket_obj_win_game = forms.BooleanField(required=False)
 
     bucket_objective1 = forms.CharField()
     bucket_objective2 = forms.CharField()
