@@ -133,3 +133,18 @@ class GenerateForm(forms.Form):
     mystery_epoch_fail = forms.IntegerField()
     mystery_gear_rando = forms.IntegerField()
     mystery_heal_rando = forms.IntegerField()
+
+    # bucket
+    bucket_num_objs = forms.IntegerField()
+    bucket_num_objs_req = forms.IntegerField()
+    bucket_disable_go_modes = forms.BooleanField()
+    bucket_obj_win_game = forms.BooleanField()
+
+    bucket_objective1 = forms.CharField()
+    bucket_objective2 = forms.CharField()
+    bucket_objective3 = forms.CharField()
+    bucket_objective4 = forms.CharField()
+    bucket_objective5 = forms.CharField()
+    bucket_objective6 = forms.CharField()
+    bucket_objective7 = forms.CharField()
+    bucket_objective8 = forms.CharField()
