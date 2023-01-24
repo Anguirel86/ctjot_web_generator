@@ -13,6 +13,7 @@ class RomForm(forms.Form):
     death_peak_alt_music = forms.BooleanField(required=False)
     quiet_mode = forms.BooleanField(required=False)
     reduce_flashes = forms.BooleanField(required=False)
+    auto_run = forms.BooleanField(required=False)
 
     # Actual character name length is limited to 5 characters in game,
     # but if an invalid name is entered the randomizer interface will
@@ -66,7 +67,9 @@ class GenerateForm(forms.Form):
     game_mode = forms.CharField(max_length=15)
 
     # Duplicate characters tab
-    duplicate_char_assignments = forms.CharField(widget=forms.HiddenInput(), required=False)
+    duplicate_char_assignments = forms.CharField(
+        widget=forms.HiddenInput(), required=False
+    )
     duplicate_duals = forms.BooleanField(required=False)
 
     # Boss rando tab
@@ -92,6 +95,19 @@ class GenerateForm(forms.Form):
     starters_sufficient = forms.BooleanField(required=False)
     use_antilife = forms.BooleanField(required=False)
     tackle_effects = forms.BooleanField(required=False)
+
+    # All of the logic tweak flags on the Extra tab
+    unlocked_skyways = forms.BooleanField(required=False)
+    add_sunkeep_spot = forms.BooleanField(required=False)
+    add_bekkler_spot = forms.BooleanField(required=False)
+    add_cyrus_spot = forms.BooleanField(required=False)
+    restore_tools = forms.BooleanField(required=False)
+    add_ozzie_spot = forms.BooleanField(required=False)
+    restore_johnny_race = forms.BooleanField(required=False)
+    add_racelog_spot = forms.BooleanField(required=False)
+    split_arris_dome = forms.BooleanField(required=False)
+    vanilla_robo_ribbon = forms.BooleanField(required=False)
+    vanilla_desert = forms.BooleanField(required=False)
 
     # seed and spoiler log
     seed = forms.CharField(max_length=25, required=False)
@@ -146,3 +162,4 @@ class GenerateForm(forms.Form):
     bucket_objective6 = forms.CharField()
     bucket_objective7 = forms.CharField()
     bucket_objective8 = forms.CharField()
+

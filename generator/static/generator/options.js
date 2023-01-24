@@ -228,7 +228,7 @@ function dcUncheckAll() {
 function toggleDCOptions() {
   var dupCharsSelected = $('id_duplicate_characters').prop('checked')
   document.getElementById('dcOptionsButton').disabled = !(dupCharsSelected);
-  
+
   // Hide the duplicate character options div if the duplicate characters 
   // checkbox is unselected. 
   if (!dupCharsSelected) {
@@ -281,7 +281,7 @@ function validateDupCharChoices() {
     }
     if (!selectionFound) {
       $('#character_selection_error').html("Each row must have at least one selection.");
-      $('#dup_char_options').collapse("show");
+      $('a[href="#options-dc"]').tab('show');
       return false;
     }
   }
@@ -299,8 +299,11 @@ function prepareForm() {
     return false;
   }
   encodeDuplicateCharacterChoices();
-  
-  if (!validateAndUpdateObjectives()){return false}
+    
+  if (!validateLogicTweaks())
+      return false;	
+    
+  if (!validateAndUpdateObjectives()){return false;}
   return true;
 }
 
@@ -649,12 +652,15 @@ function validateObjective(objective){
         weightSplit = objectivePart.split(':')
         if (weightSplit.length > 2){
             // Some error message about unexpected ':'
-            return {isValid: false, result: "Too many ':' in "+objectivePart}
+            return {
+		isValid: false,
+		result: "Too many ':' in "+objectivePart+". Format is 'weight1:obj_text1, weight2:obj_text2, ..."
+	    }
         } else if (weightSplit.length == 2) {
             // If there was a weight, verify it's an integer
             weight = weightSplit[0]
             if (!isInteger(weight) || Number(weight) < 0){
-                return {isValid: false, result: "Weight "+weight+" is not a positive integer"}
+                return {isValid: false, result: "Weight '"+weight+"' is not a positive integer"}
             }
             // Overwrite objectivePart with just the objective, not the weight
             objectivePart = weightSplit[1]
@@ -675,7 +681,12 @@ function validateObjective(objective){
             // invalid objective type
             return {isValid: false, result: "Invalid objective type: "+objectiveType}
         }
-        if (!ret){return {isValid: false, result: "Could not resolve "+objectivePart}}
+        if (!ret){
+	    return {
+		isValid: false,
+		result: "Could not resolve "+objectivePart
+	    }
+	}
     }
     
     return {isValid: true, result: cleanedObjective}
@@ -688,6 +699,7 @@ function validateObjective(objective){
 function validateAndUpdateObjectives(){
     var numObjs = document.getElementById("id_bucket_num_objs").value
 
+    var retFalse = false
     for(var i = 0; i<Number(numObjs); i++){
         elementId = 'objEntry'+(i+1)
         objective = document.getElementById(elementId).value
@@ -696,14 +708,24 @@ function validateAndUpdateObjectives(){
         const result = parse.result
         
         if (isValid){
-            formElementId = 'id_bucket_objective'+(i+1)
+            const formElementId = 'id_bucket_objective'+(i+1)
             document.getElementById(formElementId).value = result
+
+	    const errorElementId = 'objError'+(i+1)
+	    document.getElementById(errorElementId).innerHTML = ""
         }
         else{
-            // Set some error text
-            return false
+            
+	    const errorElementId = 'objError'+(i+1)
+	    document.getElementById(errorElementId).innerHTML = result
+	    $('a[href="#options-bucket"]').tab('show');
+            retFalse = true
         }
             
+    }
+
+    if (retFalse){
+	return false
     }
     
     for(var i=Number(numObjs); i<8; i++){
@@ -711,4 +733,44 @@ function validateAndUpdateObjectives(){
         document.getElementById(formElementId).value = 'None'
     }
     return true
+}
+
+/*
+ * Ensure that there are enough KI Spots to support added KIs
+ */
+function validateLogicTweaks(){
+    const addKiNames = ['restore_johnny_race', 'restore_tools', 'epoch_fail']
+    const addSpotNames = ['add_bekkler_spot', 'add_ozzie_spot',
+			  'add_racelog_spot', 'vanilla_robo_ribbon',
+			  'add_cyrus_spot']
+
+    var numKIs = 0
+    for(var i=0; i<addKiNames.length; i++){
+	const name = addKiNames[i]
+	const id = 'id_'+name
+
+	const isChecked = document.getElementById(id).checked
+	if (isChecked){numKIs++}
+	    
+    }
+
+    var numSpots = 0
+    for(var i=0; i<addSpotNames.length; i++){
+	const name = addSpotNames[i]
+	const id = 'id_'+name
+
+	const isChecked = document.getElementById(id).checked
+	if (isChecked){numSpots++}
+    }
+
+    // There can be one more KI than spot because we just erase Jerky
+    if (numKIs-1 > numSpots){
+	document.getElementById("logicTweakError").innerHTML =
+	    "Select Additional Key Item Spots"
+	return false
+    }
+
+    document.getElementById("logicTweakError").innerHTML = ""
+    return true
+    
 }
