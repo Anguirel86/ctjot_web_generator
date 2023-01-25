@@ -714,7 +714,6 @@ function validateAndUpdateObjectives(){
 	    document.getElementById(errorElementId).innerHTML = ""
         }
         else{
-            
 	    const errorElementId = 'objError'+(i+1)
 	    document.getElementById(errorElementId).innerHTML = result
 	    $('a[href="#options-bucket"]').tab('show');
@@ -766,6 +765,7 @@ function validateLogicTweaks(){
     if (numKIs-1 > numSpots){
 	document.getElementById("logicTweakError").innerHTML =
 	    "Select Additional Key Item Spots"
+	$('a[href="#options-extra"]').tab('show');
 	return false
     }
 
