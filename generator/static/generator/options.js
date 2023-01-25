@@ -356,7 +356,6 @@ function updateMysterySettings() {
   }
 
   for (const id of id_list_percentage) {
-    console.log(id)
     document.getElementById(id + "_text").value = document.getElementById("id_" + id).value + "%"
   }
 }

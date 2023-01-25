@@ -10,6 +10,9 @@
             <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#spoiler_keys">Key Items</a></li>
             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#spoiler_chars">Characters</a></li>
             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#spoiler_bosses">Bosses</a></li>
+            {% if spoiler_log.objectives %}
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#spoiler_objectives">Objectives</a></li>
+            {% endif %}
           </ul>
 
           <!-- Key Items tab -->
@@ -58,6 +61,18 @@
                   <td>{{entry.location}}</td>
                   <td>{{entry.boss}}</td>
                 </tr>
+              {% endfor %}
+            </table>
+          </div>
+
+	  <!-- Objectives tab -->
+          <div class="tab-pane fade show" id="spoiler_objectives">
+            <table class="table" id="objective_table">
+              {% for entry in spoiler_log.objectives %}
+              <tr>
+                <td>{{entry.name}}</td>
+                <td>{{entry.desc}}</td>
+              </tr>
               {% endfor %}
             </table>
           </div>
