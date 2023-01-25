@@ -13,6 +13,7 @@ class RomForm(forms.Form):
     death_peak_alt_music = forms.BooleanField(required=False)
     quiet_mode = forms.BooleanField(required=False)
     reduce_flashes = forms.BooleanField(required=False)
+    auto_run = forms.BooleanField(required=False)
 
     # Actual character name length is limited to 5 characters in game,
     # but if an invalid name is entered the randomizer interface will
@@ -66,7 +67,9 @@ class GenerateForm(forms.Form):
     game_mode = forms.CharField(max_length=15)
 
     # Duplicate characters tab
-    duplicate_char_assignments = forms.CharField(widget=forms.HiddenInput(), required=False)
+    duplicate_char_assignments = forms.CharField(
+        widget=forms.HiddenInput(), required=False
+    )
     duplicate_duals = forms.BooleanField(required=False)
 
     # Boss rando tab
@@ -88,12 +91,23 @@ class GenerateForm(forms.Form):
     free_menu_glitch = forms.BooleanField(required=False)
 
     # Extra
-    bucket_fragments = forms.BooleanField(required=False)
+    bucket_list = forms.BooleanField(required=False)
     starters_sufficient = forms.BooleanField(required=False)
     use_antilife = forms.BooleanField(required=False)
     tackle_effects = forms.BooleanField(required=False)
-    fragments_required = forms.IntegerField()
-    extra_fragments = forms.IntegerField()
+
+    # All of the logic tweak flags on the Extra tab
+    unlocked_skyways = forms.BooleanField(required=False)
+    add_sunkeep_spot = forms.BooleanField(required=False)
+    add_bekkler_spot = forms.BooleanField(required=False)
+    add_cyrus_spot = forms.BooleanField(required=False)
+    restore_tools = forms.BooleanField(required=False)
+    add_ozzie_spot = forms.BooleanField(required=False)
+    restore_johnny_race = forms.BooleanField(required=False)
+    add_racelog_spot = forms.BooleanField(required=False)
+    split_arris_dome = forms.BooleanField(required=False)
+    vanilla_robo_ribbon = forms.BooleanField(required=False)
+    vanilla_desert = forms.BooleanField(required=False)
 
     # seed and spoiler log
     seed = forms.CharField(max_length=25, required=False)
@@ -124,7 +138,7 @@ class GenerateForm(forms.Form):
     #  Flags
     mystery_tab_treasures = forms.IntegerField()
     mystery_unlock_magic = forms.IntegerField()
-    mystery_bucket_fragments = forms.IntegerField()
+    mystery_bucket_list = forms.IntegerField()
     mystery_chronosanity = forms.IntegerField()
     mystery_boss_rando = forms.IntegerField()
     mystery_boss_scale = forms.IntegerField()
@@ -133,3 +147,19 @@ class GenerateForm(forms.Form):
     mystery_epoch_fail = forms.IntegerField()
     mystery_gear_rando = forms.IntegerField()
     mystery_heal_rando = forms.IntegerField()
+
+    # bucket
+    bucket_num_objs = forms.IntegerField()
+    bucket_num_objs_req = forms.IntegerField()
+    bucket_disable_go_modes = forms.BooleanField(required=False)
+    bucket_obj_win_game = forms.BooleanField(required=False)
+
+    bucket_objective1 = forms.CharField()
+    bucket_objective2 = forms.CharField()
+    bucket_objective3 = forms.CharField()
+    bucket_objective4 = forms.CharField()
+    bucket_objective5 = forms.CharField()
+    bucket_objective6 = forms.CharField()
+    bucket_objective7 = forms.CharField()
+    bucket_objective8 = forms.CharField()
+

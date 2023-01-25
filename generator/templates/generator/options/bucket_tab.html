@@ -1,0 +1,122 @@
+            <div class="border border-primary rounded p-2 mb-3">
+              <datalist id="datalistOptions">
+                <option value="Random">
+                <option value="Random Gated Quest">
+                <option value="Random Hard Quest">
+                <option value="Random Go Mode Quest">
+                <option value="Random Gated Character Recruit">
+                <option value="Random Boss (Includes Go Mode Dungeons)">
+                <option value="Random Boss from Go Mode Dungeon">
+                <option value="Random Boss (No Go Mode Dungeons)">
+                <option value="Recruit a Random Gated Character">
+                <option value="Recruit 3 Characters (Total 5)">
+                <option value="Recruit 4 Characters (Total 6)">
+                <option value="Recruit 5 Characters (Total 7)">
+                <option value="Collect 10 of 20 Fragments">
+                <option value="Collect 10 of 30 Fragments">
+                <option value="Collect 3 Rocks">
+                <option value="Collect 4 Rocks">
+                <option value="Collect 5 Rocks">
+                <option value="Forge the Masamune">
+                <option value="Charge the Moonstone">
+                <option value="Trade the Jerky Away">
+                <option value="Defeat the Arris Dome Boss">
+                <option value="Visit Cyrus's Grave with Frog">
+                <option value="Defeat the Boss of Death's Peak">
+                <option value="Defeat the Boss of Denadoro Mountains">
+                <option value="Gain Epoch Flight">
+                <option value="Defeat the Boss of the Factory Ruins">
+                <option value="Defeat the Boss of the Geno Dome">
+                <option value="Defeat the Boss of the Giant's Claw">
+                <option value="Defeat the Boss of Heckran Cave">
+                <option value="Defeat the Boss of the King's Trial">
+                <option value="Defeat the Boss of Manoria Cathedral">
+                <option value="Defeat the Boss of Mount Woe">
+                <option value="Defeat the Boss of the Pendant Trial">
+                <option value="Defeat the Boss of the Reptite Lair">
+                <option value="Defeat the Boss of the Sun Palace">
+                <option value="Defeat the Boss of the Sunken Desert">
+                <option value="Defeat the Boss in the Zeal Throneroom">
+                <option value="Defeat the Boss of Zenan Bridge">
+                <option value="Defeat the Black Tyrano">
+                <option value="Defeat the Tyrano Lair Midboss">
+                <option value="Defeat the Boss in Flea's Spot">
+                <option value="Defeat the Boss in Slash's Spot">
+                <option value="Defeat Magus in Magus's Castle">
+                <option value="Defeat the Boss in the GigaMutant Spot">
+                <option value="Defeat the Boss in the TerraMutant Spot">
+                <option value="Defeat the Boss in the ElderSpawn Spot">
+                <option value="Defeat the Boss in the Twin Golem Spot">
+                <option value="Beat Johnny in a Race">
+                <option value="Bet on a Fair Race and Win">
+                <option value="Play the Fair Drinking Game">
+                <option value="Defeat AtroposXR">
+                <option value="Defeat DaltonPlus">
+                <option value="Defeat DragonTank">
+                <option value="Defeat ElderSpawn">
+                <option value="Defeat Flea">
+                <option value="Defeat Flea Plus">
+                <option value="Defeat Giga Gaia">
+                <option value="Defeat GigaMutant">
+                <option value="Defeat Golem">
+                <option value="Defeat Golem Boss">
+                <option value="Defeat Guardian">
+                <option value="Defeat Heckran">
+                <option value="Defeat LavosSpawn">
+                <option value="Defeat Magus (North Cape)">
+                <option value="Defeat Masamune">
+                <option value="Defeat Mother Brain">
+                <option value="Defeat Mud Imp">
+                <option value="Defeat Nizbel">
+                <option value="Defeat Nizbel II">
+                <option value="Defeat R-Series">
+                <option value="Defeat Retinite">
+                <option value="Defeat RustTyrano">
+                <option value="Defeat Slash">
+                <option value="Defeat Son of Sun">
+                <option value="Defeat Super Slash">
+                <option value="Defeat TerraMutant">
+                <option value="Defeat Yakra">
+                <option value="Defeat Yakra XIII">
+                <option value="Defeat Zombor">
+                <option value="Recruit Crono">
+                <option value="Recruit Marle">
+                <option value="Recruit Lucca">
+                <option value="Recruit Robo">
+                <option value="Recruit Frog">
+                <option value="Recruit Ayla">
+                <option value="Recruit Magus">
+                <option value="Recruit the Guardia Castle Character">
+                <option value="Recruit the Dactyl Nest Character">
+                <option value="Recruit the Proto Dome Character">
+                <option value="Recruit the Frog's Burrow Character">
+              </datalist>
+              <div>
+              <label for="{{form.bucket_num_objs.id_for_label}}"> Number of Objectives</label>
+              <input type="range" name="{{form.bucket_num_objs.name}}" id="{{form.bucket_num_objs.id_for_label}}" min="1" max="8" value="5" oninput="updateObjectiveCount(false)" onchange="updateObjectiveCount(false)" >
+              <input type="text" id="numObjectivesDisp" form="none" size="1" value="5" readonly>
+            </div>
+            <div>
+              <label for="{{form.bucket_num_objs_req.id_for_label}}"> Number Required</label>
+              <input type="range" name="{{form.bucket_num_objs_req.name}}" id="{{form.bucket_num_objs_req.id_for_label}}" min="1" max="8" value="4" oninput="updateObjectiveCount(true)" onchange="updateObjectiveCount(true)" >
+              <input type="text" id="numObjectivesRequiredDisp" form="none" size="1" value="4" readonly>
+            </div>
+            {% with '1 2 3 4 5 6 7 8' as obj_enum %}
+            {% for i in obj_enum.split %}
+            <div id="objError{{i}}" class=errorText></div>
+	    <div>
+              <input type="hidden" name="bucket_objective{{i}}" id="id_bucket_objective{{i}}">
+              <label for="objEntry{{i}}">Objective {{i}}</label>
+              <input list="datalistOptions", id="objEntry{{i}}" name="objEntry{{i}}" form=none size=50 value="Random"{% if i|add:"0" > 5 %} disabled{% endif %}>
+	    </div>
+            {% endfor %}
+            {% endwith %}
+            <div class="form-group form-check pl-0">
+              <input type="checkbox" name="{{form.bucket_disable_go_modes.name}}" id="{{form.bucket_disable_go_modes.id_for_label}}"  data-toggle="toggle">
+              <label for="{{form.bucket_disable_go_modes.id_for_label}}">Disable Other Go Modes</label>
+            </div>
+            <div class="form-group form-check pl-0">
+              <input type="checkbox" name="{{form.bucket_obj_win_game.name}}" id="{{form.bucket_obj_win_game.id_for_label}}"  data-toggle="toggle">
+              <label for="{{form.bucket_obj_win_game.id_for_label}}">Objectives Auto-Win</label>
+            </div>
+</div>
