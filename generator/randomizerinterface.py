@@ -466,7 +466,7 @@ class RandomizerInterface:
 
     @staticmethod
     def get_web_spoiler_log(
-            # settings: rset.Settings,
+            settings: rset.Settings,
             config: randoconfig.RandoConfig
     ) -> dict[str, list[dict[str, str]]]:
         """
@@ -478,21 +478,21 @@ class RandomizerInterface:
         spoiler_log = {
             'characters': [],
             'key_items': [],
-            'bosses': []
-            # 'objectives': []
+            'bosses': [],
+            'objectives': []
         }
 
-        # if False and rset.GameFlags.BUCKET_LIST in settings.gameflags:
-        #     num_objs = settings.bucket_settings.num_objectives
+        if rset.GameFlags.BUCKET_LIST in settings.gameflags:
+            num_objs = settings.bucket_settings.num_objectives
 
-        #     for ind, objective in enumerate(config.objectives):
-        #         if ind >= num_objs:
-        #             break
+            for ind, objective in enumerate(config.objectives):
+                if ind >= num_objs:
+                    break
 
-        #         spoiler_log['objectives'].append(
-        #             {'name': str(f"Objective {ind}"),
-        #              'desc': objective.desc}
-        #         )
+                spoiler_log['objectives'].append(
+                    {'name': str(f"Objective {ind+1}"),
+                     'desc': objective.desc}
+                )
 
         # Character data
         for recruit_spot in config.char_assign_dict.keys():

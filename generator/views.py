@@ -94,7 +94,10 @@ class ShareLinkView(View):
                    'is_permalink': True,
                    'base_uri': request.build_absolute_uri('/')[:-1],
                    'form': rom_form,
-                   'spoiler_log': RandomizerInterface.get_web_spoiler_log(pickle.loads(game.configuration)),
+                   'spoiler_log': RandomizerInterface.get_web_spoiler_log(
+                       pickle.loads(game.settings),
+                       pickle.loads(game.configuration),
+                   ),
                    'is_race_seed': game.race_seed,
                    'share_info': share_info.getvalue()}
 
