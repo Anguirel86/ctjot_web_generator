@@ -773,3 +773,50 @@ function validateLogicTweaks(){
     return true
     
 }
+
+const forceOff = {
+    "standard": [],
+    "lost_worlds": ["boss_scaling", "bucket_list", "epoch_fail",
+		    "add_bekkler_spot", "add_cyrus_spot", "add_ozzie_spot",
+		    "add_racelog_spot", "add_sunkeep_spot",
+		    "restore_johnny_race", "split_arris_dome",
+		    "restore_tools", "unlocked_skyways",
+		    "vanilla_desert", "vanilla_robo_ribbon"],
+    "ice_age": ["zeal", "boss_scaling", "bucket_list"],
+    "legacy_of_cyrus": ["zeal", "boss_scale", "bucket_list",
+			"add_ozzie_spot", "add_cyrus_spot",
+			"add_sunkeep_spot", "restore_tools",
+			"restore_johnny_race", "split_arris_dome",
+			"add_racelog_spot", "add_bekkler_spot"],
+    "vanilla_rando": ["boss_scaling"]
+}
+
+// Const way to iterate over the keys of forceOff?
+const totalForceList = [
+    ... new Set([...forceOff["standard"],
+		 ...forceOff["lost_worlds"],
+		 ...forceOff["ice_age"],
+		 ...forceOff["legacy_of_cyrus"],
+		 ...forceOff["vanilla_rando"]])
+]
+
+/*
+ * Unset and disable flags based on the chosen game mode.  Restore them if the
+ * mode permits.
+ */
+function restrictFlags(){
+    var mode = document.getElementById("id_game_mode").value
+    var disableList = forceOff[mode]
+
+    for(var i=0; i<totalForceList.length; i++){
+	flag = totalForceList[i]
+
+	if(disableList.includes(flag)){
+	    $("#id_"+flag).parent().addClass('disabled')
+	    $("#id_"+flag).bootstrapToggle('off')
+	}
+	else{
+	    $("#id_"+flag).parent().removeClass('disabled')
+	}
+    }
+}
