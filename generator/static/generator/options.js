@@ -11,7 +11,7 @@ function resetAll() {
   // General options
   $('#id_enemy_difficulty').val('normal');
   $('#id_item_difficulty').val('normal');
-  $('#id_game_mode').val('standard')
+  $('#id_game_mode').val('standard').change();
   $('#id_disable_glitches').prop('checked', false).change();
   $('#id_lost_worlds').prop('checked', false).change();
   $('#id_boss_scaling').prop('checked', false).change();
@@ -136,7 +136,7 @@ function presetLostWorlds() {
   resetAll();
   $('#id_enemy_difficulty').val('normal');
   $('#id_item_difficulty').val('normal');
-  $('#id_game_mode').val('lost_worlds')
+  $('#id_game_mode').val('lost_worlds').change()
   $('#id_disable_glitches').prop('checked', true).change();
   $('#id_zeal').prop('checked', true).change();
   $('#id_tech_rando').val('fully_random');
@@ -160,7 +160,7 @@ function presetHard() {
  */
 function presetLegacyOfCyrus() {
   resetAll();
-  $('#id_game_mode').val('legacy_of_cyrus')
+  $('#id_game_mode').val('legacy_of_cyrus').change()
   $('#id_enemy_difficulty').val('normal');
   $('#id_item_difficulty').val('normal');
   $('#id_disable_glitches').prop('checked', true).change();
@@ -807,16 +807,19 @@ const totalForceList = [
 function restrictFlags(){
     var mode = document.getElementById("id_game_mode").value
     var disableList = forceOff[mode]
-
+    
     for(var i=0; i<totalForceList.length; i++){
 	flag = totalForceList[i]
-
+	
 	if(disableList.includes(flag)){
-	    $("#id_"+flag).parent().addClass('disabled')
-	    $("#id_"+flag).bootstrapToggle('off')
+	    $("#id_"+flag).parent().addClass('btn-light off disabled')
+	    $("#id_"+flag).parent().removeClass('btn-primary')
+	    $("#id_"+flag).prop('checked', false)
+	    $("#id_"+flag).prop('disabled', true)
 	}
 	else{
 	    $("#id_"+flag).parent().removeClass('disabled')
+	    $("#id_"+flag).prop('disabled', false)
 	}
     }
 }
