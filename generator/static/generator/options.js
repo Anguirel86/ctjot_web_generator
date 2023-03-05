@@ -301,7 +301,7 @@ function prepareForm() {
   encodeDuplicateCharacterChoices();
     
   if (!validateLogicTweaks())
-      return false;	
+      return false;     
     
   if (!validateAndUpdateObjectives()){return false;}
   return true;
@@ -403,11 +403,11 @@ const objectiveDict = {
     "Recruit 3 Characters (Total 5)": "recruit_3",
     "Recruit 4 Characters (Total 6)": "recruit_4",
     "Recruit 5 Characters (Total 7)": "recruit_5",
-    "Collect 10 of 20 Fragments": "collect_fragments_10_10",
-    "Collect 10 of 30 Fragments": "collect_fragments_10_20",
-    "Collect 3 Rocks": "collect_rocks_3",
-    "Collect 4 Rocks": "collect_rocks_4",
-    "Collect 5 Rocks": "collect_rocks_5",
+    "Collect 10 of 20 Fragments": "collect_10_fragments_20",
+    "Collect 10 of 30 Fragments": "collect_10_fragments_30",
+    "Collect 3 Rocks": "collect_3_rocks",
+    "Collect 4 Rocks": "collect_4_rocks",
+    "Collect 5 Rocks": "collect_5_rocks",
     "Forge the Masamune": "quest_forge",
     "Charge the Moonstone": "quest_moonstone",
     "Trade the Jerky Away": "quest_jerky",
@@ -652,9 +652,9 @@ function validateObjective(objective){
         if (weightSplit.length > 2){
             // Some error message about unexpected ':'
             return {
-		isValid: false,
-		result: "Too many ':' in "+objectivePart+". Format is 'weight1:obj_text1, weight2:obj_text2, ..."
-	    }
+                isValid: false,
+                result: "Too many ':' in "+objectivePart+". Format is 'weight1:obj_text1, weight2:obj_text2, ..."
+            }
         } else if (weightSplit.length == 2) {
             // If there was a weight, verify it's an integer
             weight = weightSplit[0]
@@ -681,11 +681,11 @@ function validateObjective(objective){
             return {isValid: false, result: "Invalid objective type: "+objectiveType}
         }
         if (!ret){
-	    return {
-		isValid: false,
-		result: "Could not resolve "+objectivePart
-	    }
-	}
+            return {
+                isValid: false,
+                result: "Could not resolve "+objectivePart
+            }
+        }
     }
     
     return {isValid: true, result: cleanedObjective}
@@ -710,20 +710,20 @@ function validateAndUpdateObjectives(){
             const formElementId = 'id_bucket_objective'+(i+1)
             document.getElementById(formElementId).value = result
 
-	    const errorElementId = 'objError'+(i+1)
-	    document.getElementById(errorElementId).innerHTML = ""
+            const errorElementId = 'objError'+(i+1)
+            document.getElementById(errorElementId).innerHTML = ""
         }
         else{
-	    const errorElementId = 'objError'+(i+1)
-	    document.getElementById(errorElementId).innerHTML = result
-	    $('a[href="#options-bucket"]').tab('show');
+            const errorElementId = 'objError'+(i+1)
+            document.getElementById(errorElementId).innerHTML = result
+            $('a[href="#options-bucket"]').tab('show');
             retFalse = true
         }
             
     }
 
     if (retFalse){
-	return false
+        return false
     }
     
     for(var i=Number(numObjs); i<8; i++){
@@ -739,34 +739,34 @@ function validateAndUpdateObjectives(){
 function validateLogicTweaks(){
     const addKiNames = ['restore_johnny_race', 'restore_tools', 'epoch_fail']
     const addSpotNames = ['add_bekkler_spot', 'add_ozzie_spot',
-			  'add_racelog_spot', 'vanilla_robo_ribbon',
-			  'add_cyrus_spot']
+                          'add_racelog_spot', 'vanilla_robo_ribbon',
+                          'add_cyrus_spot']
 
     var numKIs = 0
     for(var i=0; i<addKiNames.length; i++){
-	const name = addKiNames[i]
-	const id = 'id_'+name
+        const name = addKiNames[i]
+        const id = 'id_'+name
 
-	const isChecked = document.getElementById(id).checked
-	if (isChecked){numKIs++}
-	    
+        const isChecked = document.getElementById(id).checked
+        if (isChecked){numKIs++}
+            
     }
 
     var numSpots = 0
     for(var i=0; i<addSpotNames.length; i++){
-	const name = addSpotNames[i]
-	const id = 'id_'+name
+        const name = addSpotNames[i]
+        const id = 'id_'+name
 
-	const isChecked = document.getElementById(id).checked
-	if (isChecked){numSpots++}
+        const isChecked = document.getElementById(id).checked
+        if (isChecked){numSpots++}
     }
 
     // There can be one more KI than spot because we just erase Jerky
     if (numKIs-1 > numSpots){
-	document.getElementById("logicTweakError").innerHTML =
-	    "Select Additional Key Item Spots"
-	$('a[href="#options-extra"]').tab('show');
-	return false
+        document.getElementById("logicTweakError").innerHTML =
+            "Select Additional Key Item Spots"
+        $('a[href="#options-extra"]').tab('show');
+        return false
     }
 
     document.getElementById("logicTweakError").innerHTML = ""
@@ -777,27 +777,27 @@ function validateLogicTweaks(){
 const forceOff = {
     "standard": [],
     "lost_worlds": ["boss_scaling", "bucket_list", "epoch_fail",
-		    "add_bekkler_spot", "add_cyrus_spot", "add_ozzie_spot",
-		    "add_racelog_spot", "add_sunkeep_spot",
-		    "restore_johnny_race", "split_arris_dome",
-		    "restore_tools", "unlocked_skyways",
-		    "vanilla_desert", "vanilla_robo_ribbon"],
+                    "add_bekkler_spot", "add_cyrus_spot", "add_ozzie_spot",
+                    "add_racelog_spot", "add_sunkeep_spot",
+                    "restore_johnny_race", "split_arris_dome",
+                    "restore_tools", "unlocked_skyways",
+                    "vanilla_desert", "vanilla_robo_ribbon"],
     "ice_age": ["zeal", "boss_scaling", "bucket_list"],
     "legacy_of_cyrus": ["zeal", "boss_scale", "bucket_list",
-			"add_ozzie_spot", "add_cyrus_spot",
-			"add_sunkeep_spot", "restore_tools",
-			"restore_johnny_race", "split_arris_dome",
-			"add_racelog_spot", "add_bekkler_spot"],
+                        "add_ozzie_spot", "add_cyrus_spot",
+                        "add_sunkeep_spot", "restore_tools",
+                        "restore_johnny_race", "split_arris_dome",
+                        "add_racelog_spot", "add_bekkler_spot"],
     "vanilla_rando": ["boss_scaling"]
 }
 
 // Const way to iterate over the keys of forceOff?
 const totalForceList = [
     ... new Set([...forceOff["standard"],
-		 ...forceOff["lost_worlds"],
-		 ...forceOff["ice_age"],
-		 ...forceOff["legacy_of_cyrus"],
-		 ...forceOff["vanilla_rando"]])
+                 ...forceOff["lost_worlds"],
+                 ...forceOff["ice_age"],
+                 ...forceOff["legacy_of_cyrus"],
+                 ...forceOff["vanilla_rando"]])
 ]
 
 /*
@@ -809,17 +809,17 @@ function restrictFlags(){
     var disableList = forceOff[mode]
     
     for(var i=0; i<totalForceList.length; i++){
-	flag = totalForceList[i]
-	
-	if(disableList.includes(flag)){
-	    $("#id_"+flag).parent().addClass('btn-light off disabled')
-	    $("#id_"+flag).parent().removeClass('btn-primary')
-	    $("#id_"+flag).prop('checked', false)
-	    $("#id_"+flag).prop('disabled', true)
-	}
-	else{
-	    $("#id_"+flag).parent().removeClass('disabled')
-	    $("#id_"+flag).prop('disabled', false)
-	}
+        flag = totalForceList[i]
+        
+        if(disableList.includes(flag)){
+            $("#id_"+flag).parent().addClass('btn-light off disabled')
+            $("#id_"+flag).parent().removeClass('btn-primary')
+            $("#id_"+flag).prop('checked', false)
+            $("#id_"+flag).prop('disabled', true)
+        }
+        else{
+            $("#id_"+flag).parent().removeClass('disabled')
+            $("#id_"+flag).prop('disabled', false)
+        }
     }
 }
