@@ -371,6 +371,12 @@ class RandomizerInterface:
             for ind in range(num_objectives)
         ]
 
+        # Hints *should* only be None if bucket_list isn't checked, but let's
+        # be certain.
+        hints = [
+            hint if hint is not None else '' for hint in hints
+        ]
+
         settings.bucket_settings = rset.BucketSettings(
             disable_other_go_modes=disable_other_go_modes,
             objectives_win=objectives_win,
