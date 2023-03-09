@@ -696,6 +696,9 @@ function validateObjective(objective){
  * form fields.
  */
 function validateAndUpdateObjectives(){
+    var bucketList = document.getElementById("id_bucket_list").checked
+    if (!bucketList){return true}
+
     var numObjs = document.getElementById("id_bucket_num_objs").value
 
     var retFalse = false
