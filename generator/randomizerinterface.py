@@ -16,6 +16,7 @@ sys.path.append(os.path.join(conf.BASE_DIR, 'jetsoftime', 'sourcefiles'))
 
 # Randomizer types
 import ctenums
+import multiworld
 import randoconfig
 import randomizer
 import randosettings as rset
@@ -270,6 +271,10 @@ class RandomizerInterface:
         # techs
         settings.techorder = tech_order_map[form.cleaned_data['tech_rando']]
 
+        # Force multiworld flag on for this version of the web generator
+        settings.gameflags = settings.gameflags | rset.GameFlags.MULTIWORLD
+        settings.player_name = form.cleaned_data['player_name']
+
         if form.cleaned_data['disable_glitches']:
             settings.gameflags = settings.gameflags | rset.GameFlags.FIX_GLITCH
 
@@ -468,6 +473,15 @@ class RandomizerInterface:
         rando.write_json_spoiler_log(spoiler_log)
 
         return spoiler_log
+
+    @classmethod
+    def get_archipelago_yaml(cls, config: randoconfig.RandoConfig, settings: rset.Settings,) -> io.StringIO:
+        """
+        :param config: RandoConfig object describing the seed
+        :param settings: RandoSettings object describing the seed
+        :return: File-like object with a multiworld yaml for this seed
+        """
+        return multiworld.generate_yaml_ap_config(settings, config)
 
     @staticmethod
     def get_web_spoiler_log(config: randoconfig.RandoConfig) -> dict[str, list[dict[str, str]]]:

@@ -16,4 +16,5 @@ urlpatterns = [
     path('seed/', views.DownloadSeedView.as_view(), name='seed'),
     path('spoiler_log/<str:share_id>.txt', views.DownloadSpoilerLogView.as_view(), name='spoiler_log'),
     path('spoiler_log/<str:share_id>.json', views.DownloadJSONSpoilerLogView.as_view(), name='json_spoiler_log'),
+    path('ap_yaml/<str:share_id>.yaml', views.DownloadAPYamlView.as_view(), name='ap_yaml'),
 ]

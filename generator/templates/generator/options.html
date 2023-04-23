@@ -77,6 +77,11 @@
         <h2 class="mt-3">Generate Game</h2>
         <div class="border border-primary rounded p-2 mb-3">
           <div class="form-group">
+            <label for="{{form.player_name.id_for_label}}">Player Name:</label>
+            <input class="form-control" name="{{form.player_name.name}}" id="{{form.player_name.id_for_label}}" type="text">
+          </div>
+
+          <div class="form-group">
             <label for="{{form.seed.id_for_label}}">Seed (optional):</label>
             <input class="form-control" name="{{form.seed.name}}" id="{{form.seed.id_for_label}}" type="text">
           </div>

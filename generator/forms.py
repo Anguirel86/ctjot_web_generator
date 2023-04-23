@@ -96,6 +96,7 @@ class GenerateForm(forms.Form):
     extra_fragments = forms.IntegerField()
 
     # seed and spoiler log
+    player_name = forms.CharField(max_length=16, required=True)
     seed = forms.CharField(max_length=25, required=False)
     spoiler_log = forms.BooleanField(required=False)
 

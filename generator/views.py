@@ -90,11 +90,12 @@ class ShareLinkView(View):
             pickle.loads(game.configuration), pickle.loads(game.settings))
 
         rom_form = RomForm()
+        # No web spoiler log for AP seeds.
         context = {'share_id': game.share_id,
                    'is_permalink': True,
                    'base_uri': request.build_absolute_uri('/')[:-1],
                    'form': rom_form,
-                   'spoiler_log': RandomizerInterface.get_web_spoiler_log(pickle.loads(game.configuration)),
+                   'spoiler_log': {},
                    'is_race_seed': game.race_seed,
                    'share_info': share_info.getvalue()}
 
@@ -184,6 +185,30 @@ class DownloadSpoilerLogView(View):
             return response
         else:
             return render(request, 'generator/error.html', {'error_text': 'No spoiler log available for this seed.'},
+                          status=404)
+
+
+class DownloadAPYamlView(View):
+    """
+    Create and send a spoiler log to the user for the seed with the given share ID.
+    """
+    @classmethod
+    def get(cls, request, share_id):
+        try:
+            game = Game.objects.get(share_id=share_id)
+        except Game.DoesNotExist:
+            return render(request, 'generator/error.html', {'error_text': 'Seed does not exist.'}, status=404)
+
+        if not game.race_seed:
+            ap_yaml = RandomizerInterface.get_archipelago_yaml(
+                pickle.loads(game.configuration), pickle.loads(game.settings))
+            file_name = 'ctjot_' + share_id + '.yaml'
+            response = HttpResponse(content_type='text/plain')
+            response['Content-Disposition'] = 'attachment; filename=%s' % file_name
+            response.write(ap_yaml.getvalue())
+            return response
+        else:
+            return render(request, 'generator/error.html', {'error_text': 'No Archipelago yaml available for this seed.'},
                           status=404)
 
 

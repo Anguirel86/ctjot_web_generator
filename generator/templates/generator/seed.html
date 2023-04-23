@@ -19,7 +19,7 @@
     <div class="container">
       <div class="pt-2 pb-2">
         <h1>Download Seed</h1>
-	<h3 class="pb-2"><a id="seed_share" target="_blank" href="{% url 'generator:share' share_id %}">Seed share link</a> &middot;&middot;&middot; <a id="seed_practice" target="_blank" href="{% url 'generator:practice' share_id %}">(create practice seed)</a></h3>
+	<h3 class="pb-2"><a id="seed_share" target="_blank" href="{% url 'generator:share' share_id %}">Seed share link</a></h3>
         <pre>
 {{ share_info }}
         </pre>
@@ -38,9 +38,9 @@
           <button class="btn btn-primary" type="submit" >Download Seed</button>
         </form>
 
-        {% if not is_race_seed %}
-          {% include "generator/seed/spoiler_log_section.html" %}
-        {% endif %}
+        <!-- Button to get the yaml for this multiworld game -->
+        <a class="btn btn-primary mt-2" href="{% url 'generator:ap_yaml' share_id %}" target="_blank">Download Archipelago yaml file</a>
+
       </div>
     </div>
 
