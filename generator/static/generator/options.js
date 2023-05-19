@@ -187,6 +187,16 @@ function presetLegacyOfCyrus() {
 }
 
 /*
+ * Millenial Prix league preset.
+ */
+function presetMillennialPrix() {
+  presetRace();
+  $('#id_boss_rando').prop('checked', true).change();
+  $('#id_boss_spot_hp').prop('checked', true).change();
+  $('#id_fast_tabs').prop('checked', true).change();
+}
+
+/*
  * Populate the options form with the settings for a Catalack Cup tournament seed.
  * The Catalack Cup preset buttons have been removed, but the functions are being left
  * in in case they are ever needed again.
