@@ -187,7 +187,7 @@ function presetLegacyOfCyrus() {
 }
 
 /*
- * Millenial Prix league preset.
+ * Millennial Prix league preset.
  */
 function presetMillennialPrix() {
   presetRace();
