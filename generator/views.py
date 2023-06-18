@@ -199,17 +199,18 @@ class DownloadAPYamlView(View):
         except Game.DoesNotExist:
             return render(request, 'generator/error.html', {'error_text': 'Seed does not exist.'}, status=404)
 
-        if not game.race_seed:
-            ap_yaml = RandomizerInterface.get_archipelago_yaml(
-                pickle.loads(game.configuration), pickle.loads(game.settings))
-            file_name = 'ctjot_' + share_id + '.yaml'
-            response = HttpResponse(content_type='text/plain')
-            response['Content-Disposition'] = 'attachment; filename=%s' % file_name
-            response.write(ap_yaml.getvalue())
-            return response
-        else:
-            return render(request, 'generator/error.html', {'error_text': 'No Archipelago yaml available for this seed.'},
-                          status=404)
+        # TODO:
+        # This version of the generator only creates multiworld seeds, so there's no
+        # need to verify this is a multiworld seed before generating the yaml.
+        # If this ever gets rolled into the main generator then some guard code
+        # will have to be added here.
+        ap_yaml = RandomizerInterface.get_archipelago_yaml(
+            pickle.loads(game.configuration), pickle.loads(game.settings))
+        file_name = 'ctjot_' + share_id + '.yaml'
+        response = HttpResponse(content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=%s' % file_name
+        response.write(ap_yaml.getvalue())
+        return response
 
 
 class DownloadJSONSpoilerLogView(View):
