@@ -143,14 +143,23 @@ class RandomizerInterface:
         self.randomizer.generate_rom()
         return self.randomizer.get_generated_rom()
 
-    def set_settings_and_config(self, settings: rset.Settings, config: randoconfig.RandoConfig, form: RomForm):
+    def get_seed_hash(self) -> bytes:
+        if not self.randomizer.has_generated:
+            self.generate_rom()
+        return self.randomizer.hash_string_bytes
+
+    def set_seed_hash(self, hash_bytes: bytes):
+        if not self.randomizer.has_generated:
+            self.randomizer.hash_string_bytes = hash_bytes
+
+    def set_settings_and_config(self, settings: rset.Settings, config: randoconfig.RandoConfig, form: Optional[RomForm]):
         """
         Populate the randomizer with a pre-populated RandoSettings object and a
         preconfigured RandoSettings object.
 
         :param settings: RandoSettings object
         :param config: RandoConfig object
-        :param form: RomForm with cosmetic settings
+        :param form: RomForm with cosmetic settings, or None
         """
         # Cosmetic settings
         cos_flag_dict: dict[str, rset.CosmeticFlags] = {
@@ -161,56 +170,57 @@ class RandomizerInterface:
             'auto_run': rset.CosmeticFlags.AUTORUN
         }
 
-        cos_flags = rset.CosmeticFlags(False)
-        for name, flag in cos_flag_dict.items():
-            if form.cleaned_data[name]:
-                cos_flags |= flag
+        if form is not None:
+            cos_flags = rset.CosmeticFlags(False)
+            for name, flag in cos_flag_dict.items():
+                if form.cleaned_data[name]:
+                    cos_flags |= flag
 
-        settings.cosmetic_flags = cos_flags
+            settings.cosmetic_flags = cos_flags
 
-        # Character/Epoch renames
-        settings.char_names[0] = self.get_character_name(form.cleaned_data['crono_name'], 'Crono')
-        settings.char_names[1] = self.get_character_name(form.cleaned_data['marle_name'], 'Marle')
-        settings.char_names[2] = self.get_character_name(form.cleaned_data['lucca_name'], 'Lucca')
-        settings.char_names[3] = self.get_character_name(form.cleaned_data['robo_name'], 'Robo')
-        settings.char_names[4] = self.get_character_name(form.cleaned_data['frog_name'], 'Frog')
-        settings.char_names[5] = self.get_character_name(form.cleaned_data['ayla_name'], 'Ayla')
-        settings.char_names[6] = self.get_character_name(form.cleaned_data['magus_name'], 'Magus')
-        settings.char_names[7] = self.get_character_name(form.cleaned_data['epoch_name'], 'Epoch')
+            # Character/Epoch renames
+            settings.char_names[0] = self.get_character_name(form.cleaned_data['crono_name'], 'Crono')
+            settings.char_names[1] = self.get_character_name(form.cleaned_data['marle_name'], 'Marle')
+            settings.char_names[2] = self.get_character_name(form.cleaned_data['lucca_name'], 'Lucca')
+            settings.char_names[3] = self.get_character_name(form.cleaned_data['robo_name'], 'Robo')
+            settings.char_names[4] = self.get_character_name(form.cleaned_data['frog_name'], 'Frog')
+            settings.char_names[5] = self.get_character_name(form.cleaned_data['ayla_name'], 'Ayla')
+            settings.char_names[6] = self.get_character_name(form.cleaned_data['magus_name'], 'Magus')
+            settings.char_names[7] = self.get_character_name(form.cleaned_data['epoch_name'], 'Epoch')
 
-        # In-game options
-        # Boolean options
-        if form.cleaned_data['stereo_audio'] is not None:
-            settings.ctoptions.stereo_audio = form.cleaned_data['stereo_audio']
+            # In-game options
+            # Boolean options
+            if form.cleaned_data['stereo_audio'] is not None:
+                settings.ctoptions.stereo_audio = form.cleaned_data['stereo_audio']
 
-        if form.cleaned_data['save_menu_cursor'] is not None:
-            settings.ctoptions.save_menu_cursor = form.cleaned_data['save_menu_cursor']
+            if form.cleaned_data['save_menu_cursor'] is not None:
+                settings.ctoptions.save_menu_cursor = form.cleaned_data['save_menu_cursor']
 
-        if form.cleaned_data['save_battle_cursor'] is not None:
-            settings.ctoptions.save_battle_cursor = form.cleaned_data['save_battle_cursor']
+            if form.cleaned_data['save_battle_cursor'] is not None:
+                settings.ctoptions.save_battle_cursor = form.cleaned_data['save_battle_cursor']
 
-        if form.cleaned_data['skill_item_info'] is not None:
-            settings.ctoptions.skill_item_info = form.cleaned_data['skill_item_info']
+            if form.cleaned_data['skill_item_info'] is not None:
+                settings.ctoptions.skill_item_info = form.cleaned_data['skill_item_info']
 
-        if form.cleaned_data['consistent_paging'] is not None:
-            settings.ctoptions.consistent_paging = form.cleaned_data['consistent_paging']
+            if form.cleaned_data['consistent_paging'] is not None:
+                settings.ctoptions.consistent_paging = form.cleaned_data['consistent_paging']
 
-        # Integer options
-        if form.cleaned_data['battle_speed']:
-            settings.ctoptions.battle_speed = \
-                self.clamp((form.cleaned_data['battle_speed'] - 1), 0, 7)
+            # Integer options
+            if form.cleaned_data['battle_speed']:
+                settings.ctoptions.battle_speed = \
+                    self.clamp((form.cleaned_data['battle_speed'] - 1), 0, 7)
 
-        if form.cleaned_data['background_selection']:
-            settings.ctoptions.menu_background = \
-                self.clamp((form.cleaned_data['background_selection'] - 1), 0, 7)
+            if form.cleaned_data['background_selection']:
+                settings.ctoptions.menu_background = \
+                    self.clamp((form.cleaned_data['background_selection'] - 1), 0, 7)
 
-        if form.cleaned_data['battle_message_speed']:
-            settings.ctoptions.battle_msg_speed = \
-                self.clamp((form.cleaned_data['battle_message_speed'] - 1), 0, 7)
+            if form.cleaned_data['battle_message_speed']:
+                settings.ctoptions.battle_msg_speed = \
+                    self.clamp((form.cleaned_data['battle_message_speed'] - 1), 0, 7)
 
-        if form.cleaned_data['battle_gauge_style'] is not None:
-            settings.ctoptions.battle_gauge_style = \
-                self.clamp((form.cleaned_data['battle_gauge_style']), 0, 2)
+            if form.cleaned_data['battle_gauge_style'] is not None:
+                settings.ctoptions.battle_gauge_style = \
+                    self.clamp((form.cleaned_data['battle_gauge_style']), 0, 2)
 
         self.randomizer.settings = settings
         self.randomizer.config = config
@@ -435,7 +445,7 @@ class RandomizerInterface:
     # End __convert_form_to_settings
 
     @classmethod
-    def get_spoiler_log(cls, config: randoconfig.RandoConfig, settings: rset.Settings) -> io.StringIO:
+    def get_spoiler_log(cls, config: randoconfig.RandoConfig, settings: rset.Settings, hash_bytes: Optional[bytes]) -> io.StringIO:
         """
         Get a spoiler log file-like object.
 
@@ -445,6 +455,8 @@ class RandomizerInterface:
         """
         spoiler_log = io.StringIO()
         rando = randomizer.Randomizer(cls.get_base_rom(), is_vanilla=True, settings=settings, config=config)
+        if hash_bytes is not None:
+            rando.hash_string_bytes = hash_bytes
 
         # The Randomizer.write_spoiler_log method writes directly to a file,
         # but it works if we pass a StringIO instead.
@@ -453,7 +465,7 @@ class RandomizerInterface:
         return spoiler_log
 
     @classmethod
-    def get_json_spoiler_log(cls, config: randoconfig.RandoConfig, settings: rset.Settings) -> io.StringIO:
+    def get_json_spoiler_log(cls, config: randoconfig.RandoConfig, settings: rset.Settings, hash_bytes: Optional[bytes]) -> io.StringIO:
         """
         Get a spoiler log file-like object.
 
@@ -463,6 +475,8 @@ class RandomizerInterface:
         """
         spoiler_log = io.StringIO()
         rando = randomizer.Randomizer(cls.get_base_rom(), is_vanilla=True, settings=settings, config=config)
+        if hash_bytes is not None:
+            rando.hash_string_bytes = hash_bytes
 
         # The Randomizer.write_spoiler_log method writes directly to a file,
         # but it works if we pass a StringIO instead.
@@ -559,7 +573,7 @@ class RandomizerInterface:
         return rom
 
     @classmethod
-    def get_share_details(cls, config: randoconfig.RandoConfig, settings: rset.Settings) -> io.StringIO:
+    def get_share_details(cls, config: randoconfig.RandoConfig, settings: rset.Settings, hash_bytes: Optional[bytes]) -> io.StringIO:
         """
         Get details about a seed for display on the seed share page.  If this is a mystery seed then
         just display "Mystery seed!".
@@ -571,6 +585,8 @@ class RandomizerInterface:
         """
         buffer = io.StringIO()
         rando = randomizer.Randomizer(cls.get_base_rom(), is_vanilla=True, settings=settings, config=config)
+        if hash_bytes is not None:
+            rando.hash_string_bytes = hash_bytes
 
         if rset.GameFlags.MYSTERY in settings.gameflags:
             # TODO - Get weights and non-mystery flags
