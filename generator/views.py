@@ -16,6 +16,7 @@ import hashlib
 import io
 import pickle
 import random
+import base64
 
 # Other libraries
 import nanoid
@@ -87,7 +88,7 @@ class ShareLinkView(View):
             return render(request, 'generator/error.html', {'error_text': 'Seed does not exist.'}, status=404)
 
         share_info = RandomizerInterface.get_share_details(
-            pickle.loads(game.configuration), pickle.loads(game.settings))
+            pickle.loads(game.configuration), pickle.loads(game.settings), game.seed_hash)
 
         rom_form = RomForm()
         context = {'share_id': game.share_id,
@@ -151,6 +152,10 @@ class DownloadSeedView(FormView):
             interface = RandomizerInterface(rom_bytes)
             interface.set_settings_and_config(pickle.loads(game.settings), pickle.loads(game.configuration), form)
             patched_rom = interface.generate_rom()
+            if game.seed_hash is None:
+                seed_hash = interface.get_seed_hash()
+                game.seed_hash = seed_hash
+                game.save()
             file_name = interface.get_rom_name(share_id)
             content = FileWrapper(io.BytesIO(patched_rom))
             response = HttpResponse(content, content_type='application/octet-stream')
@@ -179,7 +184,7 @@ class DownloadSpoilerLogView(View):
 
         if not game.race_seed:
             spoiler_log = RandomizerInterface.get_spoiler_log(
-                pickle.loads(game.configuration), pickle.loads(game.settings))
+                pickle.loads(game.configuration), pickle.loads(game.settings), game.seed_hash)
             file_name = 'spoiler_log_' + share_id + '.txt'
             response = HttpResponse(content_type='text/plain')
             response['Content-Disposition'] = 'attachment; filename=%s' % file_name
@@ -204,7 +209,7 @@ class DownloadJSONSpoilerLogView(View):
         response = HttpResponse(content_type='application/json')
         if not game.race_seed:
             spoiler_log = RandomizerInterface.get_json_spoiler_log(
-                pickle.loads(game.configuration), pickle.loads(game.settings))
+                pickle.loads(game.configuration), pickle.loads(game.settings), game.seed_hash)
             response.write(spoiler_log.getvalue())
         else:
             response.write(b'{"cheating": "not_allowed"}')
@@ -227,6 +232,8 @@ class PracticeSeedView(View):
         return redirect('/share/' + game.share_id)
 
 
+hashsymbols = base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAGAAAAAIBAMAAAD0Eec8AAAAD1BMVEUAAAAAngAYICiIkJD4+PicIqvpAAAAAXRSTlMAQObYZgAAANBJREFUGBkFwYGNxAAIA7Ao7SARMMCLY4CKsP9MbyMALKK4AC2dAFRmnoUIBBWcxt01XgEloGKcJ9T15wVQlXPXHGuyzVvY03gF5AL0irOo9FcjsWYc4efu78aXM7Kn727BkTgC8oJ1H71bM1NC1HjT0xW5d9d1JyB3cxeoeiv9oUZl/7jAjJ13XeLa089ZAH8qVSCv6/oD3elblLDZxbFyq+3pZy2gqks88BUtodKsE7jYiKJHHKvOelUCyDW40CcAANkAAI4EkKIQAUaAoP4BJuQ1q9JLjugAAAAASUVORK5CYII=')
+
 class SeedImageView(View):
     """
     Handle creating a random image to represent a previously-generated seed.
@@ -238,8 +245,17 @@ class SeedImageView(View):
         except Game.DoesNotExist:
             return render(request, 'generator/error.html', {'error_text': 'Seed does not exist.'}, status=404)
 
+        interface = RandomizerInterface(RandomizerInterface.get_base_rom())
+        interface.set_settings_and_config(pickle.loads(game.settings), pickle.loads(game.configuration), None)
+
+        if game.seed_hash is None:
+            seed_hash = interface.get_seed_hash()
+            game.seed_hash = seed_hash
+            game.save()
+
         rgen = random.Random(share_id)
         img = Image.new('RGB', (200,200))
+
         d = ImageDraw.Draw(img)
         squaresize = 50
         for x in range(0,200,squaresize):
@@ -247,6 +263,19 @@ class SeedImageView(View):
                 # Draw a square in a random color
                 d.polygon([(x,y),(x+squaresize,y),(x+squaresize,y+squaresize),(x,y+squaresize)],
                         fill=(rgen.randint(0,31)*8, rgen.randint(0,31)*8, rgen.randint(0,31)*8))
+
+        # make a black box to put symbols onto
+        d.polygon([(2,85),(198,85),(198,115),(2,115)], fill=(0,0,0))
+
+        # put seed hash symbols into box
+        symbols = Image.open(io.BytesIO(hashsymbols))
+        for n in range(len(game.seed_hash)):
+            byte = game.seed_hash[n]
+            idx = int.from_bytes(byte, 'big') - 0x20
+            if idx > 0x9:
+                idx = idx - 0x4
+            symb = symbols.resize((24,24), box=(8*idx,0,8*idx+8,8))
+            img.paste(symb, (4+n*24,88))
 
         with io.BytesIO() as f:
             img.save(f, 'PNG')

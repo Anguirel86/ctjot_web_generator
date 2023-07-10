@@ -12,4 +12,4 @@ class Game(models.Model):
     configuration = models.BinaryField()
     creation_date = models.DateTimeField(auto_now=True)
     seed_nonce = models.CharField(max_length=15, blank=True, default='')
-
+    seed_hash = models.BinaryField(blank=True, null=True)
