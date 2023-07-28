@@ -71,6 +71,7 @@ function resetAll() {
   $('#id_starters_sufficient').prop('checked', false).change();
 
   $('#id_bucket_list').prop('checked', false).change();
+  $('#id_rocksanity').prop('checked', false).change();
 
   // Mystery Seed options
   // game modes
