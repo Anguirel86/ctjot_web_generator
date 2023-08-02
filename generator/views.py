@@ -1,5 +1,5 @@
 # Django libraries
-from django.http import HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from wsgiref.util import FileWrapper
 
@@ -12,10 +12,15 @@ from .randomizerinterface import RandomizerInterface, InvalidSettingsException
 from .models import Game
 
 # Python standard libraries
+import base64
+import binascii
 import hashlib
 import io
+import json
 import pickle
 import random
+
+from typing import Any, Dict
 
 # Other libraries
 import nanoid
@@ -98,6 +103,7 @@ class ShareLinkView(View):
                        pickle.loads(game.settings),
                        pickle.loads(game.configuration),
                    ),
+                   'cosmetics': get_cosmetics(request),
                    'is_race_seed': game.race_seed,
                    'share_info': share_info.getvalue()}
 
@@ -325,3 +331,63 @@ def generate_seed_from_id(existing_share_id: str) -> Game:
     )
 
     return new_game
+
+
+def get_cosmetics(request: HttpRequest) -> Dict[str, Dict[str, Any]]:
+    """
+    Get cosmetic options with values read from optional cookie.
+
+    Creates nested dictionary mapping of cosmetic option IDs mapped to their
+    defaults, type, and values read from ctjot_cosmetics cookie in request
+    (if exists).
+
+    This is passed along as a json_script into seed.js for cosmetic options.
+
+    :param: request: HTTP request object passed from view to read cookie.
+    :return: Nested dictionary mapping of cosmetic options
+    """
+    cosmetics = {
+        # general cosmetics
+        'reduce_flashes': {'default': False, 'type': 'checked'},
+        'quiet_mode': {'default': False, 'type': 'checked'},
+        'zenan_alt_battle_music': {'default': False, 'type': 'checked'},
+        'death_peak_alt_music': {'default': False, 'type': 'checked'},
+        'auto_run': {'default': False, 'type': 'checked'},
+
+        # menu background
+        'stereo_audio': {'default': True, 'type': 'checked'},
+        'save_menu_cursor': {'default': False, 'type': 'checked'},
+        'save_battle_cursor': {'default': False, 'type': 'checked'},
+        'save_skill_item_cursor': {'default': True, 'type': 'checked'},
+        'skill_item_info': {'default': True, 'type': 'checked'},
+        'consistent_paging': {'default': False, 'type': 'checked'},
+        'battle_speed': {'default': 5, 'type': 'slider'},
+        'battle_message_speed': {'default': 5, 'type': 'slider'},
+        'battle_gauge_style': {'default': 1, 'type': 'slider'},
+        'background_selection': {'default': 1, 'type': 'slider'},
+
+        # character/epoch name
+        'crono_name': {'default': 'Crono', 'type': 'value'},
+        'marle_name': {'default': 'Marle', 'type': 'value'},
+        'lucca_name': {'default': 'Lucca', 'type': 'value'},
+        'robo_name': {'default': 'Robo', 'type': 'value'},
+        'frog_name': {'default': 'Frog', 'type': 'value'},
+        'ayla_name': {'default': 'Ayla', 'type': 'value'},
+        'magus_name': {'default': 'Magus', 'type': 'value'},
+        'epoch_name': {'default': 'Epoch', 'type': 'value'},
+    }
+
+    # read values from cookie, if exists
+    cosmetic_values = {}
+    cookie = request.COOKIES.get('ctjot_cosmetics')
+    if cookie:
+        try:
+            cosmetic_values = json.loads(base64.urlsafe_b64decode(cookie))
+        except (binascii.Error, json.decoder.JSONDecodeError):
+            # ignore b64 and JSON decoding errors, silently ignoring cookie
+            pass
+
+    for option, item in cosmetics.items():
+        cosmetics[option]['value'] = cosmetic_values.get(option, item['default'])
+
+    return cosmetics
