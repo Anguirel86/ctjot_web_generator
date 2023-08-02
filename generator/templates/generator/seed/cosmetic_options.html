@@ -1,5 +1,4 @@
-
-          <input type="button" class="btn btn-primary" id="cosmetic_options_button" value="Show Cosmetic Options" data-toggle="collapse" data-target="#cosmetic_section" aria-expanded="false" aria-controls="cosmetic_section">
+          <input type="button" class="btn btn-primary" id="cosmetic_options_button" value="Show Cosmetic Options" data-toggle="collapse" data-target="#cosmetic_section" aria-expanded="false" aria-controls="cosmetic_section" onclick="updateGameOptions()">
 
           <div class="tab-content border border-primary rounded p-2 collapse" id="cosmetic_section">
             <ul class="nav nav-tabs">
@@ -11,27 +10,27 @@
             <!-- General Cosmetic Options -->
             <div class="tab-pane fade show active" id="cosmetic_general">
               <div class="form-group form-check pl-0">
-                <input type="checkbox" name="{{form.reduce_flashes.name}}" id="{{form.reduce_flashes.id_for_label}}" data-toggle="toggle">
+                <input type="checkbox" name="{{form.reduce_flashes.name}}" id="{{form.reduce_flashes.id_for_label}}" data-toggle="toggle"{% if cosmetics.reduce_flashes.value %} checked{% endif %}>
                 <label for="{{form.reduce_flashes.id_for_label}}">Reduce Flashes</label>
               </div>
 
               <div class="form-group form-check pl-0">
-                <input type="checkbox" name="{{form.quiet_mode.name}}" id="{{form.quiet_mode.id_for_label}}" data-toggle="toggle">
+                <input type="checkbox" name="{{form.quiet_mode.name}}" id="{{form.quiet_mode.id_for_label}}" data-toggle="toggle"{% if cosmetics.quiet_mode.value %}checked{% endif %}>
                 <label for="{{form.quiet_mode.id_for_label}}">Quiet Mode - No Music</label>
               </div>
 
               <div class="form-group form-check pl-0">
-                <input type="checkbox" name="{{form.zenan_alt_battle_music.name}}" id="{{form.zenan_alt_battle_music.id_for_label}}" data-toggle="toggle">
+                <input type="checkbox" name="{{form.zenan_alt_battle_music.name}}" id="{{form.zenan_alt_battle_music.id_for_label}}" data-toggle="toggle"{% if cosmetics.zenan_alt_battle_music.value %}checked{% endif %}>
                 <label for="{{form.zenan_alt_battle_music.id_for_label}}">Zenan Alt Battle Music</label>
               </div>
 
               <div class="form-group form-check pl-0">
-                <input type="checkbox" name="{{form.death_peak_alt_music.name}}" id="{{form.death_peak_alt_music.id_for_label}}" data-toggle="toggle">
+                <input type="checkbox" name="{{form.death_peak_alt_music.name}}" id="{{form.death_peak_alt_music.id_for_label}}" data-toggle="toggle"{% if cosmetics.death_peak_alt_music.value %}checked{% endif %}>
                 <label for="{{form.death_peak_alt_music.id_for_label}}">Death Peak Alt Music</label>
               </div>
-	      
+
               <div class="form-group form-check pl-0">
-                <input type="checkbox" name="{{form.auto_run.name}}" id="{{form.auto_run.id_for_label}}" data-toggle="toggle">
+                <input type="checkbox" name="{{form.auto_run.name}}" id="{{form.auto_run.id_for_label}}" data-toggle="toggle"{% if cosmetics.auto_run.value %}checked{% endif %}>
                 <label for="{{form.auto_run.id_for_label}}">Auto-Run</label>
               </div>
 
@@ -40,57 +39,57 @@
             <!-- Menu background selection -->
             <div class="tab-pane fade show" id="cosmetic_in_game_options">
               <div class="form-group form-check pl-0">
-                <input type="checkbox" name="{{form.stereo_audio.name}}" id="{{form.stereo_audio.id_for_label}}" data-toggle="toggle" checked>
+                <input type="checkbox" name="{{form.stereo_audio.name}}" id="{{form.stereo_audio.id_for_label}}" data-toggle="toggle"{% if cosmetics.stereo_audio.value %}checked{% endif %}>
                 <label for="{{form.stereo_audio.id_for_label}}">Stereo Audio</label>
               </div>
 
               <div class="form-group form-check pl-0">
-                <input type="checkbox" name="{{form.save_menu_cursor.name}}" id="{{form.save_menu_cursor.id_for_label}}" data-toggle="toggle">
+                <input type="checkbox" name="{{form.save_menu_cursor.name}}" id="{{form.save_menu_cursor.id_for_label}}" data-toggle="toggle"{% if cosmetics.save_menu_cursor.value %}checked{% endif %}>
                 <label for="{{form.save_menu_cursor.id_for_label}}">Save Menu Cursor</label>
               </div>
 
               <div class="form-group form-check pl-0">
-                <input type="checkbox" name="{{form.save_battle_cursor.name}}" id="{{form.save_battle_cursor.id_for_label}}" data-toggle="toggle">
+                <input type="checkbox" name="{{form.save_battle_cursor.name}}" id="{{form.save_battle_cursor.id_for_label}}" data-toggle="toggle"{% if cosmetics.save_battle_cursor.value %}checked{% endif %}>
                 <label for="{{form.save_battle_cursor.id_for_label}}">Save Battle Cursor</label>
               </div>
 
               <div class="form-group form-check pl-0">
-                <input type="checkbox" name="{{form.save_skill_item_cursor.name}}" id="{{form.save_skill_item_cursor.id_for_label}}" data-toggle="toggle" checked>
+                <input type="checkbox" name="{{form.save_skill_item_cursor.name}}" id="{{form.save_skill_item_cursor.id_for_label}}" data-toggle="toggle"{% if cosmetics.save_skill_item_cursor.value %}checked{% endif %}>
                 <label for="{{form.save_skill_item_cursor.id_for_label}}">Save Skill/Item Cursor</label>
               </div>
 
               <div class="form-group form-check pl-0">
-                <input type="checkbox" name="{{form.skill_item_info.name}}" id="{{form.skill_item_info.id_for_label}}" data-toggle="toggle" checked>
+                <input type="checkbox" name="{{form.skill_item_info.name}}" id="{{form.skill_item_info.id_for_label}}" data-toggle="toggle"{% if cosmetics.skill_item_info.value %}checked{% endif %}>
                 <label for="{{form.skill_item_info.id_for_label}}">Skill/Item Info</label>
               </div>
 
               <div class="form-group form-check pl-0">
-                <input type="checkbox" name="{{form.consistent_paging.name}}" id="{{form.consistent_paging.id_for_label}}" data-toggle="toggle">
+                <input type="checkbox" name="{{form.consistent_paging.name}}" id="{{form.consistent_paging.id_for_label}}" data-toggle="toggle"{% if cosmetics.consistent_paging.value %}checked{% endif %}>
                 <label for="{{form.consistent_paging.id_for_label}}">Consistent Paging</label>
               </div>
 
               <div class="form-group">
                 <label for="{{form.battle_speed.id_for_label}}" class="form-label mr-2">Battle Speed:</label>
-                <input type="range" class="form-range" name="{{form.battle_speed.name}}" id="{{form.battle_speed.id_for_label}}" min="1" max="8" value="5" oninput="updateGameOptions()" onchange="updateGameOptions()" >
-                <input type="text" id="battle_speed_text" form="none" size="1" value="5" readonly>
+                <input type="range" class="form-range" name="{{form.battle_speed.name}}" id="{{form.battle_speed.id_for_label}}" min="1" max="8" value="{{cosmetics.battle_speed.value}}" oninput="updateGameOptions()" onchange="updateGameOptions()" >
+                <input type="text" id="battle_speed_text" form="none" size="1" value="{{cosmetics.battle_speed.value}}" readonly>
               </div>
 
               <div class="form-group">
                 <label for="{{form.battle_message_speed.id_for_label}}" class="form-label mr-2">Battle Message Speed:</label>
-                <input type="range" class="form-range" name="{{form.battle_message_speed.name}}" id="{{form.battle_message_speed.id_for_label}}" min="1" max="8" value="5" oninput="updateGameOptions()" onchange="updateGameOptions()" >
-                <input type="text" id="battle_message_speed_text" form="none" size="1" value="5" readonly>
+                <input type="range" class="form-range" name="{{form.battle_message_speed.name}}" id="{{form.battle_message_speed.id_for_label}}" min="1" max="8" value="{{cosmetics.battle_message_speed.value}}" oninput="updateGameOptions()" onchange="updateGameOptions()" >
+                <input type="text" id="battle_message_speed_text" form="none" size="1" value="{{cosmetics.battle_message_speed.value}}" readonly>
               </div>
 
               <div class="form-group">
                 <label for="{{form.battle_gauge_style.id_for_label}}" class="form-label mr-2">Battle Gauge Style:</label>
-                <input type="range" class="form-range" name="{{form.battle_gauge_style.name}}" id="{{form.battle_gauge_style.id_for_label}}" min="0" max="2" value="1" oninput="updateGameOptions()" onchange="updateGameOptions()" >
-                <input type="text" id="battle_gauge_style_text" form="none" size="1" value="1" readonly>
+                <input type="range" class="form-range" name="{{form.battle_gauge_style.name}}" id="{{form.battle_gauge_style.id_for_label}}" min="0" max="2" value="{{cosmetics.battle_gauge_style.value}}" oninput="updateGameOptions()" onchange="updateGameOptions()" >
+                <input type="text" id="battle_gauge_style_text" form="none" size="1" value="{{cosmetics.battle_gauge_style.value}}" readonly>
               </div>
 
               <div class="form-group">
                 <label for="{{form.background_selection.id_for_label}}" class="form-label mr-2">Background:</label>
-                <input type="range" class="form-range" name="{{form.background_selection.name}}" id="{{form.background_selection.id_for_label}}" min="1" max="8" value="1" oninput="updateGameOptions()" onchange="updateGameOptions()" >
-                <input type="text" id="background_selection_text" form="none" size="1" value="1" readonly>
+                <input type="range" class="form-range" name="{{form.background_selection.name}}" id="{{form.background_selection.id_for_label}}" min="1" max="8" value="{{cosmetics.background_selection.value}}" oninput="updateGameOptions()" onchange="updateGameOptions()" >
+                <input type="text" id="background_selection_text" form="none" size="1" value="{{cosmetics.background_selection.value}}" readonly>
               </div>
               <span id="background_selection_preview" class="menuBackground1"></span>
             </div>
@@ -100,38 +99,44 @@
             <div class="tab-pane fade show" id="cosmetic_names">
               <div class="form-group">
                 <label for="{{form.crono_name.id_for_label}}">Crono:
-                  <input class="form-control" name="{{form.crono_name.name}}" id="{{form.crono_name.id_for_label}}" type="text" value="Crono">
+                  <input class="form-control" name="{{form.crono_name.name}}" id="{{form.crono_name.id_for_label}}" type="text" value="{{cosmetics.crono_name.value}}">
                 </label>
 
                 <label for="{{form.marle_name.id_for_label}}">Marle:
-                  <input class="form-control" name="{{form.marle_name.name}}" id="{{form.marle_name.id_for_label}}" type="text" value="Marle">
+                  <input class="form-control" name="{{form.marle_name.name}}" id="{{form.marle_name.id_for_label}}" type="text" value="{{cosmetics.marle_name.value}}">
                 </label>
 
                 <label for="{{form.lucca_name.id_for_label}}">Lucca:
-                  <input class="form-control" name="{{form.lucca_name.name}}" id="{{form.lucca_name.id_for_label}}" type="text" value="Lucca">
+                  <input class="form-control" name="{{form.lucca_name.name}}" id="{{form.lucca_name.id_for_label}}" type="text" value="{{cosmetics.lucca_name.value}}">
                 </label>
               </div>
               <div class="form-group">
                 <label for="{{form.robo_name.id_for_label}}">Robo:
-                  <input class="form-control" name="{{form.robo_name.name}}" id="{{form.robo_name.id_for_label}}" type="text" value="Robo">
+                  <input class="form-control" name="{{form.robo_name.name}}" id="{{form.robo_name.id_for_label}}" type="text" value="{{cosmetics.robo_name.value}}">
                 </label>
 
                 <label for="{{form.frog_name.id_for_label}}">Frog:
-                  <input class="form-control" name="{{form.frog_name.name}}" id="{{form.frog_name.id_for_label}}" type="text" value="Frog">
+                  <input class="form-control" name="{{form.frog_name.name}}" id="{{form.frog_name.id_for_label}}" type="text" value="{{cosmetics.frog_name.value}}">
                 </label>
 
                 <label for="{{form.ayla_name.id_for_label}}">Ayla:
-                  <input class="form-control" name="{{form.ayla_name.name}}" id="{{form.ayla_name.id_for_label}}" type="text" value="Ayla">
+                  <input class="form-control" name="{{form.ayla_name.name}}" id="{{form.ayla_name.id_for_label}}" type="text" value="{{cosmetics.ayla_name.value}}">
                 </label>
               </div>
               <div class="form-group">
                 <label for="{{form.magus_name.id_for_label}}">Magus:
-                  <input class="form-control" name="{{form.magus_name.name}}" id="{{form.magus_name.id_for_label}}" type="text" value="Magus">
+                  <input class="form-control" name="{{form.magus_name.name}}" id="{{form.magus_name.id_for_label}}" type="text" value="{{cosmetics.magus_name.value}}">
                 </label>
 
                 <label for="{{form.epoch_name.id_for_label}}">Epoch:
-                  <input class="form-control" name="{{form.epoch_name.name}}" id="{{form.epoch_name.id_for_label}}" type="text" value="Epoch">
+                  <input class="form-control" name="{{form.epoch_name.name}}" id="{{form.epoch_name.id_for_label}}" type="text" value="{{cosmetics.epoch_name.value}}">
                 </label>
               </div>
+            </div>
+
+            <div class="form-group form-check pl-0">
+              <input type="button" class="btn btn-outline-primary btn-sm" id="save_cosmetic_options_button" value="Save Cosmetics" onclick="saveCosmeticOptionsCookie()" title="Save cosmetic options to cookie.">
+              <input type="button" class="btn btn-outline-primary btn-sm" id="load_cosmetic_options_button" value="Load Cosmetics" onclick="loadCosmeticOptionsCookie()" title="Load cosmetic options from cookie.">
+              <input type="button" class="btn btn-outline-primary btn-sm" id="reset_cosmetic_options_button" value="Reset Cosmetics" onclick="resetCosmeticOptionsCookie()" title="Reset cosmetic options to defaults and remove cookie.">
             </div>
           </div>

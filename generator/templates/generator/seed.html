@@ -3,6 +3,7 @@
 {% block title %}Seed {{ share_id }} - {{ block.super }}{% endblock %}
 
 {% block imports %}
+    {{ cosmetics | json_script:"cosmetics-options" }}
     {% load static %}
     <script src="{% static 'generator/seed.js' %}"></script>
     <link rel="stylesheet" href="{% static 'generator/background_select.css' %}">
