@@ -276,7 +276,7 @@ class SeedImageView(View):
         # put seed hash symbols into box
         symbols = Image.open(io.BytesIO(hashsymbols))
         for n in range(len(game.seed_hash)):
-            byte = game.seed_hash[n]
+            byte = game.seed_hash[n:n+1]
             idx = int.from_bytes(byte, 'big') - 0x20
             if idx > 0x9:
                 idx = idx - 0x4
