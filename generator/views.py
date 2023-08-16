@@ -1,4 +1,5 @@
 # Django libraries
+from django.apps import apps
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from wsgiref.util import FileWrapper
@@ -53,7 +54,12 @@ class OptionsView(View):
     @classmethod
     def get(cls, request):
         form = GenerateForm()
-        context = {'form': form}
+
+        # use MD5 checksum of options.js contents to cache-bust on changes to file
+        app = apps.get_app_config('generator')
+        js_version = app.js_versions['generator/options.js']
+
+        context = {'form': form, 'js_version': js_version}
         return render(request, 'generator/options.html', context)
 
 
@@ -95,6 +101,10 @@ class ShareLinkView(View):
         share_info = RandomizerInterface.get_share_details(
             pickle.loads(game.configuration), pickle.loads(game.settings), game.seed_hash)
 
+        # use MD5 checksum of seed.js contents to cache-bust on changes to file
+        app = apps.get_app_config('generator')
+        js_version = app.js_versions['generator/seed.js']
+
         rom_form = RomForm()
         context = {'share_id': game.share_id,
                    'is_permalink': True,
@@ -106,6 +116,7 @@ class ShareLinkView(View):
                    ),
                    'cosmetics': get_cosmetics(request),
                    'is_race_seed': game.race_seed,
+                   'js_version': js_version,
                    'share_info': share_info.getvalue()}
 
         return render(request, 'generator/seed.html', context)
@@ -290,6 +301,21 @@ class SeedImageView(View):
             response['Content-Length'] = l
             response.write(f.getbuffer())
             return response
+
+
+class TrackerView(View):
+    """
+    Handle the tracker page for the Jets of Time web generator.
+    """
+
+    @classmethod
+    def get(cls, request):
+        # use MD5 checksum of logic.js contents to cache-bust on changes to file
+        app = apps.get_app_config('generator')
+        js_version = app.js_versions['tracker/logic.js']
+
+        context = {'js_version': js_version}
+        return render(request, 'tracker/tracker.html', context)
 
 
 def get_share_id() -> str:

@@ -5,7 +5,7 @@
 {% block imports %}
     {{ cosmetics | json_script:"cosmetics-options" }}
     {% load static %}
-    <script src="{% static 'generator/seed.js' %}"></script>
+    <script src="{% static 'generator/seed.js' %}?v={{ js_version }}"></script>
     <link rel="stylesheet" href="{% static 'generator/background_select.css' %}">
     {% if is_permalink %}
       <meta property="og:title" content="Seed {{ share_id }} - Chrono Trigger: Jets of Time Randomizer" />

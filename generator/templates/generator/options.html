@@ -2,7 +2,7 @@
 
 {% block imports %}
     {% load static %}
-    <script src="{% static 'generator/options.js' %}"></script>
+    <script src="{% static 'generator/options.js' %}?v={{ js_version }}"></script>
     <link rel="stylesheet" href="{% static 'generator/styles.css' %}">
 {% endblock %}
 
