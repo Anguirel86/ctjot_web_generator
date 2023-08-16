@@ -55,7 +55,7 @@ class GenerateForm(forms.Form):
     unlocked_magic = forms.BooleanField(required=False)
     tab_treasures = forms.BooleanField(required=False)
     chronosanity = forms.BooleanField(required=False)
-    duplicate_characters = forms.BooleanField(required=False)
+    char_rando = forms.BooleanField(required=False)
     mystery_seed = forms.BooleanField(required=False)
     healing_item_rando = forms.BooleanField(required=False)
     gear_rando = forms.BooleanField(required=False)
@@ -66,10 +66,11 @@ class GenerateForm(forms.Form):
     tech_rando = forms.CharField(max_length=15)
     game_mode = forms.CharField(max_length=15)
 
-    # Duplicate characters tab
-    duplicate_char_assignments = forms.CharField(
+    # Character rando tab
+    char_rando_assignments = forms.CharField(
         widget=forms.HiddenInput(), required=False
     )
+    duplicate_characters = forms.BooleanField(required=False)
     duplicate_duals = forms.BooleanField(required=False)
 
     # Boss rando tab
@@ -145,6 +146,7 @@ class GenerateForm(forms.Form):
     mystery_boss_rando = forms.IntegerField()
     mystery_boss_scale = forms.IntegerField()
     mystery_locked_characters = forms.IntegerField()
+    mystery_char_rando = forms.IntegerField()
     mystery_duplicate_characters = forms.IntegerField()
     mystery_epoch_fail = forms.IntegerField()
     mystery_gear_rando = forms.IntegerField()
