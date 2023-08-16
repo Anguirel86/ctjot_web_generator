@@ -3,11 +3,23 @@
  * the game options, including preset and validation functions.
  */
 
+/*
+ * Initialize some UI settings when page (re-)loaded.
+ */
+function initAll() {
+  let options = ['duplicate_characters', 'boss_rando', 'mystery_seed', 'bucket_list']
+  options.forEach((option) => toggleOptions(option));
+  restrictFlags();
+}
+$(document).ready(initAll);
 
 /*
  * Reset all form inputs to default values.
  */
 function resetAll() {
+  // direct focus back to General tab
+  $('a[href="#options-general"]').tab('show');
+
   // General options
   $('#id_enemy_difficulty').val('normal');
   $('#id_item_difficulty').val('normal');
@@ -223,20 +235,6 @@ function dcUncheckAll() {
 }
 
 /*
- * Set the visibility of the Duplicate Characters options section.
- */
-function toggleDCOptions() {
-  var dupCharsSelected = $('id_duplicate_characters').prop('checked')
-  document.getElementById('dcOptionsButton').disabled = !(dupCharsSelected);
-
-  // Hide the duplicate character options div if the duplicate characters 
-  // checkbox is unselected. 
-  if (!dupCharsSelected) {
-    $('#dup_char_options').collapse("hide");
-  }
-}
-
-/*
  * Encode the character choices into the hidden form field.
  * Each character is represented by a 2 digit hex string where the
  * bit index represents the character ID. ie:
@@ -357,6 +355,22 @@ function updateMysterySettings() {
 
   for (const id of id_list_percentage) {
     document.getElementById(id + "_text").value = document.getElementById("id_" + id).value + "%"
+  }
+}
+
+/*
+ * Set the visibility of an options section.
+ */
+function toggleOptions(option) {
+  let optionSelected = $('#id_' + option).prop('checked');
+  let optionNav = $('#id_' + option + '_nav');
+
+  if (optionSelected) {
+    optionNav.removeClass('disabled');
+    optionNav.prop('disabled', false);
+  } else {
+    optionNav.addClass('disabled');
+    optionNav.prop('disabled', true);
   }
 }
 
