@@ -3,11 +3,14 @@
  * the game options, including preset and validation functions.
  */
 
+const charIdentities = ['Crono', 'Marle', 'Lucca', 'Robo', 'Frog', 'Ayla', 'Magus'];
+const charModels = ['0', '1', '2', '3', '4', '5', '6'];
+
 /*
  * Initialize some UI settings when page (re-)loaded.
  */
 function initAll() {
-  let options = ['duplicate_characters', 'boss_rando', 'mystery_seed', 'bucket_list'];
+  let options = ['char_rando', 'boss_rando', 'mystery_seed', 'bucket_list'];
   options.forEach((option) => toggleOptions(option));
   restrictFlags();
 }
@@ -36,7 +39,7 @@ function resetAll() {
   $('#id_tab_treasures').prop('checked', false).change();
   $('#id_shop_prices').val('normal');
   $('#id_tech_rando').val('normal');
-  $('#id_duplicate_characters').prop('checked', false).change();
+  $('#id_char_rando').prop('checked', false).change();
   $('#id_healing_item_rando').prop('checked', false).change();
   $('#id_gear_rando').prop('checked', false).change();
   $('#id_mystery_seed').prop('checked', false).change();
@@ -51,9 +54,10 @@ function resetAll() {
   $('#id_speed_tab_min').val(1).change();
   $('#id_speed_tab_max').val(1).change();
 
-  // Duplicate Characters options
+  // Character Rando options
+  $('#id_duplicate_characters').prop('checked', false).change();
   $('#id_duplicate_duals').prop('checked', false).change();
-  dcCheckAll();
+  rcCheckAll();
 
   // Boss Rando options
   $('#id_legacy_boss_placement').prop('checked', false).change();
@@ -214,27 +218,21 @@ function presetLegacyOfCyrus() {
  }
 
 /*
- * Check all of the duplicate character boxes.
+ * Check all of the character rando assignment boxes.
  */
-function dcCheckAll() {
-  let characters = ['Crono', 'Marle', 'Lucca', 'Robo', 'Frog', 'Ayla', 'Magus'];
-  for (var charId = 0; charId < characters.length; charId++) {
-    for (var i = 0; i < 7; i++) {
-      $('#dc_' + characters[charId] + i.toString()).prop('checked', true);
-    }
-  }
+function rcCheckAll() {
+  charIdentities.forEach((identity) => {
+    charModels.forEach((model) => $('#rc_' + identity + model).prop('checked', true));
+  });
 }
 
 /*
- * Uncheck all of the duplicate character boxes.
+ * Uncheck all of the character rando assignment boxes.
  */
-function dcUncheckAll() {
-  let characters = ['Crono', 'Marle', 'Lucca', 'Robo', 'Frog', 'Ayla', 'Magus'];
-  for (var charId = 0; charId < characters.length; charId++) {
-    for (var i = 0; i < 7; i++) {
-      $('#dc_' + characters[charId] + i.toString()).prop('checked', false);
-    }
-  }
+function rcUncheckAll() {
+  charIdentities.forEach((identity) => {
+    charModels.forEach((model) => $('#rc_' + identity + model).prop('checked', false));
+  });
 }
 
 /*
@@ -244,45 +242,54 @@ function dcUncheckAll() {
  *   0x17 - The character can become:
  *      Crono, Marle, Lucca, or Frog.
  */
-function encodeDuplicateCharacterChoices() {
+function encodeCharRandoChoices() {
   var encodedString = "";
-  let characters = ['Crono', 'Marle', 'Lucca', 'Robo', 'Frog', 'Ayla', 'Magus'];
-  for (var charId = 0; charId < characters.length; charId++) {
-    var currentCharValue = 0;
-    for (var i = 0; i < 7; i++) {
-      if ($('#dc_' + characters[charId] + i.toString()).prop('checked')) {
+  charIdentities.forEach((identity) => {
+    let currentCharValue = 0;
+    charModels.forEach((model, i) => {
+      if ($('#rc_' + identity + model).prop('checked')) {
         currentCharValue = currentCharValue + (1 << i);
       }
-    }
-    
+    });
+
     if ((currentCharValue & 0xFF) < 0x10) {
       // Pad the string with a zero if needed so that the
       // final string is 14 characters.
       encodedString += "0";
     }
     encodedString += (currentCharValue & 0xFF).toString(16);
-  }
-  
-  $('#id_duplicate_char_assignments').val(encodedString);
+  });
+  $('#id_char_rando_assignments').val(encodedString);
 }
 
 /*
- * Validate that the user's choices for duplicate characters are valid.
- * Each character needs to have at least one character they can turn into.
+ * Validate that the user's choices for character rando are valid.
+ * Each character identity needs to have at least one character model they can turn into.
+ * Unless duplicate characters is used, also ensure that each model has at
+ * least one character identity they can use.
  */
-function validateDupCharChoices() {
-  let characters = ['Crono', 'Marle', 'Lucca', 'Robo', 'Frog', 'Ayla', 'Magus'];
-  for (var charId = 0; charId < characters.length; charId++) {
-    var selectionFound = false;
-    for (var i = 0; i < 7; i++) {
-      if ($('#dc_' + characters[charId] + i.toString()).prop('checked')) {
-        selectionFound = true;
-        break;
-      }
-    }
-    if (!selectionFound) {
-      $('#character_selection_error').html("Each row must have at least one selection.");
-      $('a[href="#options-dc"]').tab('show');
+function validateCharRandoChoices() {
+  // ensure each character identity has at least one character model associated
+  modelMissing = charIdentities.some(identity => {
+    return !charModels.some(model => $('#rc_' + identity + model).prop('checked'));
+  });
+  if (modelMissing) {
+    $('#character_selection_error').html("Each identity (row) must have at least one model (column) selected.");
+    $('a[href="#options-rc"]').tab('show');
+    $('#character_selection_matrix').collapse('show');
+    return false;
+  }
+
+  let duplicateCharsChecked = $('#id_duplicate_characters').prop('checked');
+  if (!duplicateCharsChecked) {
+    // ensure each character model has at least one character identity associated
+    identityMissing = charModels.some(model => {
+      return !charIdentities.some(identity => $('#rc_' + identity + model).prop('checked'));
+    });
+    if (identityMissing) {
+      $('#character_selection_error').html("Each model (column) must have at least one identity (row) selected.");
+      $('a[href="#options-rc"]').tab('show');
+      $('#character_selection_matrix').collapse('show');
       return false;
     }
   }
@@ -292,14 +299,14 @@ function validateDupCharChoices() {
 
 /*
  * Pre-submit preparation for the form.
- *   - Validate duplicate character choices
- *   - Populate the hidden field with duplicate character information
+ *   - Validate character rando choices
+ *   - Populate the hidden field with character rando information
  */
 function prepareForm() {
-  if (!validateDupCharChoices()) {
+  if (!validateCharRandoChoices()) {
     return false;
   }
-  encodeDuplicateCharacterChoices();
+  encodeCharRandoChoices();
 
   if (!validateLogicTweaks())
       return false;
@@ -349,7 +356,7 @@ function updateMysterySettings() {
     'mystery_tech_order_normal', 'mystery_tech_order_full_random', 'mystery_tech_order_balanced_random',
     'mystery_shop_prices_normal', 'mystery_shop_prices_random', 'mystery_shop_prices_mostly_random', 'mystery_shop_prices_free'];
   var id_list_percentage = ['mystery_tab_treasures', 'mystery_unlock_magic', 'mystery_bucket_list', 'mystery_chronosanity',
-    'mystery_boss_rando', 'mystery_boss_scale', 'mystery_locked_characters', 'mystery_duplicate_characters',
+    'mystery_boss_rando', 'mystery_boss_scale', 'mystery_locked_characters', 'mystery_char_rando', 'mystery_duplicate_characters',
     'mystery_epoch_fail', 'mystery_gear_rando', 'mystery_heal_rando'];
 
   for (const id of id_list_relative) {

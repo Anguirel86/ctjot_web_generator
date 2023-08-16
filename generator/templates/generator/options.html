@@ -30,7 +30,7 @@
         <ul class="nav nav-tabs">
           <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#options-general">General</a></li>
           <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#options-tabs">Tabs</a></li>
-          <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#options-dc" id="id_duplicate_characters_nav">Duplicate Chars</a></li>
+          <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#options-rc" id="id_char_rando_nav">Character Rando</a></li>
           <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#options-ro" id="id_boss_rando_nav">Boss Rando</a></li>
           <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#options-qol">Quality of Life</a></li>
           <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#options-extra">Extra</a></li>
@@ -49,9 +49,9 @@
             {% include "generator/options/tabs_tab.html" %}
           </div>
 
-          <!-- DC options tab -->
-          <div class="tab-pane fade" id="options-dc">
-            {% include "generator/options/dup_char_tab.html" %}
+          <!-- Character Rando options tab -->
+          <div class="tab-pane fade" id="options-rc">
+            {% include "generator/options/char_rando_tab.html" %}
           </div>
 
           <!-- ro options tab -->
