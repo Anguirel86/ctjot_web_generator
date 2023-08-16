@@ -296,11 +296,12 @@ class RandomizerInterface:
             'unlocked_magic': GF.UNLOCKED_MAGIC,
             'tab_treasures': GF.TAB_TREASURES,
             'chronosanity': GF.CHRONOSANITY,
-            'duplicate_characters': GF.DUPLICATE_CHARS,
+            'char_rando': GF.CHAR_RANDO,
             'healing_item_rando': GF.HEALING_ITEM_RANDO,
             'gear_rando': GF.GEAR_RANDO,
             'mystery_seed': GF.MYSTERY,
             'epoch_fail': GF.EPOCH_FAIL,
+            'duplicate_characters': GF.DUPLICATE_CHARS,
             'duplicate_duals': GF.DUPLICATE_TECHS,
             # This should get moved to ROSettings.
             'boss_spot_hp': GF.BOSS_SPOT_HP,
@@ -334,16 +335,16 @@ class RandomizerInterface:
             if form.cleaned_data[name]:
                 settings.gameflags |= flag
 
-        # Duplicate characters
+        # Character rando
         char_choices = []
-        duplicate_char_assignments = \
-            form.cleaned_data['duplicate_char_assignments']
-        # duplicate character assignments comes in as a stringified hex number.
+        char_rando_assignments = form.cleaned_data['char_rando_assignments']
+
+        # character rando assignments comes in as a stringified hex number.
         # Decode the hex string into the char_choices list.
         # Loop through the characters
         for i in range(7):
             char_choices.append([])
-            choices = int(duplicate_char_assignments[(i * 2):(i * 2) + 2], 16)
+            choices = int(char_rando_assignments[(i * 2):(i * 2) + 2], 16)
             # Loop through the assignments for the current character
             for j in range(7):
                 if choices & (1 << j) > 0:
@@ -437,6 +438,7 @@ class RandomizerInterface:
             rset.GameFlags.BOSS_RANDO: form.cleaned_data['mystery_boss_rando']/100,
             rset.GameFlags.BOSS_SCALE: form.cleaned_data['mystery_boss_scale']/100,
             rset.GameFlags.LOCKED_CHARS: form.cleaned_data['mystery_locked_characters']/100,
+            rset.GameFlags.CHAR_RANDO: form.cleaned_data['mystery_char_rando']/100,
             rset.GameFlags.DUPLICATE_CHARS: form.cleaned_data['mystery_duplicate_characters']/100,
             rset.GameFlags.EPOCH_FAIL: form.cleaned_data['mystery_epoch_fail']/100,
             rset.GameFlags.GEAR_RANDO: form.cleaned_data['mystery_gear_rando']/100,

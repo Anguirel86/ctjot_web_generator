@@ -145,6 +145,12 @@
               </div>
 
               <div class="form-group">
+                <label for="{{form.mystery_char_rando.id_for_label}}" class="form-label mr-2">Character Rando:</label>
+                <input type="range" class="form-range" name="{{form.mystery_char_rando.name}}" id="{{form.mystery_char_rando.id_for_label}}" min="0" max="100" value="25" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_char_rando_text" form="none" size="2" value="25%" readonly>
+              </div>
+
+              <div class="form-group">
                 <label for="{{form.mystery_duplicate_characters.id_for_label}}" class="form-label mr-2">Duplicate Characters:</label>
                 <input type="range" class="form-range" name="{{form.mystery_duplicate_characters.name}}" id="{{form.mystery_duplicate_characters.id_for_label}}" min="0" max="100" value="25" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
                 <input type="text" id="mystery_duplicate_characters_text" form="none" size="2" value="25%" readonly>
