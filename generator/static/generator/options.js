@@ -7,7 +7,7 @@
  * Initialize some UI settings when page (re-)loaded.
  */
 function initAll() {
-  let options = ['duplicate_characters', 'boss_rando', 'mystery_seed', 'bucket_list']
+  let options = ['duplicate_characters', 'boss_rando', 'mystery_seed', 'bucket_list'];
   options.forEach((option) => toggleOptions(option));
   restrictFlags();
 }
@@ -112,6 +112,8 @@ function resetAll() {
   $('#id_bucket_num_objs').val(5).change();
   $('#id_bucket_num_objs_req').val(4).change();
   updateObjectiveCount();
+
+  initAll();
 }
 
 /*
