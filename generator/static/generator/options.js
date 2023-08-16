@@ -59,47 +59,47 @@ function resetAll() {
   $('#id_starters_sufficient').prop('checked', false).change();
 
   $('#id_bucket_list').prop('checked', false).change();
-  
+
   // Mystery Seed options
   // game modes
-  $('#id_mystery_game_mode_standard').val(75).change()
-  $('#id_mystery_game_mode_lw').val(25).change()
-  $('#id_mystery_game_mode_loc').val(0).change()
-  $('#id_mystery_game_mode_ia').val(0).change()
+  $('#id_mystery_game_mode_standard').val(75).change();
+  $('#id_mystery_game_mode_lw').val(25).change();
+  $('#id_mystery_game_mode_loc').val(0).change();
+  $('#id_mystery_game_mode_ia').val(0).change();
   // item difficulty
-  $('#id_mystery_item_difficulty_easy').val(15).change()
-  $('#id_mystery_item_difficulty_normal').val(70).change()
-  $('#id_mystery_item_difficulty_hard').val(15).change()
+  $('#id_mystery_item_difficulty_easy').val(15).change();
+  $('#id_mystery_item_difficulty_normal').val(70).change();
+  $('#id_mystery_item_difficulty_hard').val(15).change();
   // enemy difficulty
-  $('#id_mystery_enemy_difficulty_normal').val(75).change()
-  $('#id_mystery_enemy_difficulty_hard').val(25).change()
+  $('#id_mystery_enemy_difficulty_normal').val(75).change();
+  $('#id_mystery_enemy_difficulty_hard').val(25).change();
   // tech order
-  $('#id_mystery_tech_order_normal').val(10).change()
-  $('#id_mystery_tech_order_full_random').val(80).change()
-  $('#id_mystery_tech_order_balanced_random').val(10).change()
+  $('#id_mystery_tech_order_normal').val(10).change();
+  $('#id_mystery_tech_order_full_random').val(80).change();
+  $('#id_mystery_tech_order_balanced_random').val(10).change();
   // shop prices
-  $('#id_mystery_shop_prices_normal').val(70).change()
-  $('#id_mystery_shop_prices_random').val(10).change()
-  $('#id_mystery_shop_prices_mostly_random').val(10).change()
-  $('#id_mystery_shop_prices_free').val(10).change()
+  $('#id_mystery_shop_prices_normal').val(70).change();
+  $('#id_mystery_shop_prices_random').val(10).change();
+  $('#id_mystery_shop_prices_mostly_random').val(10).change();
+  $('#id_mystery_shop_prices_free').val(10).change();
   // flag probabilities
-  $('#id_mystery_tab_treasures').val(10).change()
-  $('#id_mystery_unlock_magic').val(50).change()
-  $('#id_mystery_bucket_list').val(15).change()
-  $('#id_mystery_chronosanity').val(30).change()
-  $('#id_mystery_boss_rando').val(50).change()
-  $('#id_mystery_boss_scale').val(30).change()
-  $('#id_mystery_locked_characters').val(25).change()
-  $('#id_mystery_duplicate_characters').val(25).change()
-  $('#id_mystery_epoch_fail').val(50).change()
-  $('#id_mystery_gear_rando').val(25).change()
-  $('#id_mystery_heal_rando').val(25).change()
-  
+  $('#id_mystery_tab_treasures').val(10).change();
+  $('#id_mystery_unlock_magic').val(50).change();
+  $('#id_mystery_bucket_list').val(15).change();
+  $('#id_mystery_chronosanity').val(30).change();
+  $('#id_mystery_boss_rando').val(50).change();
+  $('#id_mystery_boss_scale').val(30).change();
+  $('#id_mystery_locked_characters').val(25).change();
+  $('#id_mystery_char_rando').val(50).change();
+  $('#id_mystery_duplicate_characters').val(25).change();
+  $('#id_mystery_epoch_fail').val(50).change();
+  $('#id_mystery_gear_rando').val(25).change();
+  $('#id_mystery_heal_rando').val(25).change();
+
   // Bucket Settings
-  $('#id_bucket_num_objs').val(5).change()
-  $('#id_bucket_num_objs_req').val(4).change()
-  updateObjectiveCount()
-  
+  $('#id_bucket_num_objs').val(5).change();
+  $('#id_bucket_num_objs_req').val(4).change();
+  updateObjectiveCount();
 }
 
 /*
@@ -136,7 +136,7 @@ function presetLostWorlds() {
   resetAll();
   $('#id_enemy_difficulty').val('normal');
   $('#id_item_difficulty').val('normal');
-  $('#id_game_mode').val('lost_worlds').change()
+  $('#id_game_mode').val('lost_worlds').change();
   $('#id_disable_glitches').prop('checked', true).change();
   $('#id_zeal').prop('checked', true).change();
   $('#id_tech_rando').val('fully_random');
@@ -160,7 +160,7 @@ function presetHard() {
  */
 function presetLegacyOfCyrus() {
   resetAll();
-  $('#id_game_mode').val('legacy_of_cyrus').change()
+  $('#id_game_mode').val('legacy_of_cyrus').change();
   $('#id_enemy_difficulty').val('normal');
   $('#id_item_difficulty').val('normal');
   $('#id_disable_glitches').prop('checked', true).change();
@@ -241,7 +241,7 @@ function toggleDCOptions() {
  * Each character is represented by a 2 digit hex string where the
  * bit index represents the character ID. ie:
  *   0x17 - The character can become:
- *      Crono, Marle, Lucca, or Frog. 
+ *      Crono, Marle, Lucca, or Frog.
  */
 function encodeDuplicateCharacterChoices() {
   var encodedString = "";
@@ -255,7 +255,7 @@ function encodeDuplicateCharacterChoices() {
     }
     
     if ((currentCharValue & 0xFF) < 0x10) {
-      // Pad the string with a zero if needed so that the 
+      // Pad the string with a zero if needed so that the
       // final string is 14 characters.
       encodedString += "0";
     }
@@ -299,10 +299,10 @@ function prepareForm() {
     return false;
   }
   encodeDuplicateCharacterChoices();
-    
+
   if (!validateLogicTweaks())
-      return false;     
-    
+      return false;
+
   if (!validateAndUpdateObjectives()){return false;}
   return true;
 }
@@ -370,17 +370,17 @@ function updateObjectiveCount(adjustingRequired = false){
 
     numObjs = document.getElementById("id_bucket_num_objs").value
     reqObjs = document.getElementById("id_bucket_num_objs_req").value
-    
+
     if (reqObjs > numObjs){
         if (adjustingRequired) {numObjs = reqObjs}
         else {reqObjs = numObjs}
     }
-    
+
     document.getElementById("id_bucket_num_objs").value = numObjs
     document.getElementById("numObjectivesDisp").value = numObjs
     document.getElementById("id_bucket_num_objs_req").value = reqObjs
     document.getElementById("numObjectivesRequiredDisp").value = reqObjs
-    
+
     // Now enable/disable the objective entries according to numObjs
     for(var i=0; i<8; i++){
         var isDisabled = true
@@ -525,14 +525,14 @@ const allowedQuestTags = [
 
 /*
  * Helper function to parse a quest objective.
- * param questParts, Array: An objective (e.g. 'Quest_ZenanBridge') has been cleaned and turned into 
+ * param questParts, Array: An objective (e.g. 'Quest_ZenanBridge') has been cleaned and turned into
  * the array ['quest', 'zenanbridge'] which is passed in as questParts.
  */
 function validateQuestObjective(questParts){
 
     if (questParts.length != 2){
         return false
-    }       
+    }
     if (!allowedQuestTags.includes(questParts[1])){
         return false
     }
@@ -542,8 +542,8 @@ function validateQuestObjective(questParts){
 
 /*
  * Helper function to parse a boss objective.
- * param bossParts, Array: An objective (e.g. 'Boss_MotherBrain') has been 
- * cleaned and turned into the array ['boss', 'motherbrain'] which is passed 
+ * param bossParts, Array: An objective (e.g. 'Boss_MotherBrain') has been
+ * cleaned and turned into the array ['boss', 'motherbrain'] which is passed
  * in as bossParts.
  */
 const allowedBossNames = [
@@ -575,13 +575,13 @@ const allowedRecruitNames = [
 
 /*
  * Helper function to parse a recruit objective.
- * param recruitParts, Array: An objective (e.g. 'Recruit_Crono') has been 
- * cleaned and split into an array (['recruit', 'crono']) which is passed 
+ * param recruitParts, Array: An objective (e.g. 'Recruit_Crono') has been
+ * cleaned and split into an array (['recruit', 'crono']) which is passed
  * in as recruitParts.
  */
  function validateRecruitObjective(recruitParts){
     if (recruitParts.length != 2){return false}
- 
+
     return allowedRecruitNames.includes(recruitParts[1])
  }
 
@@ -596,14 +596,14 @@ function isInteger(string){
 
 /*
  * Helper function to parse a recruit objective.
- * param collectParts, Array: An objective (e.g. 'Collect_5_Fragments_5') has 
- * been cleaned and split into an array (['collect', '5', 'fragments', '5']) 
+ * param collectParts, Array: An objective (e.g. 'Collect_5_Fragments_5') has
+ * been cleaned and split into an array (['collect', '5', 'fragments', '5'])
  * which is passed in as recruitParts.
  */
 function validateCollectObjective(collectParts){
     if (collectParts.length < 2){
         return false
-    }   
+    }
     collectType = collectParts[2]
     if (collectType == 'rocks'){
         if (collectParts.length != 3){return false}
@@ -611,10 +611,10 @@ function validateCollectObjective(collectParts){
         if (!Number.isInteger(numRocks) || numRocks < 1){return false}
     } else if (collectType == 'fragments'){
         if (collectParts.length != 4){return false}
-        
+
         fragsNeeded = Number(collectParts[1])
         extraFrags = Number(collectParts[3])
-        
+
         if (!Number.isInteger(fragsNeeded) || fragsNeeded < 0){return false}
         if (!Number.isInteger(extraFrags) || extraFrags < 0){return false}
     } else {
@@ -635,15 +635,15 @@ function validateObjective(objective){
             return {isValid: true, result: objectiveDict[key]}
         }
     }
-   
+
     // Otherwise, parse the objective
     cleanedObjective = objective.replace(/\s/g,'')
-    
+
     if (cleanedObjective == ''){
         // Do something to display an error on the page for an empty objective string
         return {isValid: false, result: "Empty objective string."}
     }
-    
+
     objectiveParts = cleanedObjective.split(',')
     for (var i = 0; i < objectiveParts.length; i++){
         objectivePart = objectiveParts[i]
@@ -664,10 +664,10 @@ function validateObjective(objective){
             // Overwrite objectivePart with just the objective, not the weight
             objectivePart = weightSplit[1]
         }
-        
+
         splitObjective = objectivePart.split('_')
         objectiveType = splitObjective[0]
-        
+
         if (objectiveType == 'quest'){
             ret = validateQuestObjective(splitObjective)
         } else if (objectiveType == 'boss'){
@@ -687,7 +687,7 @@ function validateObjective(objective){
             }
         }
     }
-    
+
     return {isValid: true, result: cleanedObjective}
 }
 
@@ -708,7 +708,7 @@ function validateAndUpdateObjectives(){
         const parse = validateObjective(objective)
         const isValid = parse.isValid
         const result = parse.result
-        
+
         if (isValid){
             const formElementId = 'id_bucket_objective'+(i+1)
             document.getElementById(formElementId).value = result
@@ -722,13 +722,13 @@ function validateAndUpdateObjectives(){
             $('a[href="#options-bucket"]').tab('show');
             retFalse = true
         }
-            
+
     }
 
     if (retFalse){
         return false
     }
-    
+
     for(var i=Number(numObjs); i<8; i++){
         formElementId = 'id_bucket_objective'+(i+1)
         document.getElementById(formElementId).value = 'None'
@@ -752,7 +752,7 @@ function validateLogicTweaks(){
 
         const isChecked = document.getElementById(id).checked
         if (isChecked){numKIs++}
-            
+
     }
 
     var numSpots = 0
@@ -774,7 +774,7 @@ function validateLogicTweaks(){
 
     document.getElementById("logicTweakError").innerHTML = ""
     return true
-    
+
 }
 
 const forceOff = {
@@ -810,10 +810,10 @@ const totalForceList = [
 function restrictFlags(){
     var mode = document.getElementById("id_game_mode").value
     var disableList = forceOff[mode]
-    
+
     for(var i=0; i<totalForceList.length; i++){
         flag = totalForceList[i]
-        
+
         if(disableList.includes(flag)){
             $("#id_"+flag).parent().addClass('btn-light off disabled')
             $("#id_"+flag).parent().removeClass('btn-primary')
