@@ -14,13 +14,12 @@ check_and_set_env_vars() {
   fi
 
   # determine docker-compose command, preferring "docker compose"
-  dcver="$(docker compose version)"
+  docker compose version >/dev/null 2>&1
   ret=$?
 
   set -e
 
   if (( ret == 0 )); then
-    echo "Using docker compose (version: $dcver)"
     DCCMD="docker compose"
   else
     # check that $DCCMD is available
@@ -28,8 +27,6 @@ check_and_set_env_vars() {
       echo "You must update docker to a version with compose or install docker-compose to use this script."
       exit 1
     fi
-    dcver="$(docker-compose version)"
-    echo "Using docker-compose (version: $dcver)"
     DCCMD="docker-compose"
   fi
   export DCCMD
@@ -179,22 +176,7 @@ deploy_integration() {
   # check if docker-compose.yml already exists
   if [[ -e "$COMPOSE_FILE" ]]; then
     echo "Compose file ($COMPOSE_FILE) exists."
-
-    teardown=0
-    if [[ $yes == 1 ]]; then
-      teardown=1
-    else
-      read -p "Stop and remove containers and volumes for integration env? [y/N] " -n 1 -r
-      echo
-      if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-        teardown=1
-      fi
-    fi
-
-    if [[ $teardown == 1 ]]; then
-      echo "Stopping and removing containers and volumes..."
-      $DCCMD down -v
-    fi
+    shutdown
   fi
 
   ln -sf "$PWD/deploy/docker-compose.int.yml" "$COMPOSE_FILE"
@@ -223,8 +205,30 @@ deploy_dev() {
 # Shut down the web generator.
 #
 shutdown() {
-  echo "Shutting down..."
-  $DCCMD down
+  # assure docker-compose.yml already exists
+  if [[ ! -e "$COMPOSE_FILE" ]]; then
+    echo "Compose file ($COMPOSE_FILE) does not exist. Quitting."
+    exit 1
+  fi
+
+  rmvolumes=0
+  if [[ $yes == 1 ]]; then
+    rmvolumes=1
+  else
+    read -p "Also remove volumes? [y/N] " -n 1 -r
+    echo
+    if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+      rmvolumes=1
+    fi
+  fi
+
+  if [[ $rmvolumes == 1 ]]; then
+    echo "Shutting down containers and removing volumes..."
+    $DCCMD down -v
+  else
+    echo "Shutting down containers..."
+    $DCCMD down
+  fi
 }
 
 #
@@ -264,7 +268,7 @@ usage deploy.sh [-p | -s | -i | -d | -r | -k | -w <path_to_wiki_backup> | -y]
       Takes a path to a backup of the Jets of Time wiki data and migrates it into the 
       DokuWiki container.  NOTE: This requires root.
   -y: "Yes"
-      Don't prompt about warnings to destroy/remove existing containers (e.g. for testing).
+      Don't prompt about warnings to remove volumes when shutting down containers.
 
 EOF
 }
