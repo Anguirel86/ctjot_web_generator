@@ -25,12 +25,13 @@ services:
     environment:
       - "DEBUG=${DEBUG:-1}"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   db:
-    image: postgres:13.0-alpine
-    volumes:
-      - db_data:/var/lib/postgresql/data/
+    extends:
+      file: docker-compose.prod.yml
+      service: db
     env_file:
       - ./.env.dev.db
 
