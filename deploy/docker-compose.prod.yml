@@ -1,3 +1,5 @@
+# Production environment
+---
 version: '3.8'
 
 services:
@@ -15,7 +17,13 @@ services:
       - ./.env.prod
       - ./.env.prod.db
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "8000"]
+      interval: 3s
+      retries: 10
+      timeout: 5s
 
   db:
     image: postgres:13.0-alpine
@@ -23,6 +31,13 @@ services:
       - db_data:/var/lib/postgresql/data/
     env_file:
       - ./.env.prod.db
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "5432"]
+      interval: 3s
+      retries: 10
+      timeout: 5s
+      start_interval: 5s
+      start_period: 30s
 
   nginx-proxy:
     container_name: nginx-proxy
@@ -45,7 +60,15 @@ services:
     labels:
       - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy"
     depends_on:
-      - web-generator
+      web-generator:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 3s
+      retries: 10
+      timeout: 5s
+      start_interval: 5s
+      start_period: 30s
 
   letsencrypt: 
     image: jrcs/letsencrypt-nginx-proxy-companion
@@ -77,4 +100,3 @@ volumes:
   html:
   vhost:
   acme:
-
