@@ -1,74 +1,49 @@
+# Staging environment
+---
 version: '3.8'
 
 services:
   web-generator:
-    build: 
-      context: ../
-      dockerfile: deploy/Dockerfile
-    command: gunicorn ctjot.wsgi:application --bind 0.0.0.0:8000
-    volumes:
-      - ../ct.sfc:/home/ctjot/web/ct.sfc
-      - static_volume:/home/ctjot/web/staticfiles
-    expose:
-      - 8000
+    extends:
+      file: docker-compose.prod.yml
+      service: web-generator
     env_file:
       - ./.env.staging
       - ./.env.staging.db
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   db:
-    image: postgres:13.0-alpine
-    volumes:
-      - db_data:/var/lib/postgresql/data/
+    extends:
+      file: docker-compose.prod.yml
+      service: db
     env_file:
       - ./.env.staging.db
 
   nginx-proxy:
-    container_name: nginx-proxy
-    build: nginx
-    restart: always
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "20m"
-        max-file: "5"
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - static_volume:/home/ctjot/web/staticfiles
-      - certs:/etc/nginx/certs
-      - html:/usr/share/nginx/html
-      - vhost:/etc/nginx/vhost.d
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-    labels:
-      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy"
+    extends:
+      file: docker-compose.prod.yml
+      service: nginx-proxy
     depends_on:
-      - web-generator
+      web-generator:
+        condition: service_healthy
 
   letsencrypt: 
-    image: jrcs/letsencrypt-nginx-proxy-companion
+    extends:
+      file: docker-compose.prod.yml
+      service: letsencrypt
     env_file:
       - ./.env.staging.letsencrypt
-    volumes:
-      - certs:/etc/nginx/certs
-      - html:/usr/share/nginx/html
-      - acme:/etc/acme.sh
-      - vhost:/etc/nginx/vhost.d
-      - /var/run/docker.sock:/var/run/docker.sock:ro
     depends_on:
       - nginx-proxy
 
   ctjot_wiki:
-    image: lscr.io/linuxserver/dokuwiki:latest
-    container_name: dokuwiki
+    extends:
+      file: docker-compose.prod.yml
+      service: ctjot_wiki
     env_file:
       - ./.env.staging.wiki
-    volumes:
-      - ./wiki_config:/config
-    expose:
-      - 80
 
 volumes:
   db_data:
@@ -77,4 +52,3 @@ volumes:
   html:
   vhost:
   acme:
-

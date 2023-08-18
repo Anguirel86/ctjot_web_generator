@@ -1,84 +1,48 @@
 # Integration environment
-#
-# The JETSOFTIME_PATH environment variable can be set prior to running
-# docker-compose (or using deploy.sh script) to override location of
-# jetsoftime code to mount into container, e.g. for testing changes
-# using local changes to jetsoftime code in another directory.
-# By default, it will use the checked out submodule.
 ---
 version: '3.8'
 
 services:
   web-generator:
-    build:
-      context: ../
-      dockerfile: deploy/Dockerfile
-    command: gunicorn ctjot.wsgi:application --bind 0.0.0.0:8000
+    extends:
+      file: docker-compose.prod.yml
+      service: web-generator
     volumes:
       - ../ct.sfc:/home/ctjot/web/ct.sfc
       - static_volume:/home/ctjot/web/staticfiles
       - "${JETSOFTIME_PATH:-../jetsoftime}:/home/ctjot/web/jetsoftime"
-    expose:
-      - 8000
     env_file:
-      - ./.env.int
-      - ./.env.int.db
+      - ./.env.dev
+      - ./.env.dev.db
     environment:
       - "DEBUG=${DEBUG:-0}"
     depends_on:
       db:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "8000"]
-      interval: 3s
-      retries: 10
-      timeout: 5s
 
   db:
-    image: postgres:13.0-alpine
-    volumes:
-      - db_data:/var/lib/postgresql/data/
+    extends:
+      file: docker-compose.prod.yml
+      service: db
     env_file:
-      - ./.env.int.db
-    healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "5432"]
-      interval: 3s
-      retries: 10
-      timeout: 5s
-      start_interval: 5s
-      start_period: 30s
+      - ./.env.dev.db
 
   nginx-proxy:
-    container_name: nginx-proxy
-    build: nginx
-    restart: always
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "20m"
-        max-file: "5"
+    extends:
+      file: docker-compose.prod.yml
+      service: nginx-proxy
     ports:
       - 8000:80
-    volumes:
-      - static_volume:/home/ctjot/web/staticfiles
-      - html:/usr/share/nginx/html
-      - vhost:/etc/nginx/vhost.d
-      - /var/run/docker.sock:/tmp/docker.sock:ro
     environment:
       - DEFAULT_HOST=ctjot.local
     depends_on:
       web-generator:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost"]
-      interval: 3s
-      retries: 10
-      timeout: 5s
-      start_interval: 5s
-      start_period: 30s
 
 volumes:
   db_data:
   static_volume:
+  certs:
   html:
   vhost:
+  acme:
