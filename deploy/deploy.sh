@@ -165,6 +165,46 @@ deploy_staging() {
 }
 
 #
+# Deploy the integration testing version of the web generator. This version runs with
+# the web app and the database, like dev, but also includes the reverse proxy
+# and gunicorn, like staging and prod. It does not include the wiki nor SSL
+# encryption. Do not use this in a production environment.
+#
+# NOTE: this version will wipe existing dev or int deploys to assure
+# that volumes are in a "clean/blank state" for integration testing purposes.
+#
+deploy_integration() {
+  local yes=$1
+
+  # check if docker-compose.yml already exists and is linked to dev or int
+  if [[ -e "$COMPOSE_FILE" ]]; then
+    echo "Compose file ($COMPOSE_FILE) exists."
+
+    teardown=0
+    if [[ $yes == 1 ]]; then
+      teardown=1
+    else
+      read -p "Stop and remove containers and volumes for integration env? [y/N] " -n 1 -r
+      echo
+      if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+        teardown=1
+      fi
+    fi
+
+    if [[ $teardown == 1 ]]; then
+      echo "Stopping and removing containers and volumes..."
+      $DCCMD down -v
+    fi
+  fi
+
+  ln -sf "$PWD/deploy/docker-compose.int.yml" "$COMPOSE_FILE"
+
+  # Build and run the containers
+  $DCCMD build
+  $DCCMD up -d
+}
+
+#
 # Deploy the dev version of the web generator.  This version runs with 
 # just the web app and the database.  It does not include the reverse proxy,
 # the wiki, or SSL encryption.  It also runs with the built-in test server
@@ -200,7 +240,7 @@ rerun_deployment() {
 #
 print_usage() {
 cat << EOF
-usage deploy.sh [-p | -s | -d | -r | -k | -w <path_to_wiki_backup>]
+usage deploy.sh [-p | -s | -t | -d | -r | -k | -w <path_to_wiki_backup> | -y]
 
   Deploy the web generator in several different configurations.
 
@@ -210,6 +250,9 @@ usage deploy.sh [-p | -s | -d | -r | -k | -w <path_to_wiki_backup>]
   -s: Staging
       Deploy the web generator in a staging environment. Uses the staging version
       of the letsencrypt API to generate self-signed certs.
+  -i: Integration
+      Deploy the web generator in an integration testing environmennt.
+      Closer to staging than dev but without certs or the wiki.
   -d: Development
       Deploy the web generator in a dev environment. Deploys a minimal set of containers
       to run a local dev instance.
@@ -220,6 +263,8 @@ usage deploy.sh [-p | -s | -d | -r | -k | -w <path_to_wiki_backup>]
   -w: Wiki migration
       Takes a path to a backup of the Jets of Time wiki data and migrates it into the 
       DokuWiki container.  NOTE: This requires root.
+  -y: "Yes"
+      Don't prompt about warnings to destroy/remove existing containers (e.g. for testing).
 
 EOF
 }
@@ -245,20 +290,22 @@ if [[ $submodule_status =~ ^-.* ]]; then
 fi
 
 # Check if the Chrono Trigger ROM is present
-if [[ ! -f ct.sfc ]]; then
+if [[ -z "${SKIP_CTROM_CHECK:-}" ]] && [[ ! -f ct.sfc ]]; then
   echo "The Chrono Trigger ROM must be located in the webapp root and named ct.sfc"
   exit 1
 fi
 
 deploy_prod=0
 deploy_staging=0
+deploy_int=0
 deploy_dev=0
 deploy_wiki=0
 shutdown=0
 rerun_deployment=0
+yes=0
 
 # Figure out what type of deployment we're spinning up
-while getopts 'psdkrw:y' flag
+while getopts 'psidkrw:y' flag
 do
   case "${flag}" in
     p)
@@ -268,6 +315,10 @@ do
     s)
       # staging deployment
       deploy_staging=1
+      ;;
+    i)
+      # integration deployment
+      deploy_int=1
       ;;
     d)
       # dev deployment
@@ -286,6 +337,10 @@ do
       deploy_wiki=1
       wiki_data_path=${OPTARG}
       ;;
+    y)
+      # don't prompt
+      yes=1
+      ;;
     *)
       print_usage
       exit 0
@@ -298,6 +353,8 @@ if (( deploy_prod == 1 )); then
   deploy_production
 elif (( deploy_staging == 1 )); then
   deploy_staging
+elif (( deploy_int == 1 )); then
+  deploy_integration $yes
 elif (( deploy_dev == 1 )); then
   deploy_dev
 elif (( deploy_wiki == 1 )); then

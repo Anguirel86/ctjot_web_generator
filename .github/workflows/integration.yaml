@@ -1,0 +1,21 @@
+---
+name: Deploy and Test Integration
+on:
+  push
+env:
+  COMPOSE_FILE: ./deploy/docker-compose.yml
+
+  # we can't actually use the CT rom on github tests of course...
+  SKIP_CTROM_CHECK: 1
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Deploy Integration Environment
+        run: |
+          ./deploy/deploy.sh -iy
+      - name: Test Integration Environment
+        run: |
+          ./deploy/test.sh
