@@ -7,7 +7,7 @@ app_name = 'generator'
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name="generator/index.html"), name='index'),
-    path('tracker/', TemplateView.as_view(template_name="tracker/tracker.html"), name='tracker'),
+    path('tracker/', views.TrackerView.as_view(), name='tracker'),
     path('options/', views.OptionsView.as_view(), name='options'),
     path('generate-rom/', views.GenerateView.as_view(), name='generate'),
     path('share/<str:share_id>/', views.ShareLinkView.as_view(), name='share'),
