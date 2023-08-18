@@ -1,10 +1,44 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #
 # This script performs setup and deployment of the web generator in Docker containers.
 # It allows for either a production, staging, or development deployment.
 #
 
+check_and_set_env_vars() {
+  set +e
+
+  if ! builtin command -v "docker" >/dev/null; then
+    echo "You must install docker to use this script."
+    exit 1
+  fi
+
+  # determine docker-compose command, preferring "docker compose"
+  dcver="$(docker compose version)"
+  ret=$?
+
+  set -e
+
+  if (( ret == 0 )); then
+    echo "Using docker compose (version: $dcver)"
+    DCCMD="docker compose"
+  else
+    # check that $DCCMD is available
+    if ! builtin command -v "docker-compose" >/dev/null; then
+      echo "You must update docker to a version with compose or install docker-compose to use this script."
+      exit 1
+    fi
+    dcver="$(docker-compose version)"
+    echo "Using docker-compose (version: $dcver)"
+    DCCMD="docker-compose"
+  fi
+  export DCCMD
+
+  COMPOSE_FILE="${COMPOSE_FILE:-$PWD/deploy/docker-compose.yml}"
+  export COMPOSE_FILE
+
+  set +e
+}
 
 #
 # Copy the ctjot wiki data into the DokuWiki container's config area. This is used
@@ -50,7 +84,7 @@ migrate_dokuwiki_data() {
     fi
 
     echo "Copying ${WIKIDATA}/data/${dir}..."
-    sudo cp -r ${WIKIDATA}/data/${dir}/* deploy/wiki_config/dokuwiki/data/${dir}/
+    sudo cp -r "${WIKIDATA}/data/${dir}/"* "deploy/wiki_config/dokuwiki/data/${dir}/"
   done
 
   # Files will be owned by a mix of root and the docker container user.
@@ -61,12 +95,12 @@ migrate_dokuwiki_data() {
   # This requires root
   echo "Copying ${WIKIDATA}/conf..."
   echo "This requires root permission"
-  sudo cp ${WIKIDATA}/conf/* deploy/wiki_config/dokuwiki/conf/
+  sudo cp "${WIKIDATA}/conf/"* deploy/wiki_config/dokuwiki/conf/
 
   # Copy over the lib directory (plugins)
   # Does not require root
   echo "Copying ${WIKIDATA}/lib..."
-  cp -r ${WIKIDATA}/lib/* deploy/wiki_config/dokuwiki/lib/
+  cp -r "${WIKIDATA}/lib/"* deploy/wiki_config/dokuwiki/lib/
   sudo chown -R 1000:911 deploy/wiki_config/dokuwiki/lib/
 }
 
@@ -102,11 +136,11 @@ deploy_production() {
   # Create volume directories needed by the containers
   mkdir deploy/wiki_config
 
-  ln -sf $PWD/deploy/docker-compose.prod.yml $PWD/deploy/docker-compose.yml
+  ln -sf "$PWD/deploy/docker-compose.prod.yml" "$COMPOSE_FILE"
 
   # Build and run the containers
-  docker-compose -f deploy/docker-compose.yml build
-  docker-compose -f deploy/docker-compose.yml up -d
+  $DCCMD build
+  $DCCMD up -d
 }
 
 #
@@ -123,11 +157,11 @@ deploy_staging() {
   # Create volume directories needed by the containers
   mkdir deploy/wiki_config
 
-  ln -sf $PWD/deploy/docker-compose.staging.yml $PWD/deploy/docker-compose.yml
+  ln -sf "$PWD/deploy/docker-compose.staging.yml" "$COMPOSE_FILE"
 
   # Build and run the containers
-  docker-compose -f deploy/docker-compose.yml build
-  docker-compose -f deploy/docker-compose.yml up -d
+  $DCCMD build
+  $DCCMD up -d
 }
 
 #
@@ -138,11 +172,11 @@ deploy_staging() {
 #
 deploy_dev() {
 
-  ln -sf $PWD/deploy/docker-compose.dev.yml $PWD/deploy/docker-compose.yml
+  ln -sf "$PWD/deploy/docker-compose.dev.yml" "$COMPOSE_FILE"
 
   # Build and run the containers
-  docker-compose -f deploy/docker-compose.yml build
-  docker-compose -f deploy/docker-compose.yml up -d
+  $DCCMD build
+  $DCCMD up -d
 }
 
 #
@@ -150,7 +184,7 @@ deploy_dev() {
 #
 shutdown() {
   echo "Shutting down..."
-  docker-compose -f deploy/docker-compose.yml down
+  $DCCMD down
 }
 
 #
@@ -158,7 +192,7 @@ shutdown() {
 #
 rerun_deployment() {
   echo "Running web generator..."
-  docker-compose -f deploy/docker-compose.yml up -d
+  $DCCMD up -d
 }
 
 #
@@ -171,13 +205,13 @@ usage deploy.sh [-p | -s | -d | -r | -k | -w <path_to_wiki_backup>]
   Deploy the web generator in several different configurations.
 
   -p: Production
-      Deploy the web generator in a production environment.  Performs several 
+      Deploy the web generator in a production environment. Performs several 
       sanity checks for passwords and keys before deploying the full web app.
   -s: Staging
-      Deploy the web generator in a staging environment.  Uses the staging version
+      Deploy the web generator in a staging environment. Uses the staging version
       of the letsencrypt API to generate self-signed certs.
   -d: Development
-      Deploy the web generator in a dev environment.  Deploys a minimal set of containers
+      Deploy the web generator in a dev environment. Deploys a minimal set of containers
       to run a local dev instance.
   -k: Shutdown/kill
       Shuts down the web generator.
@@ -224,7 +258,7 @@ shutdown=0
 rerun_deployment=0
 
 # Figure out what type of deployment we're spinning up
-while getopts pdskrw: flag
+while getopts 'psdkrw:y' flag
 do
   case "${flag}" in
     p)
@@ -252,16 +286,21 @@ do
       deploy_wiki=1
       wiki_data_path=${OPTARG}
       ;;
+    *)
+      print_usage
+      exit 0
     esac
 done
 
-if (( $deploy_prod == 1 )); then
+check_and_set_env_vars
+
+if (( deploy_prod == 1 )); then
   deploy_production
-elif (( $deploy_staging == 1 )); then
+elif (( deploy_staging == 1 )); then
   deploy_staging
-elif (( $deploy_dev == 1 )); then
+elif (( deploy_dev == 1 )); then
   deploy_dev
-elif (( $deploy_wiki == 1 )); then
+elif (( deploy_wiki == 1 )); then
   migrate_dokuwiki_data "$wiki_data_path"
 elif (( shutdown == 1 )); then
   shutdown
