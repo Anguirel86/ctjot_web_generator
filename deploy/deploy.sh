@@ -170,13 +170,13 @@ deploy_staging() {
 # and gunicorn, like staging and prod. It does not include the wiki nor SSL
 # encryption. Do not use this in a production environment.
 #
-# NOTE: this version will wipe existing dev or int deploys to assure
+# NOTE: this function will wipe existing dev or int deploys to assure
 # that volumes are in a "clean/blank state" for integration testing purposes.
 #
 deploy_integration() {
   local yes=$1
 
-  # check if docker-compose.yml already exists and is linked to dev or int
+  # check if docker-compose.yml already exists
   if [[ -e "$COMPOSE_FILE" ]]; then
     echo "Compose file ($COMPOSE_FILE) exists."
 
@@ -240,7 +240,7 @@ rerun_deployment() {
 #
 print_usage() {
 cat << EOF
-usage deploy.sh [-p | -s | -t | -d | -r | -k | -w <path_to_wiki_backup> | -y]
+usage deploy.sh [-p | -s | -i | -d | -r | -k | -w <path_to_wiki_backup> | -y]
 
   Deploy the web generator in several different configurations.
 
