@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = int(os.environ.get("DEBUG", default=0))
+DEBUG = int(os.environ.get("DEBUG", "0"))
 
 # If DJANGO_ALLOWED_HOSTS doesn't exist then assume we're running a local test server.
 if os.environ.get("DJANGO_ALLOWED_HOSTS") is None:
@@ -130,6 +130,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# manifest static files cannot be used if DEBUG mode is on
+if not DEBUG:
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
