@@ -13,6 +13,7 @@ function initAll() {
   let options = ['char_rando', 'boss_rando', 'mystery_seed', 'bucket_list'];
   options.forEach((option) => toggleOptions(option));
   restrictFlags();
+  disableDuplicateTechs();
 }
 $(document).ready(initAll);
 
@@ -57,6 +58,9 @@ function resetAll() {
   // Character Rando options
   $('#id_duplicate_characters').prop('checked', false).change();
   $('#id_duplicate_duals').prop('checked', false).change();
+  $('#id_duplicate_duals').addClass('disabled');
+  $('#id_duplicate_duals').prop('disabled', true).change();
+
   rcCheckAll();
 
   // Boss Rando options
@@ -295,6 +299,20 @@ function validateCharRandoChoices() {
   }
   $('#character_selection_error').html("");
   return true;
+}
+
+/*
+ * Disable duplicate techs if duplicate characters is disabled.
+ */
+function disableDuplicateTechs() {
+  if ($('#id_duplicate_characters').prop('checked')) {
+    $('#id_duplicate_duals').removeClass('disabled');
+    $('#id_duplicate_duals').prop('disabled', false).change();
+  } else {
+    $('#id_duplicate_duals').prop('checked', false).change();
+    $('#id_duplicate_duals').addClass('disabled');
+    $('#id_duplicate_duals').prop('disabled', true).change();
+  }
 }
 
 /*
