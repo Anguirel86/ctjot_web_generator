@@ -2,7 +2,7 @@
             <div class="tab-content border border-primary rounded p-2 mb-3">
 
               <div class="form-group form-check pt-3 pl-0">
-                <input type="checkbox" name="{{form.duplicate_characters.name}}" id="{{form.duplicate_characters.id_for_label}}" data-toggle="toggle" />
+                <input type="checkbox" name="{{form.duplicate_characters.name}}" id="{{form.duplicate_characters.id_for_label}}" data-toggle="toggle" onchange="disableDuplicateTechs()" />
                 <label for="{{form.duplicate_characters.id_for_label}}">Duplicate Characters</label>
               </div>
 
