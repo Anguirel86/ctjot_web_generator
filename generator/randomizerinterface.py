@@ -321,6 +321,7 @@ class RandomizerInterface:
             'starters_sufficient': GF.STARTERS_SUFFICIENT,
             'bucket_list': GF.BUCKET_LIST,
             'rocksanity': GF.ROCKSANITY,
+            'tech_damage_rando': GF.TECH_DAMAGE_RANDO,
             # QoL
             'sightscope_always_on': GF.VISIBLE_HEALTH,
             'boss_sightscope': GF.BOSS_SIGHTSCOPE,

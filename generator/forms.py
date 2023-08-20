@@ -1,10 +1,10 @@
 from django import forms
 
 
-#
-# This form is used to submit the ROM on the page where seeds are downloaded.
-#
 class RomForm(forms.Form):
+    """
+    This form is used to submit the ROM on the page where seeds are downloaded.
+    """
     rom_file = forms.FileField(required=True)
     share_id = forms.CharField(widget=forms.HiddenInput(), required=True)
 
@@ -40,10 +40,10 @@ class RomForm(forms.Form):
     battle_gauge_style = forms.IntegerField(required=False)
 
 
-#
-# Form class for version 3.2.0 of the randomizer.
-#
 class GenerateForm(forms.Form):
+    """
+    Form class for version 3.3.0 of the randomizer.
+    """
     # Flag options
     disable_glitches = forms.BooleanField(required=False)
 
@@ -95,6 +95,7 @@ class GenerateForm(forms.Form):
     starters_sufficient = forms.BooleanField(required=False)
     use_antilife = forms.BooleanField(required=False)
     tackle_effects = forms.BooleanField(required=False)
+    tech_damage_rando = forms.BooleanField(required=False)
 
     # All of the logic tweak flags on the Extra tab
     unlocked_skyways = forms.BooleanField(required=False)

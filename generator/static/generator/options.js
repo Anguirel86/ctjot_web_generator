@@ -69,9 +69,9 @@ function resetAll() {
   $('#id_use_antilife').prop('checked', false).change();
   $('#id_tackle_effects').prop('checked', false).change();
   $('#id_starters_sufficient').prop('checked', false).change();
-
   $('#id_bucket_list').prop('checked', false).change();
   $('#id_rocksanity').prop('checked', false).change();
+  $('#id_tech_damage_rando').prop('checked', false).change();
 
   // Mystery Seed options
   // game modes
