@@ -80,6 +80,7 @@ function resetAll() {
   $('#id_bucket_list').prop('checked', false).change();
   $('#id_rocksanity').prop('checked', false).change();
   $('#id_tech_damage_rando').prop('checked', false).change();
+  $('#id_unlocked_skyways').prop('checked', false).change();
 
   // Mystery Seed options
   // game modes
@@ -312,6 +313,43 @@ function disableDuplicateTechs() {
     $('#id_duplicate_duals').prop('checked', false).change();
     $('#id_duplicate_duals').addClass('disabled');
     $('#id_duplicate_duals').prop('disabled', true).change();
+  }
+}
+
+/*
+ * Toggle flags related to Rocksanity when rocksanity is toggled.
+ *
+ * Provides visual clues to users for things that fix_flag_conflicts in randomizer
+ * already does (enable Unlocked Skyways.
+ */
+var priorUnlockedSkyways = $('#id_unlocked_skyways').prop('checked');
+function toggleRocksanityRelated() {
+  let game_mode = $('#id_game_mode').val();
+
+  if ($('#id_rocksanity').prop('checked')) {
+    priorUnlockedSkyways = $('#id_unlocked_skyways').prop('checked');
+    $('#id_unlocked_skyways').prop('checked', true).change();
+  } else {
+    // check to prevent infinite recursion
+    if ($('#id_unlocked_skyways').prop('checked') != priorUnlockedSkyways) {
+      $('#id_unlocked_skyways').prop('checked', priorUnlockedSkyways).change();
+    }
+  }
+}
+
+/*
+ * Toggle flags related to Unlocked Skyways when it is toggled.
+ *
+ * Provides visual cluse to users for related/dependencies when Unlocked
+ * Skyways is toggled (e.g. turn off Rocksanity if Unlocked Skyways is removed).
+ */
+function toggleUnlockedSkywaysRelated() {
+  if (!$('#id_unlocked_skyways').prop('checked')) {
+    // check to prevent infinite recursion
+    if ($('#id_rocksanity').prop('checked')) {
+      priorUnlockedSkyways = false;
+      $('#id_rocksanity').prop('checked', false).change();
+    }
   }
 }
 
