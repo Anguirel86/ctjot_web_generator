@@ -3,6 +3,7 @@ from __future__ import annotations
 import io
 import os.path
 import random
+import re
 import sys
 import datetime
 
@@ -17,6 +18,7 @@ sys.path.append(os.path.join(conf.BASE_DIR, 'jetsoftime', 'sourcefiles'))
 # Randomizer types
 import ctenums
 import bossrandotypes as rotypes
+import logicwriters as logicwriter
 import randoconfig
 import randomizer
 import randosettings as rset
@@ -503,7 +505,8 @@ class RandomizerInterface:
             'characters': [],
             'key_items': [],
             'bosses': [],
-            'objectives': []
+            'objectives': [],
+            'spheres': []
         }
 
         if rset.GameFlags.BUCKET_LIST in settings.gameflags:
@@ -541,6 +544,12 @@ class RandomizerInterface:
             else:
                 boss_str = str(config.boss_assign_dict[location])
             spoiler_log['bosses'].append({'location': str(location), 'boss': boss_str})
+
+        # Sphere data
+        spheres = logicwriter.get_proof_string_from_settings_config(settings, config)
+        rgx = re.compile(r'((?P<sphere>GO|(\d?)):\s*)?(?P<desc>.+)')
+        for line in spheres.splitlines():
+            spoiler_log['spheres'].append(rgx.search(line).groupdict())
 
         return spoiler_log
     # End get_web_spoiler_log
