@@ -1,84 +1,119 @@
+<div class="border border-primary rounded p-2 mb-3">
 
-            <div class="border border-primary rounded p-2 mb-3">
-              <div class="form-group form-check pl-0">
-                <input type="checkbox" name="{{form.use_antilife.name}}" id="{{form.use_antilife.id_for_label}}"  data-toggle="toggle">
-                <label for="{{form.use_antilife.id_for_label}}">Use Anti-Life</label>
-              </div>
-              <div class="form-group form-check pl-0">
-                <input type="checkbox" name="{{form.tackle_effects.name}}" id="{{form.tackle_effects.id_for_label}}"  data-toggle="toggle">
-                <label for="{{form.tackle_effects.id_for_label}}">Tackle On-Hit Effects</label>
-              </div>
-              <div class="form-group form-check pl-0">
-                <input type="checkbox" name="{{form.starters_sufficient.name}}" id="{{form.starters_sufficient.id_for_label}}"  data-toggle="toggle">
-                <label for="{{form.starters_sufficient.id_for_label}}">Starters Sufficient</label>
-              </div>
-              <div class="form-group form-check pl-0">
-                <input type="checkbox" name="{{form.bucket_list.name}}" id="{{form.bucket_list.id_for_label}}" data-toggle="toggle" onchange="toggleOptions('bucket_list')">
-                <label for="{{form.bucket_list.id_for_label}}">Bucket List</label>
-              </div>
-              <div class="form-group form-check pl-0">
-                <input type="checkbox" name="{{form.tech_damage_rando.name}}" id="{{form.tech_damage_rando.id_for_label}}"  data-toggle="toggle">
-                <label for="{{form.tech_damage_rando.id_for_label}}">Tech Damage Rando</label>
-              </div>
-	      <div>
-		<h4>Logic Tweaks</h4>
-		<div id="logicTweakError" class=errorText></div>
-		<p>Flags that Add a Key Item:</p>
-		<div>
-		  <div class="form-group form-check pl-0">
-                    <input type="checkbox" name="{{form.restore_johnny_race.name}}" id="{{form.restore_johnny_race.id_for_label}}"  data-toggle="toggle">
-                    <label for="{{form.restore_johnny_race.id_for_label}}">Restore Johnny Race</label>
-		  </div>
-		  <div class="form-group form-check pl-0">
-                    <input type="checkbox" name="{{form.restore_tools.name}}" id="{{form.restore_tools.id_for_label}}"  data-toggle="toggle">
-                    <label for="{{form.restore_tools.id_for_label}}">Restore Tools</label>
-		  </div>
-		</div>
-		<p>Flags that Add a Key Item Spot:</p>
-		<div>
-		  <div class="form-group form-check pl-0">
-                    <input type="checkbox" name="{{form.add_bekkler_spot.name}}" id="{{form.add_bekkler_spot.id_for_label}}"  data-toggle="toggle">
-                    <label for="{{form.add_bekkler_spot.id_for_label}}">Add Bekkler Spot</label>
-		  </div>
-		  <div class="form-group form-check pl-0">
-                    <input type="checkbox" name="{{form.add_ozzie_spot.name}}" id="{{form.add_ozzie_spot.id_for_label}}"  data-toggle="toggle">
-                    <label for="{{form.add_ozzie_spot.id_for_label}}">Add Ozzie's Fort Spot</label>
-		  </div>
-		  <div class="form-group form-check pl-0">
-                    <input type="checkbox" name="{{form.add_racelog_spot.name}}" id="{{form.add_racelog_spot.id_for_label}}"  data-toggle="toggle">
-                    <label for="{{form.add_racelog_spot.id_for_label}}">Add Race Log Spot</label>
-		  </div>
-		  <div class="form-group form-check pl-0">
-                    <input type="checkbox" name="{{form.vanilla_robo_ribbon.name}}" id="{{form.vanilla_robo_ribbon.id_for_label}}"  data-toggle="toggle">
-                    <label for="{{form.vanilla_robo_ribbon.id_for_label}}">Vanilla Robo Ribbon</label>
-		  </div>
-		  <div class="form-group form-check pl-0">
-                    <input type="checkbox" name="{{form.add_cyrus_spot.name}}" id="{{form.add_cyrus_spot.id_for_label}}"  data-toggle="toggle">
-                    <label for="{{form.add_cyrus_spot.id_for_label}}">Add Cyrus Grave Spot</label>
-		  </div>
-		</div>
-		<p>Flags that are Spot-Neutral:</p>
-		<div>
-		  <div class="form-group form-check pl-0">
-                    <input type="checkbox" name="{{form.unlocked_skyways.name}}" id="{{form.unlocked_skyways.id_for_label}}" data-toggle="toggle" onchange="toggleUnlockedSkywaysRelated()">
-                    <label for="{{form.unlocked_skyways.id_for_label}}">Unlocked Skyways</label>
-		  </div>
-		  <div class="form-group form-check pl-0">
-                    <input type="checkbox" name="{{form.add_sunkeep_spot.name}}" id="{{form.add_sunkeep_spot.id_for_label}}"  data-toggle="toggle">
-                    <label for="{{form.add_sunkeep_spot.id_for_label}}">Add Sun Keep Spot</label>
-		  </div>
-		  <div class="form-group form-check pl-0">
-                    <input type="checkbox" name="{{form.split_arris_dome.name}}" id="{{form.split_arris_dome.id_for_label}}"  data-toggle="toggle">
-                    <label for="{{form.split_arris_dome.id_for_label}}">Split Arris Dome</label>
-		  </div>
-		  <div class="form-group form-check pl-0">
-                    <input type="checkbox" name="{{form.vanilla_desert.name}}" id="{{form.vanilla_desert.id_for_label}}"  data-toggle="toggle">
-                    <label for="{{form.vanilla_desert.id_for_label}}">Vanilla Desert</label>
-		  </div>
-		  <div class="form-group form-check pl-0">
-                    <input type="checkbox" name="{{form.rocksanity.name}}" id="{{form.rocksanity.id_for_label}}" data-toggle="toggle" onchange="toggleRocksanityRelated()">
-                    <label for="{{form.rocksanity.id_for_label}}">Rocksanity</label>
-		  </div>
-		</div>
-	      </div>
-            </div>
+  <div class="row align-items-start">
+    <div class="col-sm">
+      <div class="form-group form-check pl-0">
+        <input type="checkbox" name="{{form.bucket_list.name}}" id="{{form.bucket_list.id_for_label}}" data-toggle="toggle" onchange="toggleOptions('bucket_list')">
+        <label for="{{form.bucket_list.id_for_label}}">Bucket List</label>
+      </div>
+      <div class="form-group form-check pl-0">
+        <input type="checkbox" name="{{form.starters_sufficient.name}}" id="{{form.starters_sufficient.id_for_label}}" data-toggle="toggle">
+        <label for="{{form.starters_sufficient.id_for_label}}">Starters Sufficient</label>
+      </div>
+      <div class="form-group form-check pl-0">
+        <input type="checkbox" name="{{form.tech_damage_rando.name}}" id="{{form.tech_damage_rando.id_for_label}}" data-toggle="toggle">
+        <label for="{{form.tech_damage_rando.id_for_label}}">Tech Damage Rando</label>
+      </div>
+    </div>
+    <div class="col-sm">
+      <div class="form-group form-check pl-0">
+        <input type="checkbox" name="{{form.tackle_effects.name}}" id="{{form.tackle_effects.id_for_label}}" data-toggle="toggle">
+        <label for="{{form.tackle_effects.id_for_label}}">Tackle On-Hit Effects</label>
+      </div>
+      <div class="form-group form-check pl-0">
+        <input type="checkbox" name="{{form.use_antilife.name}}" id="{{form.use_antilife.id_for_label}}" data-toggle="toggle">
+        <label for="{{form.use_antilife.id_for_label}}">Use Anti-Life</label>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <h4>Logic Tweaks</h4>
+    <div id="logicTweakError" class="bg-danger"></div>
+
+    <div class="row">
+      <div class="col-sm"><p><b>Flags that Add a Key Item:</b></p></div>
+    </div>
+
+    <div class="row align-items-start">
+      <div class="col-sm">
+        <div class="form-group form-check pl-0">
+          <input type="checkbox" name="{{form.restore_johnny_race.name}}" id="{{form.restore_johnny_race.id_for_label}}" data-toggle="toggle">
+          <label for="{{form.restore_johnny_race.id_for_label}}">Restore Johnny Race</label>
+        </div>
+      </div>
+
+      <div class="col-sm">
+        <div class="form-group form-check pl-0">
+          <input type="checkbox" name="{{form.restore_tools.name}}" id="{{form.restore_tools.id_for_label}}" data-toggle="toggle">
+          <label for="{{form.restore_tools.id_for_label}}">Restore Tools</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm"><p><b>Flags that Add/Remove a Key Item Spot:</b></p></div>
+    </div>
+
+    <div class="row align-items-start">
+      <div class="col-sm">
+        <div class="form-group form-check pl-0">
+          <input type="checkbox" name="{{form.add_bekkler_spot.name}}" id="{{form.add_bekkler_spot.id_for_label}}" data-toggle="toggle">
+          <label for="{{form.add_bekkler_spot.id_for_label}}">Add Bekkler Spot</label>
+        </div>
+        <div class="form-group form-check pl-0">
+          <input type="checkbox" name="{{form.add_cyrus_spot.name}}" id="{{form.add_cyrus_spot.id_for_label}}" data-toggle="toggle">
+          <label for="{{form.add_cyrus_spot.id_for_label}}">Add Cyrus Grave Spot</label>
+        </div>
+        <div class="form-group form-check pl-0">
+          <input type="checkbox" name="{{form.add_ozzie_spot.name}}" id="{{form.add_ozzie_spot.id_for_label}}" data-toggle="toggle">
+          <label for="{{form.add_ozzie_spot.id_for_label}}">Add Ozzie's Fort Spot</label>
+        </div>
+      </div>
+
+      <div class="col-sm">
+        <div class="form-group form-check pl-0">
+          <input type="checkbox" name="{{form.add_racelog_spot.name}}" id="{{form.add_racelog_spot.id_for_label}}" data-toggle="toggle">
+          <label for="{{form.add_racelog_spot.id_for_label}}">Add Race Log Spot</label>
+        </div>
+        <div class="form-group form-check pl-0">
+          <input type="checkbox" name="{{form.vanilla_robo_ribbon.name}}" id="{{form.vanilla_robo_ribbon.id_for_label}}" data-toggle="toggle">
+          <label for="{{form.vanilla_robo_ribbon.id_for_label}}">Vanilla Robo Ribbon</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm"><p><b>Flags that are Spot-Neutral:</b></p></div>
+    </div>
+
+    <div class="row align-items-start">
+      <div class="col-sm">
+        <div class="form-group form-check pl-0">
+          <input type="checkbox" name="{{form.add_sunkeep_spot.name}}" id="{{form.add_sunkeep_spot.id_for_label}}" data-toggle="toggle">
+          <label for="{{form.add_sunkeep_spot.id_for_label}}">Add Sun Keep Spot</label>
+        </div>
+        <div class="form-group form-check pl-0">
+          <input type="checkbox" name="{{form.split_arris_dome.name}}" id="{{form.split_arris_dome.id_for_label}}" data-toggle="toggle">
+          <label for="{{form.split_arris_dome.id_for_label}}">Split Arris Dome</label>
+        </div>
+        <div class="form-group form-check pl-0">
+          <input type="checkbox" name="{{form.vanilla_desert.name}}" id="{{form.vanilla_desert.id_for_label}}" data-toggle="toggle">
+          <label for="{{form.vanilla_desert.id_for_label}}">Vanilla Desert</label>
+        </div>
+      </div>
+
+      <div class="col-sm">
+        <div class="form-group form-check pl-0">
+          <input type="checkbox" name="{{form.unlocked_skyways.name}}" id="{{form.unlocked_skyways.id_for_label}}" data-toggle="toggle" onchange="toggleUnlockedSkywaysRelated()">
+          <label for="{{form.unlocked_skyways.id_for_label}}">Unlocked Skyways</label>
+        </div>
+        <div class="form-group form-check pl-0">
+          <input type="checkbox" name="{{form.rocksanity.name}}" id="{{form.rocksanity.id_for_label}}" data-toggle="toggle" onchange="toggleRocksanityRelated()">
+          <label for="{{form.rocksanity.id_for_label}}">Rocksanity</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
