@@ -81,6 +81,16 @@ function resetAll() {
   $('#id_rocksanity').prop('checked', false).change();
   $('#id_tech_damage_rando').prop('checked', false).change();
   $('#id_unlocked_skyways').prop('checked', false).change();
+  $('#id_restore_johnny_race').prop('checked', false).change();
+  $('#id_restore_tools').prop('checked', false).change();
+  $('#id_add_bekkler_spot').prop('checked', false).change();
+  $('#id_add_ozzie_spot').prop('checked', false).change();
+  $('#id_add_racelog_spot').prop('checked', false).change();
+  $('#id_vanilla_robo_ribbon').prop('checked', false).change();
+  $('#id_add_cyrus_spot').prop('checked', false).change();
+  $('#id_add_sunkeep_spot').prop('checked', false).change();
+  $('#id_split_arris_dome').prop('checked', false).change();
+  $('#id_vanilla_desert').prop('checked', false).change();
 
   // Mystery Seed options
   // game modes
