@@ -830,40 +830,40 @@ function validateAndUpdateObjectives(){
  * Ensure that there are enough KI Spots to support added KIs
  */
 function validateLogicTweaks(){
-    const addKiNames = ['restore_johnny_race', 'restore_tools', 'epoch_fail']
+    // chronosanity always has enough spots
+    if ($('#id_chronosanity').prop('checked')) {
+      return true;
+    }
+
+    const addKiNames = ['restore_johnny_race', 'restore_tools', 'epoch_fail'];
     const addSpotNames = ['add_bekkler_spot', 'add_ozzie_spot',
                           'add_racelog_spot', 'vanilla_robo_ribbon',
-                          'add_cyrus_spot']
+                          'add_cyrus_spot'];
+    let game_mode = $('#id_game_mode').val();
 
-    var numKIs = 0
-    for(var i=0; i<addKiNames.length; i++){
-        const name = addKiNames[i]
-        const id = 'id_'+name
+    let numKIs = addKiNames.filter((ki) => $('#id_' + ki).prop('checked')).length;
 
-        const isChecked = document.getElementById(id).checked
-        if (isChecked){numKIs++}
+    let numSpots = addSpotNames.filter((spot) => $('#id_' + spot).prop('checked')).length;
 
-    }
+    // some modes have extra spots
+    if (game_mode == 'legacy_of_cyrus') { numSpots++; }
+    else if (game_mode == 'ice_age') { numSpots += 2; }
 
-    var numSpots = 0
-    for(var i=0; i<addSpotNames.length; i++){
-        const name = addSpotNames[i]
-        const id = 'id_'+name
+    // there can be more KI than spots because can erase Jerky
+    // and fix_flag_conflicts can add Robo Ribbon or remove Epoch Fail
+    allowedExtras = 1;
+    if (!$('#id_vanilla_robo_ribbon').prop('checked')) { allowedExtras++; }
+    if ($('#id_epoch_fail').prop('checked')) { allowedExtras++; }
 
-        const isChecked = document.getElementById(id).checked
-        if (isChecked){numSpots++}
-    }
-
-    // There can be one more KI than spot because we just erase Jerky
-    if (numKIs-1 > numSpots){
+    if (numKIs > numSpots + allowedExtras){
         document.getElementById("logicTweakError").innerHTML =
-            "Select Additional Key Item Spots"
+            "Select Additional Key Item Spots";
         $('a[href="#options-extra"]').tab('show');
-        return false
+        return false;
     }
 
-    document.getElementById("logicTweakError").innerHTML = ""
-    return true
+    document.getElementById("logicTweakError").innerHTML = "";
+    return true;
 
 }
 
