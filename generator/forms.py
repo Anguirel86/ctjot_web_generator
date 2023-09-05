@@ -107,6 +107,7 @@ class GenerateForm(forms.Form):
     add_ozzie_spot = forms.BooleanField(required=False)
     restore_johnny_race = forms.BooleanField(required=False)
     add_racelog_spot = forms.BooleanField(required=False)
+    remove_black_omen_spot = forms.BooleanField(required=False)
     split_arris_dome = forms.BooleanField(required=False)
     rocksanity = forms.BooleanField(required=False)
     vanilla_robo_ribbon = forms.BooleanField(required=False)
