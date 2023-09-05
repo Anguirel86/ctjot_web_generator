@@ -1,5 +1,6 @@
 # Python types
 from __future__ import annotations
+import copy
 import io
 import os.path
 import random
@@ -316,6 +317,7 @@ class RandomizerInterface:
             'add_ozzie_spot': GF.ADD_OZZIE_SPOT,
             'restore_johnny_race': GF.RESTORE_JOHNNY_RACE,
             'add_racelog_spot': GF.ADD_RACELOG_SPOT,
+            'remove_black_omen_spot': GF.REMOVE_BLACK_OMEN_SPOT,
             'split_arris_dome': GF.SPLIT_ARRIS_DOME,
             'vanilla_robo_ribbon': GF.VANILLA_ROBO_RIBBON,
             'vanilla_desert': GF.VANILLA_DESERT,
@@ -336,6 +338,8 @@ class RandomizerInterface:
         for name, flag in gameflags_dict.items():
             if form.cleaned_data[name]:
                 settings.gameflags |= flag
+
+        settings.initial_flags = copy.deepcopy(settings.gameflags)
 
         # Character rando
         char_choices = []
