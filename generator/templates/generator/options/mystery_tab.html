@@ -25,6 +25,12 @@
                 <input type="text" id="mystery_game_mode_ia_text" form="none" size="1" value="0" readonly>
               </div>
 
+              <div class="form-group">
+                <label for="{{form.mystery_game_mode_vr.id_for_label}}" class="form-label mr-2">Vanilla Rando:</label>
+                <input type="range" class="form-range" name="{{form.mystery_game_mode_vr.name}}" id="{{form.mystery_game_mode_vr.id_for_label}}" min="0" max="100" value="0" oninput="updateMysterySettings()" onchange="updateMysterySettings()" >
+                <input type="text" id="mystery_game_mode_vr_text" form="none" size="1" value="0" readonly>
+              </div>
+
               <h4>Item Difficulty:</h4>
               <div class="form-group">
                 <label for="{{form.mystery_item_difficulty_easy.id_for_label}}" class="form-label mr-2">Easy:</label>

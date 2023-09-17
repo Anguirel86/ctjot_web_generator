@@ -410,7 +410,8 @@ class RandomizerInterface:
             rset.GameMode.STANDARD: form.cleaned_data['mystery_game_mode_standard'],
             rset.GameMode.LOST_WORLDS: form.cleaned_data['mystery_game_mode_lw'],
             rset.GameMode.LEGACY_OF_CYRUS: form.cleaned_data['mystery_game_mode_loc'],
-            rset.GameMode.ICE_AGE: form.cleaned_data['mystery_game_mode_ia']
+            rset.GameMode.ICE_AGE: form.cleaned_data['mystery_game_mode_ia'],
+            rset.GameMode.VANILLA_RANDO: form.cleaned_data['mystery_game_mode_vr']
         }
 
         settings.mystery_settings.item_difficulty_freqs: dict[rset.Difficulty, int] = {

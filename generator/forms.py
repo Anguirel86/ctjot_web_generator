@@ -123,6 +123,7 @@ class GenerateForm(forms.Form):
     mystery_game_mode_lw = forms.IntegerField()
     mystery_game_mode_loc = forms.IntegerField()
     mystery_game_mode_ia = forms.IntegerField()
+    mystery_game_mode_vr = forms.IntegerField()
     #  Item Difficulty
     mystery_item_difficulty_easy = forms.IntegerField()
     mystery_item_difficulty_normal = forms.IntegerField()
