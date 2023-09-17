@@ -52,7 +52,15 @@ class OptionsView(View):
     @classmethod
     def get(cls, request):
         form = GenerateForm()
-        context = {'form': form}
+        gameflags_map = RandomizerInterface.get_gameflags_map()
+        obhint_map = RandomizerInterface.get_obhint_map()
+        settings_defaults_json = RandomizerInterface.get_settings_defaults_json()
+        context = {
+            'form': form,
+            'gameflags_map': gameflags_map,
+            'obhint_map': obhint_map,
+            'settings_defaults_json': settings_defaults_json,
+        }
         return render(request, 'generator/options.html', context)
 
 

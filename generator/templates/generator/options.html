@@ -2,6 +2,9 @@
 
 {% block imports %}
     {% load static %}
+    {{ gameflags_map | json_script:"gameflags-map" }}
+    {{ obhint_map | json_script:"obhint-map" }}
+    <script id="settings-defaults" type="application/json">{{ settings_defaults_json | safe }}</script>
     <script src="{% static 'generator/options.js' %}"></script>
     <link rel="stylesheet" href="{% static 'generator/styles.css' %}">
 {% endblock %}
