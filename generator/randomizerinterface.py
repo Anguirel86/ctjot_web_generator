@@ -17,7 +17,6 @@ from django.conf import settings as conf
 sys.path.append(os.path.join(conf.BASE_DIR, 'jetsoftime', 'sourcefiles'))
 
 # Randomizer types
-import ctenums
 import bossrandotypes as rotypes
 import logicwriters as logicwriter
 import randoconfig
@@ -155,7 +154,9 @@ class RandomizerInterface:
         if not self.randomizer.has_generated:
             self.randomizer.hash_string_bytes = hash_bytes
 
-    def set_settings_and_config(self, settings: rset.Settings, config: randoconfig.RandoConfig, form: Optional[RomForm]):
+    def set_settings_and_config(
+        self, settings: rset.Settings, config: randoconfig.RandoConfig, form: Optional[RomForm]
+    ):
         """
         Populate the randomizer with a pre-populated RandoSettings object and a
         preconfigured RandoSettings object.
@@ -455,7 +456,9 @@ class RandomizerInterface:
     # End __convert_form_to_settings
 
     @classmethod
-    def get_spoiler_log(cls, config: randoconfig.RandoConfig, settings: rset.Settings, hash_bytes: Optional[bytes]) -> io.StringIO:
+    def get_spoiler_log(
+        cls, config: randoconfig.RandoConfig, settings: rset.Settings, hash_bytes: Optional[bytes]
+    ) -> io.StringIO:
         """
         Get a spoiler log file-like object.
 
@@ -475,7 +478,9 @@ class RandomizerInterface:
         return spoiler_log
 
     @classmethod
-    def get_json_spoiler_log(cls, config: randoconfig.RandoConfig, settings: rset.Settings, hash_bytes: Optional[bytes]) -> io.StringIO:
+    def get_json_spoiler_log(
+        cls, config: randoconfig.RandoConfig, settings: rset.Settings, hash_bytes: Optional[bytes]
+    ) -> io.StringIO:
         """
         Get a spoiler log file-like object.
 
@@ -590,7 +595,9 @@ class RandomizerInterface:
         return rom
 
     @classmethod
-    def get_share_details(cls, config: randoconfig.RandoConfig, settings: rset.Settings, hash_bytes: Optional[bytes]) -> io.StringIO:
+    def get_share_details(
+        cls, config: randoconfig.RandoConfig, settings: rset.Settings, hash_bytes: Optional[bytes]
+    ) -> io.StringIO:
         """
         Get details about a seed for display on the seed share page.  If this is a mystery seed then
         just display "Mystery seed!".
@@ -639,4 +646,3 @@ class RandomizerInterface:
     @staticmethod
     def clamp(value, min_val, max_val):
         return max(min_val, min(value, max_val))
-

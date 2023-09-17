@@ -8,7 +8,7 @@ import sqlite3
 from sqlite3 import Error
 import sys
 
-# Add the randomizer to the system path here. 
+# Add the randomizer to the system path here.
 # Use the path within the web generator container.
 sys.path.append('/home/ctjot/web/jetsoftime/sourcefiles')
 
@@ -30,7 +30,7 @@ def create_connection() -> sqlite3.Connection:
             password = os.environ['POSTGRES_PASSWORD']
             host = os.environ['SQL_HOST']
             port = os.environ['SQL_PORT']
-            conn = psycopg2.connect(database = database, user = user, password = password, host = host, port = port)
+            conn = psycopg2.connect(database=database, user=user, password=password, host=host, port=port)
         else:
             # Not using Postgres.  Try to fall back to sqlite.
             conn = sqlite3.connect('./db.sqlite3')

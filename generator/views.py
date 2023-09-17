@@ -19,7 +19,6 @@ import io
 import json
 import pickle
 import random
-import base64
 
 from typing import Any, Dict
 
@@ -238,7 +237,13 @@ class PracticeSeedView(View):
         return redirect('/share/' + game.share_id)
 
 
-hashsymbols = base64.b64decode('R0lGODlhYAAIAPEDABggKIiQkPj4+AAAACH5BAUAAAMALAAAAABgAAgAQALTBIYpNwbSVkIvnCPkpMv6LFiJwxjNdQUhA4Iioo3qY8xx9AxLF0LcHOkFhriJSiUEIDMWGqcSOh6WIuUtMishSzwVVlKCIpuG0GBpZqo7R4lQ2gJxK2Wur6HjVkfdk3zilEeSUwHUMHbR8gLGyMBXw2QV8xAJ0eP4yBZXhXjGVhGk8baigGl1QWEok2FSBvKzU9Zm4+jQc2k1tEIDSano+idT1agV6Wtxh9XUxvpUqtQEIcm5QDcqYvNCgWPmjCe9EY6nhCl+ireBQlHrMEIy4j5QAAA7')
+hashsymbols = base64.b64decode(
+    'R0lGODlhYAAIAPEDABggKIiQkPj4+AAAACH5BAUAAAMALAAAAABgAAgAQALTBIYpNwbSVkIvnCPkpMv6LFiJwxjNdQUhA4Iioo3qY8xx'
+    '9AxLF0LcHOkFhriJSiUEIDMWGqcSOh6WIuUtMishSzwVVlKCIpuG0GBpZqo7R4lQ2gJxK2Wur6HjVkfdk3zilEeSUwHUMHbR8gLGyMBX'
+    'w2QV8xAJ0eP4yBZXhXjGVhGk8baigGl1QWEok2FSBvKzU9Zm4+jQc2k1tEIDSano+idT1agV6Wtxh9XUxvpUqtQEIcm5QDcqYvNCgWPm'
+    'jCe9EY6nhCl+ireBQlHrMEIy4j5QAAA7'
+)
+
 
 class SeedImageView(View):
     """
@@ -260,18 +265,20 @@ class SeedImageView(View):
             game.save()
 
         rgen = random.Random(share_id)
-        img = Image.new('RGB', (200,200))
+        img = Image.new('RGB', (200, 200))
 
         d = ImageDraw.Draw(img)
         squaresize = 50
-        for x in range(0,200,squaresize):
+        for x in range(0, 200, squaresize):
             for y in range(0, 200, squaresize):
                 # Draw a square in a random color
-                d.polygon([(x,y),(x+squaresize,y),(x+squaresize,y+squaresize),(x,y+squaresize)],
-                        fill=(rgen.randint(0,31)*8, rgen.randint(0,31)*8, rgen.randint(0,31)*8))
+                d.polygon(
+                    [(x, y), (x+squaresize, y), (x+squaresize, y+squaresize), (x, y+squaresize)],
+                    fill=(rgen.randint(0, 31)*8, rgen.randint(0, 31)*8, rgen.randint(0, 31)*8)
+                )
 
         # make a black box to put symbols onto
-        d.polygon([(2,85),(198,85),(198,115),(2,115)], fill=(0,0,0))
+        d.polygon([(2, 85), (198, 85), (198, 115), (2, 115)], fill=(0, 0, 0))
 
         # put seed hash symbols into box
         symbols = Image.open(io.BytesIO(hashsymbols))
@@ -280,8 +287,8 @@ class SeedImageView(View):
             idx = int.from_bytes(byte, 'big') - 0x20
             if idx > 0x9:
                 idx = idx - 0x4
-            symb = symbols.resize((24,24), box=(8*idx,0,8*idx+8,8))
-            img.paste(symb, (4+n*24,88))
+            symb = symbols.resize((24, 24), box=(8*idx, 0, 8*idx+8, 8))
+            img.paste(symb, (4+n*24, 88))
 
         with io.BytesIO() as f:
             img.save(f, 'PNG')

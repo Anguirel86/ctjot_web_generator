@@ -1,0 +1,19 @@
+[flake8]
+exclude = .git,__pycache__,jetsoftime
+max-line-length = 119
+
+extend-ignore=
+  # Ignore formatting issues that a tool like black could automatically address
+  ## non-syntax indentation (visual)
+  # E122, E123, E128, E131,
+
+  ## whitespace with comments
+  E261, E262, E265,
+
+  # Ignore other issues which may or may not care about
+  ## module level import not at top of file
+  ## this is because of sys.path adding jetsoftime submodule
+  E402,
+
+  ## ambigious variable name
+  E741

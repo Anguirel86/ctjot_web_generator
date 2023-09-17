@@ -1,7 +1,6 @@
 import os
 
 from urllib.parse import quote, urljoin
-from collections import defaultdict
 from hashlib import md5
 from pathlib import Path
 from typing import Dict
@@ -31,7 +30,7 @@ class GeneratorConfig(AppConfig):
         so use this alternative method there.
         '''
         # map truncated path to each static file to it's MD5 checksum
-        md5sums : Dict[str, str] =  {
+        md5sums: Dict[str, str] = {
             str(Path(*path.parts[2:])): md5(path.read_bytes()).hexdigest()
             for path in Path('generator/static').rglob('*')
             if path.is_file()
