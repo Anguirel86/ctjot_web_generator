@@ -3,6 +3,16 @@
  * the game options, including preset and validation functions.
  */
 
+/*
+ * Parse content from json-script data into object.
+ */
+function getJsonScriptData(jsonScript) {
+  return JSON.parse(document.getElementById(jsonScript).textContent);
+}
+const gameflagsMap = getJsonScriptData('gameflags-map');
+const obhintMap = getJsonScriptData('obhint-map');
+const settingsDefaults = getJsonScriptData('settings-defaults');
+
 const charIdentities = ['Crono', 'Marle', 'Lucca', 'Robo', 'Frog', 'Ayla', 'Magus'];
 const charModels = ['0', '1', '2', '3', '4', '5', '6'];
 
@@ -488,100 +498,6 @@ function updateObjectiveCount(adjustingRequired = false){
     }
 }
 
-// Parsing objectives
-const objectiveDict = {
-    "Random": "65:quest_gated, 30:boss_nogo, 15:recruit_gated",
-    "Random Gated Quest": "quest_gated",
-    "Random Hard Quest": "quest_late",
-    "Random Go Mode Quest": "quest_go",
-    "Random Gated Character Recruit": "recruit_gated",
-    "Random Boss (Includes Go Mode Dungeons)": "boss_any",
-    "Random Boss from Go Mode Dungeon": "boss_go",
-    "Random Boss (No Go Mode Dungeons)": "boss_nogo",
-    "Recruit a Random Gated Character": "recruit_gated",
-    "Recruit 3 Characters (Total 5)": "recruit_3",
-    "Recruit 4 Characters (Total 6)": "recruit_4",
-    "Recruit 5 Characters (Total 7)": "recruit_5",
-    "Collect 10 of 20 Fragments": "collect_10_fragments_20",
-    "Collect 10 of 30 Fragments": "collect_10_fragments_30",
-    "Collect 3 Rocks": "collect_3_rocks",
-    "Collect 4 Rocks": "collect_4_rocks",
-    "Collect 5 Rocks": "collect_5_rocks",
-    "Forge the Masamune": "quest_forge",
-    "Charge the Moonstone": "quest_moonstone",
-    "Trade the Jerky Away": "quest_jerky",
-    "Defeat the Arris Dome Boss": "quest_arris",
-    "Visit Cyrus's Grave with Frog": "quest_cyrus",
-    "Defeat the Boss of Death's Peak": "quest_deathpeak",
-    "Defeat the Boss of Denadoro Mountains": "quest_denadoro",
-    "Gain Epoch Flight": "quest_epoch",
-    "Defeat the Boss of the Factory Ruins": "quest_factory",
-    "Defeat the Boss of the Geno Dome": "quest_geno",
-    "Defeat the Boss of the Giant's Claw": "quest_claw",
-    "Defeat the Boss of Heckran's Cave": "quest_heckran",
-    "Defeat the Boss of the King's Trial": "quest_shard",
-    "Defeat the Boss of Manoria Cathedral": "quest_cathedral",
-    "Defeat the Boss of Mount Woe": "quest_woe",
-    "Defeat the Boss of the Pendant Trial": "quest_pendant",
-    "Defeat the Boss of the Reptite Lair": "quest_reptite",
-    "Defeat the Boss of the Sun Palace": "quest_sunpalace",
-    "Defeat the Boss of the Sunken Desert": "quest_desert",
-    "Defeat the Boss in the Zeal Throneroom": "quest_zealthrone",
-    "Defeat the Boss of Zenan Bridge": "quest_zenan",
-    "Defeat the Black Tyrano": "quest_blacktyrano",
-    "Defeat the Tyrano Lair Midboss": "quest_tyranomid",
-    "Defeat the Boss in Flea's Spot": "quest_flea",
-    "Defeat the Boss in Slash's Spot": "quest_slash",
-    "Defeat Magus in Magus's Castle": "quest_magus",
-    "Defeat the Boss in the GigaMutant Spot": "quest_omengiga",
-    "Defeat the Boss in the TerraMutant Spot": "quest_omenterra",
-    "Defeat the Boss in the ElderSpawn Spot": "quest_omenelder",
-    "Defeat the Boss in the Twin Golem Spot": "quest_twinboss",
-    "Beat Johnny in a Race": "quest_johnny",
-    "Bet on a Fair Race and Win": "quest_fairrace",
-    "Play the Fair Drinking Game": "quest_soda",
-    "Defeat AtroposXR": "boss_atropos",
-    "Defeat DaltonPlus": "boss_dalton",
-    "Defeat DragonTank": "boss_dragontank",
-    "Defeat ElderSpawn": "boss_elderspawn",
-    "Defeat Flea": "boss_flea",
-    "Defeat Flea Plus": "boss_fleaplus",
-    "Defeat Giga Gaia": "boss_gigagaia",
-    "Defeat GigaMutant": "boss_gigamutant",
-    "Defeat Golem": "boss_golem",
-    "Defeat Golem Boss": "boss_golemboss",
-    "Defeat Guardian": "boss_guardian",
-    "Defeat Heckran": "boss_heckran",
-    "Defeat LavosSpawn": "boss_lavosspawn",
-    "Defeat Magus (North Cape)": "boss_magusnc",
-    "Defeat Masamune": "boss_masamune",
-    "Defeat Mother Brain": "boss_motherbrain",
-    "Defeat Mud Imp": "boss_mudimp",
-    "Defeat Nizbel": "boss_nizbel",
-    "Defeat Nizbel II": "boss_nizbel2",
-    "Defeat R-Series": "boss_rseries",
-    "Defeat Retinite": "boss_retinite",
-    "Defeat RustTyrano": "boss_rusttyrano",
-    "Defeat Slash": "boss_slash",
-    "Defeat Son of Sun": "boss_sonofsun",
-    "Defeat Super Slash": "boss_superslash",
-    "Defeat TerraMutant": "boss_terramutant",
-    "Defeat Yakra": "boss_yakra",
-    "Defeat Yakra XIII": "boss_yakraxiii",
-    "Defeat Zombor": "boss_zombor",
-    "Recruit Crono": "recruit_crono",
-    "Recruit Marle": "recruit_marle",
-    "Recruit Lucca": "recruit_lucca",
-    "Recruit Robo": "recruit_robo",
-    "Recruit Frog": "recruit_frog",
-    "Recruit Ayla": "recruit_ayla",
-    "Recruit Magus": "recruit_magus",
-    "Recruit the Guardia Castle Character": "recruit_castle",
-    "Recruit the Dactyl Nest Character": "recruit_dactyl",
-    "Recruit the Proto Dome Character": "recruit_proto",
-    "Recruit the Frog's Burrow Character": "recruit_burrow"
-}
-
 // All quest name tags allowed by the parser.
 const allowedQuestTags = [
     'free', 'gated', 'late', 'go',
@@ -729,9 +645,9 @@ function validateCollectObjective(collectParts){
 function validateObjective(objective){
     // If the user used a preset in the entry box, then use the dict above to resolve it.
     cleanedObjective = objective.toLowerCase()
-    for(var key in objectiveDict){
-        if (objectiveDict.hasOwnProperty(key) && key.toLowerCase() == cleanedObjective){
-            return {isValid: true, result: objectiveDict[key]}
+    for(var key in obhintMap){
+        if (obhintMap.hasOwnProperty(key) && key.toLowerCase() == cleanedObjective){
+            return {isValid: true, result: obhintMap[key]}
         }
     }
 

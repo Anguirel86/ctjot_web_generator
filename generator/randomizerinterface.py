@@ -2,11 +2,15 @@
 from __future__ import annotations
 import copy
 import io
+import json
 import os.path
 import random
 import re
 import sys
 import datetime
+
+from collections import OrderedDict
+from typing import Dict, Optional
 
 # Web types
 from .forms import GenerateForm, RomForm
@@ -18,10 +22,12 @@ sys.path.append(os.path.join(conf.BASE_DIR, 'jetsoftime', 'sourcefiles'))
 
 # Randomizer types
 import bossrandotypes as rotypes
+import jotjson
 import logicwriters as logicwriter
 import randoconfig
 import randomizer
 import randosettings as rset
+from randosettings import GameFlags as GF
 
 
 game_mode_map = {
@@ -49,6 +55,137 @@ tech_order_map = {
     "normal": rset.TechOrder.NORMAL,
     "fully_random": rset.TechOrder.FULL_RANDOM,
     "balanced_random": rset.TechOrder.BALANCED_RANDOM
+}
+
+gameflags_dict = {
+    # Main
+    'disable_glitches': GF.FIX_GLITCH,
+    'boss_rando': GF.BOSS_RANDO,
+    'boss_scaling': GF.BOSS_SCALE,
+    'zeal': GF.ZEAL_END,
+    'early_pendant': GF.FAST_PENDANT,
+    'locked_chars': GF.LOCKED_CHARS,
+    'unlocked_magic': GF.UNLOCKED_MAGIC,
+    'tab_treasures': GF.TAB_TREASURES,
+    'chronosanity': GF.CHRONOSANITY,
+    'char_rando': GF.CHAR_RANDO,
+    'healing_item_rando': GF.HEALING_ITEM_RANDO,
+    'gear_rando': GF.GEAR_RANDO,
+    'mystery_seed': GF.MYSTERY,
+    'epoch_fail': GF.EPOCH_FAIL,
+    'duplicate_characters': GF.DUPLICATE_CHARS,
+    'duplicate_duals': GF.DUPLICATE_TECHS,
+    # This should get moved to ROSettings.
+    'boss_spot_hp': GF.BOSS_SPOT_HP,
+    # Extra
+    'unlocked_skyways': GF.UNLOCKED_SKYGATES,
+    'add_sunkeep_spot': GF.ADD_SUNKEEP_SPOT,
+    'add_bekkler_spot': GF.ADD_BEKKLER_SPOT,
+    'add_cyrus_spot': GF.ADD_CYRUS_SPOT,
+    'restore_tools': GF.RESTORE_TOOLS,
+    'add_ozzie_spot': GF.ADD_OZZIE_SPOT,
+    'restore_johnny_race': GF.RESTORE_JOHNNY_RACE,
+    'add_racelog_spot': GF.ADD_RACELOG_SPOT,
+    'remove_black_omen_spot': GF.REMOVE_BLACK_OMEN_SPOT,
+    'split_arris_dome': GF.SPLIT_ARRIS_DOME,
+    'vanilla_robo_ribbon': GF.VANILLA_ROBO_RIBBON,
+    'vanilla_desert': GF.VANILLA_DESERT,
+    'use_antilife': GF.USE_ANTILIFE,
+    'tackle_effects': GF.TACKLE_EFFECTS_ON,
+    'starters_sufficient': GF.STARTERS_SUFFICIENT,
+    'bucket_list': GF.BUCKET_LIST,
+    'rocksanity': GF.ROCKSANITY,
+    'tech_damage_rando': GF.TECH_DAMAGE_RANDO,
+    # QoL
+    'sightscope_always_on': GF.VISIBLE_HEALTH,
+    'boss_sightscope': GF.BOSS_SIGHTSCOPE,
+    'fast_tabs': GF.FAST_TABS,
+    'free_menu_glitch': GF.FREE_MENU_GLITCH,
+}
+
+# TODO: remove this and use objectivehints.get_objective_hint_aliases once merged to jetsoftime
+# Mapping of objective hint aliases mapped to objective hint strings
+# NOTE: this is ordered (python>=3.5) with more common random categories at the top
+objective_hint_aliases: Dict[str, str] = {
+    'Random': '65:quest_gated, 30:boss_nogo, 15:recruit_gated',
+    'Random Gated Quest': 'quest_gated',
+    'Random Hard Quest': 'quest_late',
+    'Random Go Mode Quest': 'quest_go',
+    'Random Gated Character Recruit': 'recruit_gated',
+    'Random Boss (Includes Go Mode Dungeons)': 'boss_any',
+    'Random Boss from Go Mode Dungeon': 'boss_go',
+    'Random Boss (No Go Mode Dungeons)': 'boss_nogo',
+    'Recruit 3 Characters (Total 5)': 'recruit_3',
+    'Recruit 4 Characters (Total 6)': 'recruit_4',
+    'Recruit 5 Characters (Total 7)': 'recruit_5',
+    'Collect 10 of 20 Fragments': 'collect_10_fragments_20',
+    'Collect 10 of 30 Fragments': 'collect_10_fragments_30',
+    'Collect 3 Rocks': 'collect_3_rocks',
+    'Collect 4 Rocks': 'collect_4_rocks',
+    'Collect 5 Rocks': 'collect_5_rocks',
+    'Forge the Masamune': 'quest_forge',
+    'Charge the Moonstone': 'quest_moonstone',
+    'Trade the Jerky Away': 'quest_jerky',
+    'Defeat the Arris Dome Boss': 'quest_arris',
+    "Visit Cyrus's Grave with Frog": 'quest_cyrus',
+    "Defeat the Boss of Death's Peak": 'quest_deathpeak',
+    'Defeat the Boss of Denadoro Mountains': 'quest_denadoro',
+    'Gain Epoch Flight': 'quest_epoch',
+    'Defeat the Boss of the Factory Ruins': 'quest_factory',
+    'Defeat the Boss of the Geno Dome': 'quest_geno',
+    "Defeat the Boss of the Giant's Claw": 'quest_claw',
+    "Defeat the Boss of Heckran's Cave": 'quest_heckran',
+    "Defeat the Boss of the King's Trial": 'quest_shard',
+    'Defeat the Boss of Manoria Cathedral': 'quest_cathedral',
+    'Defeat the Boss of Mount Woe': 'quest_woe',
+    'Defeat the Boss of the Pendant Trial': 'quest_pendant',
+    'Defeat the Boss of the Reptite Lair': 'quest_reptite',
+    'Defeat the Boss of the Sun Palace': 'quest_sunpalace',
+    'Defeat the Boss of the Sunken Desert': 'quest_desert',
+    'Defeat the Boss in the Zeal Throneroom': 'quest_zealthrone',
+    'Defeat the Boss of Zenan Bridge': 'quest_zenan',
+    'Defeat the Black Tyrano': 'quest_blacktyrano',
+    'Defeat the Tyrano Lair Midboss': 'quest_tyranomid',
+    "Defeat the Boss in Flea's Spot": 'quest_flea',
+    "Defeat the Boss in Slash's Spot": 'quest_slash',
+    "Defeat Magus in Magus's Castle": 'quest_magus',
+    'Defeat the Boss in the GigaMutant Spot': 'quest_omengiga',
+    'Defeat the Boss in the TerraMutant Spot': 'quest_omenterra',
+    'Defeat the Boss in the ElderSpawn Spot': 'quest_omenelder',
+    'Defeat the Boss in the Twin Golem Spot': 'quest_twinboss',
+    'Beat Johnny in a Race': 'quest_johnny',
+    'Bet on a Fair Race and Win': 'quest_fairrace',
+    'Play the Fair Drinking Game': 'quest_soda',
+    'Defeat AtroposXR': 'boss_atropos',
+    'Defeat DaltonPlus': 'boss_dalton',
+    'Defeat DragonTank': 'boss_dragontank',
+    'Defeat ElderSpawn': 'boss_elderspawn',
+    'Defeat Flea': 'boss_flea',
+    'Defeat Flea Plus': 'boss_fleaplus',
+    'Defeat Giga Gaia': 'boss_gigagaia',
+    'Defeat GigaMutant': 'boss_gigamutant',
+    'Defeat Golem': 'boss_golem',
+    'Defeat Golem Boss': 'boss_golemboss',
+    'Defeat Guardian': 'boss_guardian',
+    'Defeat Heckran': 'boss_heckran',
+    'Defeat LavosSpawn': 'boss_lavosspawn',
+    'Defeat Magus (North Cape)': 'boss_magusnc',
+    'Defeat Masamune': 'boss_masamune',
+    'Defeat Mother Brain': 'boss_motherbrain',
+    'Defeat Mud Imp': 'boss_mudimp',
+    'Defeat Nizbel': 'boss_nizbel',
+    'Defeat Nizbel II': 'boss_nizbel2',
+    'Defeat R-Series': 'boss_rseries',
+    'Defeat Retinite': 'boss_retinite',
+    'Defeat RustTyrano': 'boss_rusttyrano',
+    'Defeat Slash': 'boss_slash',
+    'Defeat Son of Sun': 'boss_sonofsun',
+    'Defeat Super Slash': 'boss_superslash',
+    'Defeat TerraMutant': 'boss_terramutant',
+    # Skip twinboss b/c it's in quests
+    'Defeat Yakra': 'boss_yakra',
+    'Defeat Yakra XIII': 'boss_yakraxiii',
+    'Defeat Zombor': 'boss_zombor'
 }
 
 
@@ -288,53 +425,6 @@ class RandomizerInterface:
         # techs
         settings.techorder = tech_order_map[form.cleaned_data['tech_rando']]
 
-        GF = rset.GameFlags
-        gameflags_dict = {
-            # Main
-            'disable_glitches': GF.FIX_GLITCH,
-            'boss_rando': GF.BOSS_RANDO,
-            'boss_scaling': GF.BOSS_SCALE,
-            'zeal': GF.ZEAL_END,
-            'early_pendant': GF.FAST_PENDANT,
-            'locked_chars': GF.LOCKED_CHARS,
-            'unlocked_magic': GF.UNLOCKED_MAGIC,
-            'tab_treasures': GF.TAB_TREASURES,
-            'chronosanity': GF.CHRONOSANITY,
-            'char_rando': GF.CHAR_RANDO,
-            'healing_item_rando': GF.HEALING_ITEM_RANDO,
-            'gear_rando': GF.GEAR_RANDO,
-            'mystery_seed': GF.MYSTERY,
-            'epoch_fail': GF.EPOCH_FAIL,
-            'duplicate_characters': GF.DUPLICATE_CHARS,
-            'duplicate_duals': GF.DUPLICATE_TECHS,
-            # This should get moved to ROSettings.
-            'boss_spot_hp': GF.BOSS_SPOT_HP,
-            # Extra
-            'unlocked_skyways': GF.UNLOCKED_SKYGATES,
-            'add_sunkeep_spot': GF.ADD_SUNKEEP_SPOT,
-            'add_bekkler_spot': GF.ADD_BEKKLER_SPOT,
-            'add_cyrus_spot': GF.ADD_CYRUS_SPOT,
-            'restore_tools': GF.RESTORE_TOOLS,
-            'add_ozzie_spot': GF.ADD_OZZIE_SPOT,
-            'restore_johnny_race': GF.RESTORE_JOHNNY_RACE,
-            'add_racelog_spot': GF.ADD_RACELOG_SPOT,
-            'remove_black_omen_spot': GF.REMOVE_BLACK_OMEN_SPOT,
-            'split_arris_dome': GF.SPLIT_ARRIS_DOME,
-            'vanilla_robo_ribbon': GF.VANILLA_ROBO_RIBBON,
-            'vanilla_desert': GF.VANILLA_DESERT,
-            'use_antilife': GF.USE_ANTILIFE,
-            'tackle_effects': GF.TACKLE_EFFECTS_ON,
-            'starters_sufficient': GF.STARTERS_SUFFICIENT,
-            'bucket_list': GF.BUCKET_LIST,
-            'rocksanity': GF.ROCKSANITY,
-            'tech_damage_rando': GF.TECH_DAMAGE_RANDO,
-            # QoL
-            'sightscope_always_on': GF.VISIBLE_HEALTH,
-            'boss_sightscope': GF.BOSS_SIGHTSCOPE,
-            'fast_tabs': GF.FAST_TABS,
-            'free_menu_glitch': GF.FREE_MENU_GLITCH,
-        }
-
         settings.gameflags = GF(False)
         for name, flag in gameflags_dict.items():
             if form.cleaned_data[name]:
@@ -563,6 +653,44 @@ class RandomizerInterface:
 
         return spoiler_log
     # End get_web_spoiler_log
+
+    @staticmethod
+    def get_gameflags_map() -> Dict[str, str]:
+        """
+        Get mapping of form names to gameflags to encode to JSON.
+        """
+        return {k: str(flag) for k, flag in gameflags_dict.items()}
+
+    @staticmethod
+    def get_obhint_map() -> OrderedDict[str, str]:
+        """
+        Get ordered dict of objective hints aliases mapped to objective hint strings.
+
+        :return: OrderedDict of obhint alias strings mapped to obhint strings.
+        """
+        # TODO: use objectivehints.get_objective_hint_aliases once merged to jetsoftime
+        return OrderedDict(objective_hint_aliases.items())
+
+    @staticmethod
+    def get_settings_defaults_json() -> str:
+        """
+        Get the default settings object encoded as compact JSON.
+
+        This turns on fast tab and disables glitches by default as well.
+        Even though those are not the defaults in Settings, they are used
+        as "defaults" in the web GUI for improved UX, especially for new
+        players.
+
+        :return: default RandoSettings object encoded as JSON.
+        """
+        settings = rset.Settings()
+
+        # turn on fast tabs and disable glitches by default
+        settings.gameflags |= (
+            rset.GameFlags.FIX_GLITCH | rset.GameFlags.FAST_TABS
+        )
+
+        return json.dumps(settings, cls=jotjson.JOTJSONEncoder, indent=None, separators=(',', ':'))
 
     @staticmethod
     def get_random_seed() -> str:
