@@ -8,6 +8,7 @@ import random
 import re
 import sys
 import datetime
+import types
 
 from collections import OrderedDict
 from typing import Dict, Optional
@@ -689,6 +690,61 @@ class RandomizerInterface:
         settings.gameflags |= (
             rset.GameFlags.FIX_GLITCH | rset.GameFlags.FAST_TABS
         )
+
+        # TODO: remove this temporary monkeypatch after jetsoftime PR merged with to_jot_json updates
+        def _jot_json(self):
+            return {
+                "game_mode": str(self.game_mode),
+                "enemy_difficulty": str(self.enemy_difficulty),
+                "item_difficulty": str(self.item_difficulty),
+                "techorder": str(self.techorder),
+                "shopprices": str(self.shopprices),
+                "mystery_settings": {
+                    'game_mode_freqs': {
+                        'Standard': 75,
+                        'Lost worlds': 25,
+                        'Legacy of cyrus': 0,
+                        'Ice age': 0,
+                        'Vanilla rando': 0
+                    },
+                    'item_difficulty_freqs': {'Easy': 15, 'Normal': 70, 'Hard': 15},
+                    'enemy_difficulty_freqs': {'Normal': 75, 'Hard': 25},
+                    'tech_order_freqs': {'Normal': 10, 'Balanced random': 10, 'Full random': 80},
+                    'shop_price_freqs': {'Normal': 70, 'Mostly random': 10, 'Fully random': 10, 'Free': 10},
+                    'flag_prob_dict': {
+                        'GameFlags.TAB_TREASURES': 0.1,
+                        'GameFlags.UNLOCKED_MAGIC': 0.5,
+                        'GameFlags.BUCKET_LIST': 0.15,
+                        'GameFlags.CHRONOSANITY': 0.5,
+                        'GameFlags.BOSS_RANDO': 0.5,
+                        'GameFlags.BOSS_SCALE': 0.1,
+                        'GameFlags.LOCKED_CHARS': 0.25,
+                        'GameFlags.CHAR_RANDO': 0.5,
+                        'GameFlags.DUPLICATE_CHARS': 0.25,
+                        'GameFlags.EPOCH_FAIL': 0.5,
+                        'GameFlags.GEAR_RANDO': 0.25,
+                        'GameFlags.HEALING_ITEM_RANDO': 0.25
+                    }
+                },
+                "gameflags": self.gameflags,
+                "bucket_settings": {
+                    "disable_other_go_modes": False,
+                    "objectives_win": False,
+                    "num_objectives": 5,
+                    "num_objectives_needed": 4,
+                    "hints": [],
+                },
+                "tab_settings": {
+                    "power_min": 2,
+                    "power_max": 4,
+                    "magic_min": 1,
+                    "magic_max": 3,
+                    "speed_min": 1,
+                    "speed_max": 1,
+                },
+            }
+
+        setattr(settings, '_jot_json', types.MethodType(_jot_json, settings))
 
         return json.dumps(settings, cls=jotjson.JOTJSONEncoder, indent=None, separators=(',', ':'))
 

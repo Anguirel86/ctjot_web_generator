@@ -28,220 +28,254 @@ function initAll() {
 $(document).ready(initAll);
 
 /*
- * Reset all form inputs to default values.
+ * Apply preset values to all form inputs.
  */
-function resetAll() {
-  // direct focus back to General tab
-  $('a[href="#options-general"]').tab('show');
-
+function applyPreset(preset) {
   // General options
-  $('#id_enemy_difficulty').val('normal');
-  $('#id_item_difficulty').val('normal');
-  $('#id_game_mode').val('standard').change();
-  $('#id_disable_glitches').prop('checked', false).change();
+  function _game_option(key) {
+    let missing = settingsDefaults[key].toLowerCase().replace(/\s/g, '_');
+    if(!preset.settings[key]) { return missing; }
+    return preset.settings[key].toLowerCase().replace(/\s/g, '_');
+  }
+  $('#id_game_mode').val(_game_option('game_mode')).change();
+  $('#id_enemy_difficulty').val(_game_option('enemy_difficulty')).change();
+  $('#id_item_difficulty').val(_game_option('item_difficulty')).change();
+  $('#id_tech_rando').val(
+    (v => {
+      if (v == 'full_random') { return 'fully_random'; }
+      return v;
+    })(_game_option('techorder'))
+  ).change();
+  $('#id_shop_prices').val(_game_option('shopprices')).change();
+
+  // Flags
+  function _has_flag(flag) {
+    let missing = settingsDefaults.gameflags.includes(flag);
+    if(!preset.settings.gameflags) { return missing; }
+    return preset.settings.gameflags.includes(flag);
+  }
+  Object.entries(gameflagsMap).forEach(([id, flag]) => {
+    $('#id_' + id).prop('checked', _has_flag(flag)).change();
+  });
+
   $('#id_lost_worlds').prop('checked', false).change();
-  $('#id_boss_scaling').prop('checked', false).change();
-  $('#id_early_pendant').prop('checked', false).change();
-  $('#id_unlocked_magic').prop('checked', false).change();
-  $('#id_chronosanity').prop('checked', false).change();
-  $('#id_boss_rando').prop('checked', false).change();
-  $('#id_zeal').prop('checked', false).change();
-  $('#id_locked_chars').prop('checked', false).change();
-  $('#id_tab_treasures').prop('checked', false).change();
-  $('#id_shop_prices').val('normal');
-  $('#id_tech_rando').val('normal');
-  $('#id_char_rando').prop('checked', false).change();
-  $('#id_healing_item_rando').prop('checked', false).change();
-  $('#id_gear_rando').prop('checked', false).change();
-  $('#id_mystery_seed').prop('checked', false).change();
   $('#id_spoiler_log').prop('checked', true).change();
-  $('#id_epoch_fail').prop('checked', false).change();
 
   // Tabs options
-  $('#id_power_tab_min').val(2).change();
-  $('#id_power_tab_max').val(4).change();
-  $('#id_magic_tab_min').val(1).change();
-  $('#id_magic_tab_max').val(3).change();
-  $('#id_speed_tab_min').val(1).change();
-  $('#id_speed_tab_max').val(1).change();
+  function _tab_setting(key) {
+    let missing = settingsDefaults.tab_settings[key];
+    if(!preset.settings.tab_settings) { return missing; }
+    return preset.settings.tab_settings[key] || missing;
+  }
+  $('#id_power_tab_min').val(_tab_setting('power_min')).change();
+  $('#id_power_tab_max').val(_tab_setting('power_max')).change();
+  $('#id_magic_tab_min').val(_tab_setting('magic_min')).change();
+  $('#id_magic_tab_max').val(_tab_setting('magic_max')).change();
+  $('#id_speed_tab_min').val(_tab_setting('speed_min')).change();
+  $('#id_speed_tab_max').val(_tab_setting('speed_max')).change();
+  // TODO: missing tab scheme, binom_success
 
   // Character Rando options
-  $('#id_duplicate_characters').prop('checked', false).change();
-  $('#id_duplicate_duals').prop('checked', false).change();
-  $('#id_duplicate_duals').addClass('disabled');
-  $('#id_duplicate_duals').prop('disabled', true).change();
+  if (!_has_flag('GameFlags.DUPLICATE_CHARS')) {
+    $('#id_duplicate_duals').prop('checked', false).change();
+    $('#id_duplicate_duals').addClass('disabled');
+    $('#id_duplicate_duals').prop('disabled', true).change();
+  }
 
   rcCheckAll();
 
   // Boss Rando options
   $('#id_legacy_boss_placement').prop('checked', false).change();
-  $('#id_boss_spot_hp').prop('checked', false).change();
-
-  // Quality of Life options
-  $('#id_sightscope_always_on').prop('checked', false).change();
-  $('#id_boss_sightscope').prop('checked', false).change();
-  $('#id_fast_tabs').prop('checked', false).change();
-  $('#id_free_menu_glitch').prop('checked', false).change();
-
-  // Extra options
-  $('#id_use_antilife').prop('checked', false).change();
-  $('#id_tackle_effects').prop('checked', false).change();
-  $('#id_starters_sufficient').prop('checked', false).change();
-  $('#id_bucket_list').prop('checked', false).change();
-  $('#id_rocksanity').prop('checked', false).change();
-  $('#id_tech_damage_rando').prop('checked', false).change();
-  $('#id_unlocked_skyways').prop('checked', false).change();
-  $('#id_restore_johnny_race').prop('checked', false).change();
-  $('#id_restore_tools').prop('checked', false).change();
-  $('#id_add_bekkler_spot').prop('checked', false).change();
-  $('#id_add_ozzie_spot').prop('checked', false).change();
-  $('#id_add_racelog_spot').prop('checked', false).change();
-  $('#id_vanilla_robo_ribbon').prop('checked', false).change();
-  $('#id_add_cyrus_spot').prop('checked', false).change();
-  $('#id_remove_black_omen_spot').prop('checked', false).change();
-  $('#id_add_sunkeep_spot').prop('checked', false).change();
-  $('#id_split_arris_dome').prop('checked', false).change();
-  $('#id_vanilla_desert').prop('checked', false).change();
 
   // Mystery Seed options
+  function _mystery_setting(field, key) {
+    let missing = settingsDefaults.mystery_settings[field][key];
+    if(!preset.settings.mystery_settings) { return missing; }
+    if(!preset.settings.mystery_settings[field]) { return missing; }
+    return preset.settings.mystery_settings[field][key] || missing;
+  }
   // game modes
-  $('#id_mystery_game_mode_standard').val(75).change();
-  $('#id_mystery_game_mode_lw').val(25).change();
-  $('#id_mystery_game_mode_loc').val(0).change();
-  $('#id_mystery_game_mode_ia').val(0).change();
+  $('#id_mystery_game_mode_standard').val(_mystery_setting('game_mode_freqs', 'Standard')).change();
+  $('#id_mystery_game_mode_lw').val(_mystery_setting('game_mode_freqs', 'Lost worlds')).change();
+  $('#id_mystery_game_mode_loc').val(_mystery_setting('game_mode_freqs', 'Legacy of cyrus')).change();
+  $('#id_mystery_game_mode_ia').val(_mystery_setting('game_mode_freqs', 'Ice age')).change();
+  $('#id_mystery_game_mode_vr').val(_mystery_setting('game_mode_freqs', 'Vanilla rando', 0)).change();
   // item difficulty
-  $('#id_mystery_item_difficulty_easy').val(15).change();
-  $('#id_mystery_item_difficulty_normal').val(70).change();
-  $('#id_mystery_item_difficulty_hard').val(15).change();
+  $('#id_mystery_item_difficulty_easy').val(_mystery_setting('item_difficulty_freqs', 'Easy')).change();
+  $('#id_mystery_item_difficulty_normal').val(_mystery_setting('item_difficulty_freqs', 'Normal')).change();
+  $('#id_mystery_item_difficulty_hard').val(_mystery_setting('item_difficulty_freqs', 'Hard')).change();
   // enemy difficulty
-  $('#id_mystery_enemy_difficulty_normal').val(75).change();
-  $('#id_mystery_enemy_difficulty_hard').val(25).change();
+  $('#id_mystery_enemy_difficulty_normal').val(_mystery_setting('enemy_difficulty_freqs', 'Normal')).change();
+  $('#id_mystery_enemy_difficulty_hard').val(_mystery_setting('enemy_difficulty_freqs', 'Hard')).change();
   // tech order
-  $('#id_mystery_tech_order_normal').val(10).change();
-  $('#id_mystery_tech_order_full_random').val(80).change();
-  $('#id_mystery_tech_order_balanced_random').val(10).change();
+  $('#id_mystery_tech_order_normal').val(_mystery_setting('tech_order_freqs', 'Normal')).change();
+  $('#id_mystery_tech_order_full_random').val(_mystery_setting('tech_order_freqs', 'Full random')).change();
+  $('#id_mystery_tech_order_balanced_random').val(_mystery_setting('tech_order_freqs', 'Balanced random')).change();
   // shop prices
-  $('#id_mystery_shop_prices_normal').val(70).change();
-  $('#id_mystery_shop_prices_random').val(10).change();
-  $('#id_mystery_shop_prices_mostly_random').val(10).change();
-  $('#id_mystery_shop_prices_free').val(10).change();
+  $('#id_mystery_shop_prices_normal').val(_mystery_setting('shop_price_freqs', 'Normal')).change();
+  $('#id_mystery_shop_prices_random').val(_mystery_setting('shop_price_freqs', 'Fully random')).change();
+  $('#id_mystery_shop_prices_mostly_random').val(_mystery_setting('shop_price_freqs', 'Mostly random')).change();
+  $('#id_mystery_shop_prices_free').val(_mystery_setting('shop_price_freqs', 'Free')).change();
   // flag probabilities
-  $('#id_mystery_tab_treasures').val(10).change();
-  $('#id_mystery_unlock_magic').val(50).change();
-  $('#id_mystery_bucket_list').val(15).change();
-  $('#id_mystery_chronosanity').val(30).change();
-  $('#id_mystery_boss_rando').val(50).change();
-  $('#id_mystery_boss_scale').val(30).change();
-  $('#id_mystery_locked_characters').val(25).change();
-  $('#id_mystery_char_rando').val(50).change();
-  $('#id_mystery_duplicate_characters').val(25).change();
-  $('#id_mystery_epoch_fail').val(50).change();
-  $('#id_mystery_gear_rando').val(25).change();
-  $('#id_mystery_heal_rando').val(25).change();
+  function _mystery_flag(flag) {
+    return 100 * _mystery_setting('flag_prob_dict', gameflagsMap[flag]);
+  }
+  $('#id_mystery_tab_treasures').val(_mystery_flag('tab_treasures')).change();
+  $('#id_mystery_unlock_magic').val(_mystery_flag('unlock_magic')).change();
+  $('#id_mystery_bucket_list').val(_mystery_flag('bucket_list')).change();
+  $('#id_mystery_chronosanity').val(_mystery_flag('chronosanity')).change();
+  $('#id_mystery_boss_rando').val(_mystery_flag('boss_rando')).change();
+  $('#id_mystery_boss_scale').val(_mystery_flag('boss_scale')).change();
+  $('#id_mystery_locked_characters').val(_mystery_flag('locked_characters')).change();
+  $('#id_mystery_char_rando').val(_mystery_flag('char_rando')).change();
+  $('#id_mystery_duplicate_characters').val(_mystery_flag('duplicate_characters')).change();
+  $('#id_mystery_epoch_fail').val(_mystery_flag('epoch_fail')).change();
+  $('#id_mystery_gear_rando').val(_mystery_flag('gear_rando')).change();
+  $('#id_mystery_heal_rando').val(_mystery_flag('heal_rando')).change();
 
   // Bucket Settings
-  $('#id_bucket_num_objs').val(5).change();
-  $('#id_bucket_num_objs_req').val(4).change();
+  function _bucket_setting(key) {
+    let missing = settingsDefaults.bucket_settings[key]
+    if(!preset.settings.bucket_settings) { return missing; }
+    return preset.settings.bucket_settings[key] || missing;
+  }
+  $('#id_bucket_num_objs').val(_bucket_setting('num_objectives')).change();
+  $('#id_bucket_num_objs_req').val(_bucket_setting('num_objectives_needed')).change();
+  $('#id_bucket_disable_go_modes').prop('checked', _bucket_setting('disable_other_go_modes', false)).change();
+  $('#id_bucket_obj_win_game').prop('checked', _bucket_setting('objectives_win', false)).change();
   updateObjectiveCount();
 
+  // read objective hints from preset
+  let hints = _bucket_setting('hints') || [];
+  hints.forEach((hint, index) => $('#objEntry' + (index + 1)).val(hint).change());
+}
+
+/*
+ * Reset all form inputs to default values.
+ */
+function resetAll() {
+  // direct focus back to General tab
+  $('a[href="#options-general"]').tab('show');
   initAll();
+  applyPreset({'settings': {}});
 }
 
 /*
  * Populate the options form with the settings for a standard race seed.
  */
 function presetRace() {
-  resetAll();
-  $('#id_enemy_difficulty').val('normal');
-  $('#id_item_difficulty').val('normal');
-  $('#id_disable_glitches').prop('checked', true).change();
-  $('#id_zeal').prop('checked', true).change();
-  $('#id_early_pendant').prop('checked', true).change();
-  $('#id_tech_rando').val('fully_random');
+  applyPreset(
+    {
+      "settings": {
+        "game_mode": "Standard",
+        "enemy_difficulty": "Normal",
+        "item_difficulty": "Normal",
+        "techorder": "Full random",
+        "shopprices": "Normal",
+        "gameflags": [
+          "GameFlags.FIX_GLITCH",
+          "GameFlags.ZEAL_END",
+          "GameFlags.FAST_PENDANT",
+          "GameFlags.FAST_TABS"
+        ]
+      }
+    }
+  );
 }
 
 /*
  * Populate the options form with the settings for a new player seed.
  */
 function presetNewPlayer() {
-  resetAll();
-  $('#id_enemy_difficulty').val('normal');
-  $('#id_item_difficulty').val('easy');
-  $('#id_disable_glitches').prop('checked', true).change();
-  $('#id_zeal').prop('checked', true).change();
-  $('#id_early_pendant').prop('checked', true).change();
-  $('#id_unlocked_magic').prop('checked', true).change();
-  $('#id_tech_rando').val('fully_random');
+  applyPreset(
+    {
+      "settings": {
+        "game_mode": "Standard",
+        "enemy_difficulty": "Normal",
+        "item_difficulty": "Easy",
+        "techorder": "Full random",
+        "shopprices": "Normal",
+        "gameflags": [
+          "GameFlags.FIX_GLITCH",
+          "GameFlags.ZEAL_END",
+          "GameFlags.FAST_PENDANT",
+          "GameFlags.UNLOCKED_MAGIC",
+          "GameFlags.VISIBLE_HEALTH",
+          "GameFlags.FAST_TABS"
+        ]
+      }
+    }
+  );
 }
 
 /*
  *Populate the options form with the settings for a lost worlds seed.
  */
 function presetLostWorlds() {
-  resetAll();
-  $('#id_enemy_difficulty').val('normal');
-  $('#id_item_difficulty').val('normal');
-  $('#id_game_mode').val('lost_worlds').change();
-  $('#id_disable_glitches').prop('checked', true).change();
-  $('#id_zeal').prop('checked', true).change();
-  $('#id_tech_rando').val('fully_random');
+  applyPreset(
+    {
+      "settings": {
+        "game_mode": "Lost worlds",
+        "enemy_difficulty": "Normal",
+        "item_difficulty": "Normal",
+        "techorder": "Full random",
+        "shopprices": "Normal",
+        "gameflags": [
+          "GameFlags.FIX_GLITCH",
+          "GameFlags.ZEAL_END",
+          "GameFlags.FAST_TABS"
+        ]
+      }
+    }
+  );
 }
 
 /*
  *Populate the options form with the settings for a hard seed.
  */
 function presetHard() {
-  resetAll();
-  $('#id_enemy_difficulty').val('hard');
-  $('#id_item_difficulty').val('hard');
-  $('#id_disable_glitches').prop('checked', true).change();
-  $('#id_boss_scaling').prop('checked', true).change();
-  $('#id_locked_chars').prop('checked', true).change();
-  $('#id_tech_rando').val('balanced_random');
+  applyPreset(
+    {
+      "settings": {
+        "game_mode": "Standard",
+        "enemy_difficulty": "Hard",
+        "item_difficulty": "Hard",
+        "techorder": "Balanced random",
+        "shopprices": "Normal",
+        "gameflags": [
+          "GameFlags.FIX_GLITCH",
+          "GameFlags.BOSS_SCALE",
+          "GameFlags.LOCKED_CHARS",
+          "GameFlags.FAST_TABS"
+        ]
+      }
+    }
+  );
 }
 
 /*
  *Populate the options form with the settings for a hard seed.
  */
 function presetLegacyOfCyrus() {
-  resetAll();
-  $('#id_game_mode').val('legacy_of_cyrus').change();
-  $('#id_enemy_difficulty').val('normal');
-  $('#id_item_difficulty').val('normal');
-  $('#id_disable_glitches').prop('checked', true).change();
-  $('#id_early_pendant').prop('checked', true).change();
-  $('#id_unlocked_magic').prop('checked', true).change();
-  $('#id_gear_rando').prop('checked', true).change();
-  $('#id_fast_tabs').prop('checked', true).change();
-  $('#id_tech_rando').val('fully_random');
+  applyPreset(
+    {
+      "settings": {
+        "game_mode": "Legacy of cyrus",
+        "enemy_difficulty": "Normal",
+        "item_difficulty": "Normal",
+        "techorder": "Full random",
+        "shopprices": "Normal",
+        "gameflags": [
+          "GameFlags.FIX_GLITCH",
+          "GameFlags.FAST_PENDANT",
+          "GameFlags.UNLOCKED_MAGIC",
+          "GameFlags.FAST_TABS",
+          "GameFlags.GEAR_RANDO"
+        ]
+      }
+    }
+  );
 }
-
-/*
- * Populate the options form with the settings for a Catalack Cup tournament seed.
- * The Catalack Cup preset buttons have been removed, but the functions are being left
- * in in case they are ever needed again.
- */
- function presetTourney() {
-  resetAll();
-  $('#id_item_difficulty').val('normal');
-  $('#id_tech_rando').val('fully_random');
-  $('#id_shop_prices').val('normal');
-  $('#id_disable_glitches').prop('checked', true).change();
-  $('#id_zeal').prop('checked', true).change();
-  $('#id_early_pendant').prop('checked', true).change();
-  $('#id_boss_rando').prop('checked', true).change();
-  $('#id_boss_spot_hp').prop('checked', true).change();
-  $('#id_fast_tabs').prop('checked', true).change();
-  $('#id_free_menu_glitch').prop('checked', true).change();
-  $('#id_healing_item_rando').prop('checked', true).change();
-  $('#id_gear_rando').prop('checked', true).change();
- }
-
- function presetTourneyTop8() {
-   presetTourney();
-   $('#id_item_difficulty').val('hard');
-   $('#id_free_menu_glitch').prop('checked', false).change();
- }
 
 /*
  * Check all of the character rando assignment boxes.
@@ -832,21 +866,25 @@ const totalForceList = [
  * mode permits.
  */
 function restrictFlags(){
-    var mode = document.getElementById("id_game_mode").value
-    var disableList = forceOff[mode]
+    let mode = document.getElementById("id_game_mode").value;
+    let disableList = forceOff[mode];
+    if (!disableList) {
+      console.error('Could not find forceOff list for mode: ' + mode)
+      return
+    }
 
-    for(var i=0; i<totalForceList.length; i++){
-        flag = totalForceList[i]
+    for(let i=0; i<totalForceList.length; i++){
+        flag = totalForceList[i];
 
         if(disableList.includes(flag)){
-            $("#id_"+flag).parent().addClass('btn-light off disabled')
-            $("#id_"+flag).parent().removeClass('btn-primary')
-            $("#id_"+flag).prop('checked', false)
-            $("#id_"+flag).prop('disabled', true)
+            $("#id_"+flag).parent().addClass('btn-light off disabled');
+            $("#id_"+flag).parent().removeClass('btn-primary');
+            $("#id_"+flag).prop('checked', false);
+            $("#id_"+flag).prop('disabled', true);
         }
         else{
-            $("#id_"+flag).parent().removeClass('disabled')
-            $("#id_"+flag).prop('disabled', false)
+            $("#id_"+flag).parent().removeClass('disabled');
+            $("#id_"+flag).prop('disabled', false);
         }
     }
 }
