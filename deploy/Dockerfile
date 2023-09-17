@@ -3,7 +3,7 @@
 ###########
 
 # pull official base image
-FROM python:3.10.6-alpine as builder
+FROM python:3.11.5-alpine as builder
 
 # set work directory
 WORKDIR /usr/src/app
@@ -27,7 +27,7 @@ RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requir
 #########
 
 # pull official base image
-FROM python:3.10.6-alpine
+FROM python:3.11.5-alpine
 
 # Set up a user for the webapp
 RUN mkdir -p /home/ctjot
