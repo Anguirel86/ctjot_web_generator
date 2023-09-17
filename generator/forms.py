@@ -168,4 +168,3 @@ class GenerateForm(forms.Form):
     bucket_objective6 = forms.CharField(required=False)
     bucket_objective7 = forms.CharField(required=False)
     bucket_objective8 = forms.CharField(required=False)
-
