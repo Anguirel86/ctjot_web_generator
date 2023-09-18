@@ -149,7 +149,7 @@ function applyPreset(preset) {
 
   // read objective hints from preset
   let hints = _bucket_setting('hints') || [];
-  hints.forEach((hint, index) => $('#objEntry' + (index + 1)).val(hint).change());
+  [...Array(8).keys()].forEach((index) => $('#objEntry' + (index + 1)).val(hints[index] || '').change());
 }
 
 /*
@@ -502,6 +502,11 @@ function toggleOptions(option) {
   } else {
     optionNav.addClass('disabled');
     optionNav.prop('disabled', true);
+
+    // if currently on that nav tab, boot user back to General
+    if (optionNav.prop('id') == $('.nav .active').attr('id')) {
+      $('a[href="#options-general"]').tab('show');
+    }
   }
 }
 
