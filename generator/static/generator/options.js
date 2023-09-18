@@ -24,6 +24,8 @@ function initAll() {
   options.forEach((option) => toggleOptions(option));
   restrictFlags();
   disableDuplicateTechs();
+  $('#id_disable_glitches').prop('checked', true).change();
+  $('#id_fast_tabs').prop('checked', true).change();
 }
 $(document).ready(initAll);
 
