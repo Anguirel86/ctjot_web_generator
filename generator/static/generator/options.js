@@ -16,6 +16,107 @@ const settingsDefaults = getJsonScriptData('settings-defaults');
 const charIdentities = ['Crono', 'Marle', 'Lucca', 'Robo', 'Frog', 'Ayla', 'Magus'];
 const charModels = ['0', '1', '2', '3', '4', '5', '6'];
 
+/* Mystery Settings sliders mapping of DOM id to MysterySettings field and key */
+const mysterySliders = {
+  // game modes
+  'mystery_game_mode_standard': ['game_mode_freqs', 'Standard'],
+  'mystery_game_mode_lw': ['game_mode_freqs', 'Lost worlds'],
+  'mystery_game_mode_loc': ['game_mode_freqs', 'Legacy of cyrus'],
+  'mystery_game_mode_ia': ['game_mode_freqs', 'Ice age'],
+  'mystery_game_mode_vr': ['game_mode_freqs', 'Vanilla rando'],
+  // item difficulty
+  'mystery_item_difficulty_easy': ['item_difficulty_freqs', 'Easy'],
+  'mystery_item_difficulty_normal': ['item_difficulty_freqs', 'Normal'],
+  'mystery_item_difficulty_hard': ['item_difficulty_freqs', 'Hard'],
+  // enemy difficulty
+  'mystery_enemy_difficulty_normal': ['enemy_difficulty_freqs', 'Normal'],
+  'mystery_enemy_difficulty_hard': ['enemy_difficulty_freqs', 'Hard'],
+  // tech order
+  'mystery_tech_order_normal': ['tech_order_freqs', 'Normal'],
+  'mystery_tech_order_full_random': ['tech_order_freqs', 'Full random'],
+  'mystery_tech_order_balanced_random': ['tech_order_freqs', 'Balanced random'],
+  // shop prices
+  'mystery_shop_prices_normal': ['shop_price_freqs', 'Normal'],
+  'mystery_shop_prices_random': ['shop_price_freqs', 'Fully random'],
+  'mystery_shop_prices_mostly_random': ['shop_price_freqs', 'Mostly random'],
+  'mystery_shop_prices_free': ['shop_price_freqs', 'Free']
+}
+
+/* Mystery Settings flags sliders mapping of DOM id to MysterySettings key (in flag_prob_dict field) */
+const mysteryFlagSliders = {
+  'mystery_tab_treasures': 'tab_treasures',
+  'mystery_unlock_magic': 'unlocked_magic',
+  'mystery_bucket_list': 'bucket_list',
+  'mystery_chronosanity': 'chronosanity',
+  'mystery_boss_rando': 'boss_rando',
+  'mystery_boss_scale': 'boss_scaling',
+  'mystery_locked_characters': 'locked_chars',
+  'mystery_char_rando': 'char_rando',
+  'mystery_duplicate_characters': 'duplicate_characters',
+  'mystery_epoch_fail': 'epoch_fail',
+  'mystery_gear_rando': 'gear_rando',
+  'mystery_heal_rando': 'healing_item_rando'
+}
+
+/*
+ * Creates a slider with linked text.
+ * Slider element will update text when slider is moved, and update slider when text is entered.
+ * Adds optional suffix to text.
+ */
+function createSlider(id, suffix='') {
+  let slider = document.getElementById('id_' + id);
+  let text = document.getElementById(id + '_text');
+
+  text.value = slider.value + suffix;
+  slider.onchange = () => text.value = slider.value + suffix;
+  slider.oninput = slider.onchange;
+  text.onchange = () => slider.value = text.value.replace(suffix, '');
+  text.oninput = text.onchange;
+}
+
+/*
+ * Creates a pair of "min" and "max" sliders with linked text.
+ * Slider element will update text when slider is moved, and update slider when text is entered.
+ * If min slider value goes above max slider, max slider gets increased.
+ * If max slider value goes below min slider, min slider gets decreased.
+ */
+
+function createMinMaxSlidersPair(pair) {
+  let maxSlider = document.getElementById('id_' + pair + '_max');
+  let minSlider = document.getElementById('id_' + pair + '_min');
+  let maxText = document.getElementById(pair + '_max_text');
+  let minText = document.getElementById(pair + '_min_text');
+
+  minText.value = minSlider.value;
+  maxText.value = maxSlider.value;
+
+  // increase max value if min value goes above it
+  function _adjust_max() {
+    if (minSlider.value > maxSlider.value) {
+      maxSlider.value = minSlider.value;
+      maxText.value = minSlider.value;
+    }
+  }
+
+  // decrease min value if max value goes below it
+  function _adjust_min() {
+    if (maxSlider.value < minSlider.value) {
+      minSlider.value = maxSlider.value;
+      minText.value = maxText.value;
+    }
+  }
+
+  minSlider.onchange = (() => { minText.value = minSlider.value; _adjust_max(); });
+  minSlider.oninput = minSlider.onchange;
+  minText.onchange = (() => { minSlider.value = minText.value; _adjust_max(); });
+  minText.oninput = minText.onchange;
+
+  maxSlider.onchange = (() => { maxText.value = maxSlider.value; _adjust_min(); });
+  maxSlider.oninput = maxSlider.onchange;
+  maxText.onchange = (() => { maxSlider.value = maxText.value; _adjust_min(); });
+  maxText.oninput = maxText.onchange;
+}
+
 /*
  * Initialize some UI settings when page (re-)loaded.
  */
@@ -26,6 +127,10 @@ function initAll() {
   disableDuplicateTechs();
   $('#id_disable_glitches').prop('checked', true).change();
   $('#id_fast_tabs').prop('checked', true).change();
+
+  Object.entries(mysterySliders).forEach(([id, _]) => createSlider(id));
+  Object.entries(mysteryFlagSliders).forEach(([id, _]) => createSlider(id, '%'));
+  ['power_tab', 'magic_tab', 'speed_tab'].forEach((pair) => createMinMaxSlidersPair(pair));
 }
 $(document).ready(initAll);
 
@@ -69,12 +174,11 @@ function applyPreset(preset) {
     if(!preset.settings.tab_settings) { return missing; }
     return preset.settings.tab_settings[key] || missing;
   }
-  $('#id_power_tab_min').val(_tab_setting('power_min')).change();
-  $('#id_power_tab_max').val(_tab_setting('power_max')).change();
-  $('#id_magic_tab_min').val(_tab_setting('magic_min')).change();
-  $('#id_magic_tab_max').val(_tab_setting('magic_max')).change();
-  $('#id_speed_tab_min').val(_tab_setting('speed_min')).change();
-  $('#id_speed_tab_max').val(_tab_setting('speed_max')).change();
+
+  ['power', 'magic', 'speed'].forEach((tab) => {
+    $('#id_' + tab + '_tab_max').val(_tab_setting(tab + '_max')).change();
+    $('#id_' + tab + '_tab_min').val(_tab_setting(tab + '_min')).change();
+  });
   // TODO: missing tab scheme, binom_success
 
   // Character Rando options
@@ -96,44 +200,15 @@ function applyPreset(preset) {
     if(!preset.settings.mystery_settings[field]) { return missing; }
     return preset.settings.mystery_settings[field][key] || missing;
   }
-  // game modes
-  $('#id_mystery_game_mode_standard').val(_mystery_setting('game_mode_freqs', 'Standard')).change();
-  $('#id_mystery_game_mode_lw').val(_mystery_setting('game_mode_freqs', 'Lost worlds')).change();
-  $('#id_mystery_game_mode_loc').val(_mystery_setting('game_mode_freqs', 'Legacy of cyrus')).change();
-  $('#id_mystery_game_mode_ia').val(_mystery_setting('game_mode_freqs', 'Ice age')).change();
-  $('#id_mystery_game_mode_vr').val(_mystery_setting('game_mode_freqs', 'Vanilla rando', 0)).change();
-  // item difficulty
-  $('#id_mystery_item_difficulty_easy').val(_mystery_setting('item_difficulty_freqs', 'Easy')).change();
-  $('#id_mystery_item_difficulty_normal').val(_mystery_setting('item_difficulty_freqs', 'Normal')).change();
-  $('#id_mystery_item_difficulty_hard').val(_mystery_setting('item_difficulty_freqs', 'Hard')).change();
-  // enemy difficulty
-  $('#id_mystery_enemy_difficulty_normal').val(_mystery_setting('enemy_difficulty_freqs', 'Normal')).change();
-  $('#id_mystery_enemy_difficulty_hard').val(_mystery_setting('enemy_difficulty_freqs', 'Hard')).change();
-  // tech order
-  $('#id_mystery_tech_order_normal').val(_mystery_setting('tech_order_freqs', 'Normal')).change();
-  $('#id_mystery_tech_order_full_random').val(_mystery_setting('tech_order_freqs', 'Full random')).change();
-  $('#id_mystery_tech_order_balanced_random').val(_mystery_setting('tech_order_freqs', 'Balanced random')).change();
-  // shop prices
-  $('#id_mystery_shop_prices_normal').val(_mystery_setting('shop_price_freqs', 'Normal')).change();
-  $('#id_mystery_shop_prices_random').val(_mystery_setting('shop_price_freqs', 'Fully random')).change();
-  $('#id_mystery_shop_prices_mostly_random').val(_mystery_setting('shop_price_freqs', 'Mostly random')).change();
-  $('#id_mystery_shop_prices_free').val(_mystery_setting('shop_price_freqs', 'Free')).change();
-  // flag probabilities
-  function _mystery_flag(flag) {
-    return 100 * _mystery_setting('flag_prob_dict', gameflagsMap[flag]);
-  }
-  $('#id_mystery_tab_treasures').val(_mystery_flag('tab_treasures')).change();
-  $('#id_mystery_unlock_magic').val(_mystery_flag('unlock_magic')).change();
-  $('#id_mystery_bucket_list').val(_mystery_flag('bucket_list')).change();
-  $('#id_mystery_chronosanity').val(_mystery_flag('chronosanity')).change();
-  $('#id_mystery_boss_rando').val(_mystery_flag('boss_rando')).change();
-  $('#id_mystery_boss_scale').val(_mystery_flag('boss_scale')).change();
-  $('#id_mystery_locked_characters').val(_mystery_flag('locked_characters')).change();
-  $('#id_mystery_char_rando').val(_mystery_flag('char_rando')).change();
-  $('#id_mystery_duplicate_characters').val(_mystery_flag('duplicate_characters')).change();
-  $('#id_mystery_epoch_fail').val(_mystery_flag('epoch_fail')).change();
-  $('#id_mystery_gear_rando').val(_mystery_flag('gear_rando')).change();
-  $('#id_mystery_heal_rando').val(_mystery_flag('heal_rando')).change();
+
+  Object.entries(mysterySliders).forEach(([id, [field, key]]) => {
+    $('#id_' + id).val(_mystery_setting(field, key)).change();
+  });
+
+  Object.entries(mysteryFlagSliders).forEach(([id, [field, key]]) => {
+    let value = 100 * _mystery_setting('flag_prob_dict', gameflagsMap[flag]);
+    $('#id_' + id).val(value).change();
+  });
 
   // Bucket Settings
   function _bucket_setting(key) {
@@ -434,59 +509,6 @@ function prepareForm() {
 
   if (!validateAndUpdateObjectives()){return false;}
   return true;
-}
-
-/*
- * Called when a tab range slider is changed.  Update all tab values on the page.
- */
-function updateAllTabValues(adjustMin = false) {
-  updateTabValuesFromRange("id_power_tab_min", "id_power_tab_max", "power_tab_min_text", "power_tab_max_text", adjustMin);
-  updateTabValuesFromRange("id_magic_tab_min", "id_magic_tab_max", "magic_tab_min_text", "magic_tab_max_text", adjustMin);
-  updateTabValuesFromRange("id_speed_tab_min", "id_speed_tab_max", "speed_tab_min_text", "speed_tab_max_text", adjustMin);
-}
-
-/*
- * Update the min/max values of a tab based on range slider input.
- * Perform some basic validation to make sure the values make sense.
- */
-function updateTabValuesFromRange(rangeMin, rangeMax, textMin, textMax, adjustMin) {
-  var min = document.getElementById(rangeMin).value;
-  var max = document.getElementById(rangeMax).value;
-
-  if (min > max) {
-    if (adjustMin) {
-      min = max
-    } else {
-      max = min;
-    }
-  }
-
-  document.getElementById(textMin).value = min;
-  document.getElementById(textMax).value = max;
-  document.getElementById(rangeMin).value = min;
-  document.getElementById(rangeMax).value = max;
-}
-
-/*
- * Update the mystery flags slider text boxes.
- */
-function updateMysterySettings() {
-  var id_list_relative = ['mystery_game_mode_standard', 'mystery_game_mode_lw', 'mystery_game_mode_loc', 'mystery_game_mode_ia',
-    'mystery_item_difficulty_easy', 'mystery_item_difficulty_normal', 'mystery_item_difficulty_hard',
-    'mystery_enemy_difficulty_normal', 'mystery_enemy_difficulty_hard',
-    'mystery_tech_order_normal', 'mystery_tech_order_full_random', 'mystery_tech_order_balanced_random',
-    'mystery_shop_prices_normal', 'mystery_shop_prices_random', 'mystery_shop_prices_mostly_random', 'mystery_shop_prices_free'];
-  var id_list_percentage = ['mystery_tab_treasures', 'mystery_unlock_magic', 'mystery_bucket_list', 'mystery_chronosanity',
-    'mystery_boss_rando', 'mystery_boss_scale', 'mystery_locked_characters', 'mystery_char_rando', 'mystery_duplicate_characters',
-    'mystery_epoch_fail', 'mystery_gear_rando', 'mystery_heal_rando'];
-
-  for (const id of id_list_relative) {
-    document.getElementById(id + "_text").value = document.getElementById("id_" + id).value
-  }
-
-  for (const id of id_list_percentage) {
-    document.getElementById(id + "_text").value = document.getElementById("id_" + id).value + "%"
-  }
 }
 
 /*
