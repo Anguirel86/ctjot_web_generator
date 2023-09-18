@@ -68,10 +68,14 @@ function createSlider(id, suffix='') {
   let text = document.getElementById(id + '_text');
 
   text.value = slider.value + suffix;
-  slider.onchange = () => text.value = slider.value + suffix;
-  slider.oninput = slider.onchange;
-  text.onchange = () => slider.value = text.value.replace(suffix, '');
-  text.oninput = text.onchange;
+
+  const updateText = () => text.value = slider.value.toString() + suffix;
+  ['change', 'input'].forEach((ev) => slider.addEventListener(ev, updateText));
+
+  const updateSlider = () => slider.value = text.value.toString().replace(suffix, '');
+  ['change', 'input'].forEach((ev) => text.addEventListener(ev, updateSlider));
+
+  return [slider, text];
 }
 
 /*
@@ -81,40 +85,35 @@ function createSlider(id, suffix='') {
  * If max slider value goes below min slider, min slider gets decreased.
  */
 
-function createMinMaxSlidersPair(pair) {
-  let maxSlider = document.getElementById('id_' + pair + '_max');
-  let minSlider = document.getElementById('id_' + pair + '_min');
-  let maxText = document.getElementById(pair + '_max_text');
-  let minText = document.getElementById(pair + '_min_text');
+function createMinMaxSlidersPair(id_min, id_max, suffix='') {
+  let [minSlider, minText] = createSlider(id_min, suffix);
+  let [maxSlider, maxText] = createSlider(id_max, suffix);
 
   minText.value = minSlider.value;
   maxText.value = maxSlider.value;
 
-  // increase max value if min value goes above it
-  function _adjust_max() {
-    if (minSlider.value > maxSlider.value) {
-      maxSlider.value = minSlider.value;
-      maxText.value = minSlider.value;
-    }
-  }
-
   // decrease min value if max value goes below it
-  function _adjust_min() {
+  const adjustMin = (() => {
     if (maxSlider.value < minSlider.value) {
       minSlider.value = maxSlider.value;
       minText.value = maxText.value;
     }
-  }
+  });
 
-  minSlider.onchange = (() => { minText.value = minSlider.value; _adjust_max(); });
-  minSlider.oninput = minSlider.onchange;
-  minText.onchange = (() => { minSlider.value = minText.value; _adjust_max(); });
-  minText.oninput = minText.onchange;
+  // increase max value if min value goes above it
+  const adjustMax = (() => {
+    if (minSlider.value > maxSlider.value) {
+      maxSlider.value = minSlider.value;
+      maxText.value = minText.value;
+    }
+  });
 
-  maxSlider.onchange = (() => { maxText.value = maxSlider.value; _adjust_min(); });
-  maxSlider.oninput = maxSlider.onchange;
-  maxText.onchange = (() => { maxSlider.value = maxText.value; _adjust_min(); });
-  maxText.oninput = maxText.onchange;
+  ['change', 'input'].forEach((ev) => minSlider.addEventListener(ev, adjustMax));
+  ['change', 'input'].forEach((ev) => minText.addEventListener(ev, adjustMax));
+  ['change', 'input'].forEach((ev) => maxSlider.addEventListener(ev, adjustMin));
+  ['change', 'input'].forEach((ev) => maxText.addEventListener(ev, adjustMin));
+
+  return [[minSlider, minText], [maxSlider, maxText]];
 }
 
 /*
@@ -130,7 +129,7 @@ function initAll() {
 
   Object.entries(mysterySliders).forEach(([id, _]) => createSlider(id));
   Object.entries(mysteryFlagSliders).forEach(([id, _]) => createSlider(id, '%'));
-  ['power_tab', 'magic_tab', 'speed_tab'].forEach((pair) => createMinMaxSlidersPair(pair));
+  ['power', 'magic', 'speed'].forEach((tab) => createMinMaxSlidersPair(tab + '_tab_min', tab + '_tab_max'));
 }
 $(document).ready(initAll);
 
@@ -176,8 +175,12 @@ function applyPreset(preset) {
   }
 
   ['power', 'magic', 'speed'].forEach((tab) => {
-    $('#id_' + tab + '_tab_max').val(_tab_setting(tab + '_max')).change();
-    $('#id_' + tab + '_tab_min').val(_tab_setting(tab + '_min')).change();
+    let max = _tab_setting(tab + '_max');
+    let min = _tab_setting(tab + '_min');
+    $('#id_' + tab + '_tab_max').val(max).change();
+    $('#' + tab + '_tab_max_text').val(max).change();
+    $('#id_' + tab + '_tab_min').val(min).change();
+    $('#' + tab + '_tab_min_text').val(min).change();
   });
   // TODO: missing tab scheme, binom_success
 
@@ -202,12 +205,15 @@ function applyPreset(preset) {
   }
 
   Object.entries(mysterySliders).forEach(([id, [field, key]]) => {
-    $('#id_' + id).val(_mystery_setting(field, key)).change();
+    let value = _mystery_setting(field, key);
+    $('#id_' + id).val(value).change();
+    $('#' + id + '_text').val(value).change();
   });
 
-  Object.entries(mysteryFlagSliders).forEach(([id, [field, key]]) => {
-    let value = 100 * _mystery_setting('flag_prob_dict', gameflagsMap[flag]);
+  Object.entries(mysteryFlagSliders).forEach(([id, key]) => {
+    let value = 100 * _mystery_setting('flag_prob_dict', gameflagsMap[key]);
     $('#id_' + id).val(value).change();
+    $('#' + id + '_text').val(value).change();
   });
 
   // Bucket Settings
