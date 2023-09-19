@@ -65,9 +65,8 @@ const mysteryFlagSliders = {
  */
 function createSlider(id, suffix='') {
   let slider = document.getElementById('id_' + id);
-  let text = document.getElementById(id + '_text');
-
-  text.value = slider.value + suffix;
+  let text = document.getElementById('id_' + id + '_text');
+  text.value = slider.value.toString() + suffix;
 
   const updateText = () => text.value = slider.value.toString() + suffix;
   ['change', 'input'].forEach((ev) => slider.addEventListener(ev, updateText));
@@ -88,9 +87,6 @@ function createSlider(id, suffix='') {
 function createMinMaxSlidersPair(id_min, id_max, suffix='') {
   let [minSlider, minText] = createSlider(id_min, suffix);
   let [maxSlider, maxText] = createSlider(id_max, suffix);
-
-  minText.value = minSlider.value;
-  maxText.value = maxSlider.value;
 
   // decrease min value if max value goes below it
   const adjustMin = (() => {
@@ -116,8 +112,39 @@ function createMinMaxSlidersPair(id_min, id_max, suffix='') {
   return [[minSlider, minText], [maxSlider, maxText]];
 }
 
+function createBucketSliders() {
+  let [
+    [reqObjsSlider, reqObjsText],
+    [numObjsSlider, numObjsText]
+  ] = createMinMaxSlidersPair('bucket_num_objs_req', 'bucket_num_objs');
+
+  const adjustObjectiveEntries = (() => {
+    [...Array(8).keys()].forEach((index) => {
+      let id = 'id_obhint_entry' + (index + 1);
+      document.getElementById(id).disabled = (index > numObjsSlider.value - 1);
+    });
+  });
+
+  ['change', 'input'].forEach((ev) => reqObjsSlider.addEventListener(ev, adjustObjectiveEntries));
+  ['change', 'input'].forEach((ev) => reqObjsText.addEventListener(ev, adjustObjectiveEntries));
+  ['change', 'input'].forEach((ev) => numObjsSlider.addEventListener(ev, adjustObjectiveEntries));
+  ['change', 'input'].forEach((ev) => numObjsText.addEventListener(ev, adjustObjectiveEntries));
+
+  return [[reqObjsSlider, reqObjsText], [numObjsSlider, numObjsText]];
+}
+
 /*
- * Initialize some UI settings when page (re-)loaded.
+ * Set slider and linked text to value.
+ */
+function setSlider(id, value, suffix='') {
+  let slider = document.getElementById('id_' + id);
+  let text = document.getElementById('id_' + id + '_text');
+  slider.value = value;
+  text.value = value.toString() + suffix;
+}
+
+/*
+ * Intended-to-be-idempotent (re-)initialization of page state.
  */
 function initAll() {
   let options = ['char_rando', 'boss_rando', 'mystery_seed', 'bucket_list'];
@@ -126,66 +153,72 @@ function initAll() {
   disableDuplicateTechs();
   $('#id_disable_glitches').prop('checked', true).change();
   $('#id_fast_tabs').prop('checked', true).change();
+}
 
+/*
+ * Initialize some UI settings when page (re-)loaded.
+ */
+function initOnce() {
+  // only add listeners once, on page load; don't add again when resetAll called
   Object.entries(mysterySliders).forEach(([id, _]) => createSlider(id));
   Object.entries(mysteryFlagSliders).forEach(([id, _]) => createSlider(id, '%'));
   ['power', 'magic', 'speed'].forEach((tab) => createMinMaxSlidersPair(tab + '_tab_min', tab + '_tab_max'));
+  createBucketSliders();
+
+  // preform intended-to-be-idempotent (re-)initialization
+  initAll();
 }
-$(document).ready(initAll);
+$(document).ready(initOnce);
 
 /*
  * Apply preset values to all form inputs.
  */
 function applyPreset(preset) {
   // General options
-  function _game_option(key) {
+  const gameOption = ((key) => {
     let missing = settingsDefaults[key].toLowerCase().replace(/\s/g, '_');
     if(!preset.settings[key]) { return missing; }
     return preset.settings[key].toLowerCase().replace(/\s/g, '_');
-  }
-  $('#id_game_mode').val(_game_option('game_mode')).change();
-  $('#id_enemy_difficulty').val(_game_option('enemy_difficulty')).change();
-  $('#id_item_difficulty').val(_game_option('item_difficulty')).change();
+  });
+  $('#id_game_mode').val(gameOption('game_mode')).change();
+  $('#id_enemy_difficulty').val(gameOption('enemy_difficulty')).change();
+  $('#id_item_difficulty').val(gameOption('item_difficulty')).change();
   $('#id_tech_rando').val(
     (v => {
       if (v == 'full_random') { return 'fully_random'; }
       return v;
-    })(_game_option('techorder'))
+    })(gameOption('techorder'))
   ).change();
-  $('#id_shop_prices').val(_game_option('shopprices')).change();
+  $('#id_shop_prices').val(gameOption('shopprices')).change();
 
   // Flags
-  function _has_flag(flag) {
+  const hasFlag = ((flag) => {
     let missing = settingsDefaults.gameflags.includes(flag);
     if(!preset.settings.gameflags) { return missing; }
     return preset.settings.gameflags.includes(flag);
-  }
+  });
   Object.entries(gameflagsMap).forEach(([id, flag]) => {
-    $('#id_' + id).prop('checked', _has_flag(flag)).change();
+    $('#id_' + id).prop('checked', hasFlag(flag)).change();
   });
 
   $('#id_lost_worlds').prop('checked', false).change();
   $('#id_spoiler_log').prop('checked', true).change();
 
   // Tabs options
-  function _tab_setting(key) {
+  const tabSetting = ((key) => {
     let missing = settingsDefaults.tab_settings[key];
     if(!preset.settings.tab_settings) { return missing; }
     return preset.settings.tab_settings[key] || missing;
-  }
+  });
 
   ['power', 'magic', 'speed'].forEach((tab) => {
-    let max = _tab_setting(tab + '_max');
-    let min = _tab_setting(tab + '_min');
-    $('#id_' + tab + '_tab_max').val(max).change();
-    $('#' + tab + '_tab_max_text').val(max).change();
-    $('#id_' + tab + '_tab_min').val(min).change();
-    $('#' + tab + '_tab_min_text').val(min).change();
+    setSlider(tab + '_tab_max', tabSetting(tab + '_max'));
+    setSlider(tab + '_tab_min', tabSetting(tab + '_min'));
   });
   // TODO: missing tab scheme, binom_success
 
   // Character Rando options
-  if (!_has_flag('GameFlags.DUPLICATE_CHARS')) {
+  if (!hasFlag('GameFlags.DUPLICATE_CHARS')) {
     $('#id_duplicate_duals').prop('checked', false).change();
     $('#id_duplicate_duals').addClass('disabled');
     $('#id_duplicate_duals').prop('disabled', true).change();
@@ -197,40 +230,33 @@ function applyPreset(preset) {
   $('#id_legacy_boss_placement').prop('checked', false).change();
 
   // Mystery Seed options
-  function _mystery_setting(field, key) {
+  const mysterySetting = ((field, key) => {
     let missing = settingsDefaults.mystery_settings[field][key];
     if(!preset.settings.mystery_settings) { return missing; }
     if(!preset.settings.mystery_settings[field]) { return missing; }
     return preset.settings.mystery_settings[field][key] || missing;
-  }
-
-  Object.entries(mysterySliders).forEach(([id, [field, key]]) => {
-    let value = _mystery_setting(field, key);
-    $('#id_' + id).val(value).change();
-    $('#' + id + '_text').val(value).change();
   });
 
+  Object.entries(mysterySliders).forEach(([id, [field, key]]) => setSlider(id, mysterySetting(field, key)));
   Object.entries(mysteryFlagSliders).forEach(([id, key]) => {
-    let value = 100 * _mystery_setting('flag_prob_dict', gameflagsMap[key]);
-    $('#id_' + id).val(value).change();
-    $('#' + id + '_text').val(value).change();
+    let value = 100 * mysterySetting('flag_prob_dict', gameflagsMap[key]);
+    setSlider(id, value, '%');
   });
 
   // Bucket Settings
-  function _bucket_setting(key) {
+  const bucketSetting = ((key) => {
     let missing = settingsDefaults.bucket_settings[key]
     if(!preset.settings.bucket_settings) { return missing; }
     return preset.settings.bucket_settings[key] || missing;
-  }
-  $('#id_bucket_num_objs').val(_bucket_setting('num_objectives')).change();
-  $('#id_bucket_num_objs_req').val(_bucket_setting('num_objectives_needed')).change();
-  $('#id_bucket_disable_go_modes').prop('checked', _bucket_setting('disable_other_go_modes', false)).change();
-  $('#id_bucket_obj_win_game').prop('checked', _bucket_setting('objectives_win', false)).change();
-  updateObjectiveCount();
+  });
+  setSlider('bucket_num_objs', bucketSetting('num_objectives'));
+  setSlider('bucket_num_objs_req', bucketSetting('num_objectives_needed'));
+  $('#id_bucket_disable_go_modes').prop('checked', bucketSetting('disable_other_go_modes')).change();
+  $('#id_bucket_obj_win_game').prop('checked', bucketSetting('objectives_win')).change();
 
   // read objective hints from preset
-  let hints = _bucket_setting('hints') || [];
-  [...Array(8).keys()].forEach((index) => $('#objEntry' + (index + 1)).val(hints[index] || '').change());
+  let hints = bucketSetting('hints') || [];
+  [...Array(8).keys()].forEach((index) => $('#id_obhint_entry' + (index + 1)).val(hints[index] || '').change());
 }
 
 /*
@@ -541,32 +567,6 @@ function toggleOptions(option) {
 // All broken code goes below this line
 // Adding Bucket-specific functions and data
 
-/*
- * Ensure that the number of objectives and the
- */
-function updateObjectiveCount(adjustingRequired = false){
-
-    numObjs = document.getElementById("id_bucket_num_objs").value
-    reqObjs = document.getElementById("id_bucket_num_objs_req").value
-
-    if (reqObjs > numObjs){
-        if (adjustingRequired) {numObjs = reqObjs}
-        else {reqObjs = numObjs}
-    }
-
-    document.getElementById("id_bucket_num_objs").value = numObjs
-    document.getElementById("numObjectivesDisp").value = numObjs
-    document.getElementById("id_bucket_num_objs_req").value = reqObjs
-    document.getElementById("numObjectivesRequiredDisp").value = reqObjs
-
-    // Now enable/disable the objective entries according to numObjs
-    for(var i=0; i<8; i++){
-        var isDisabled = true
-        if (i < numObjs){isDisabled = false}
-        document.getElementById("objEntry"+(i+1)).disabled = isDisabled
-    }
-}
-
 // All quest name tags allowed by the parser.
 const allowedQuestTags = [
     'free', 'gated', 'late', 'go',
@@ -714,7 +714,7 @@ function validateCollectObjective(collectParts){
 function validateObjective(objective){
     // If the user used a preset in the entry box, then use the dict above to resolve it.
     cleanedObjective = objective.toLowerCase()
-    for(var key in obhintMap){
+    for(let key in obhintMap){
         if (obhintMap.hasOwnProperty(key) && key.toLowerCase() == cleanedObjective){
             return {isValid: true, result: obhintMap[key]}
         }
@@ -729,7 +729,7 @@ function validateObjective(objective){
     }
 
     objectiveParts = cleanedObjective.split(',')
-    for (var i = 0; i < objectiveParts.length; i++){
+    for (let i = 0; i < objectiveParts.length; i++){
         objectivePart = objectiveParts[i]
         // split into weight:objective if possible
         weightSplit = objectivePart.split(':')
@@ -780,15 +780,15 @@ function validateObjective(objective){
  * form fields.
  */
 function validateAndUpdateObjectives(){
-    var bucketList = document.getElementById("id_bucket_list").checked
+    let bucketList = document.getElementById("id_bucket_list").checked
     if (!bucketList){return true}
 
-    var numObjs = document.getElementById("id_bucket_num_objs").value
+    let numObjs = document.getElementById("id_bucket_num_objs").value
 
-    var retFalse = false
-    for(var i = 0; i<Number(numObjs); i++){
-        elementId = 'objEntry'+(i+1)
-        objective = document.getElementById(elementId).value
+    let retFalse = false
+    for(let i = 0; i<Number(numObjs); i++){
+        let elementId = 'id_obhint_entry'+(i+1)
+        let objective = document.getElementById(elementId).value
         const parse = validateObjective(objective)
         const isValid = parse.isValid
         const result = parse.result
@@ -813,7 +813,7 @@ function validateAndUpdateObjectives(){
         return false
     }
 
-    for(var i=Number(numObjs); i<8; i++){
+    for(let i=Number(numObjs); i<8; i++){
         formElementId = 'id_bucket_objective'+(i+1)
         document.getElementById(formElementId).value = 'None'
     }
@@ -871,6 +871,7 @@ function validateLogicTweaks(){
 
 }
 
+// TODO: pull this mapping out of jetsoftime code
 const forceOff = {
     "standard": [],
     "lost_worlds": ["boss_scaling", "bucket_list", "epoch_fail",
