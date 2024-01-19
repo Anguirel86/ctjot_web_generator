@@ -15,12 +15,8 @@
       <h2 class="pt-4">Presets</h2>
       <div class="border border-primary rounded p-2">
         <button class="btn btn-primary mt-1 mb-1" type="button" onclick="resetAll()">Reset All</button>
-        <button class="btn btn-primary mt-1 mb-1" type="button" onclick="presetMillennialPrix()">Millennial Prix</button>
-        <button class="btn btn-primary mt-1 mb-1" type="button" onclick="presetRace()">Race</button>
-        <button class="btn btn-primary mt-1 mb-1" type="button" onclick="presetNewPlayer()">New Player</button>
-        <button class="btn btn-primary mt-1 mb-1" type="button" onclick="presetLostWorlds()">Lost Worlds</button>
-        <button class="btn btn-primary mt-1 mb-1" type="button" onclick="presetHard()">Hard</button>
-        <button class="btn btn-primary mt-1 mb-1" type="button" onclick="presetLegacyOfCyrus()">Legacy of Cyrus</button>
+        <button class="btn btn-primary mt-1 mb-1" type="button" onclick="presetMillennialPrix()">Millennial Prix 1st Half</button>
+        <button class="btn btn-primary mt-1 mb-1" type="button" onclick="presetMillennialPrix2()">Millennial Prix 2nd Half</button>
       </div> <!-- End preset buttons -->
       
       <form name="game_options_form" id="game_options_form" action="{% url 'generator:generate' %}" method="post" enctype="multipart/form-data" onsubmit="return prepareForm()">

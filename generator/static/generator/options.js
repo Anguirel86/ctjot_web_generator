@@ -187,13 +187,22 @@ function presetLegacyOfCyrus() {
 }
 
 /*
- * Millennial Prix league preset.
+ * Millennial Prix league first half preset.
  */
 function presetMillennialPrix() {
   presetRace();
   $('#id_boss_rando').prop('checked', true).change();
   $('#id_boss_spot_hp').prop('checked', true).change();
   $('#id_fast_tabs').prop('checked', true).change();
+}
+
+/*
+ * Millennial Prix league second half preset.
+ */
+function presetMillennialPrix2() {
+    presetMillennialPrix();
+    $('#id_gear_rando').prop('checked', true).change();
+    $('#id_healing_item_rando').prop('checked', true).change();
 }
 
 /*
