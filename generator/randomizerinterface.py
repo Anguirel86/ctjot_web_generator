@@ -475,13 +475,14 @@ class RandomizerInterface:
         return spoiler_log
 
     @classmethod
-    def get_archipelago_yaml(cls, config: randoconfig.RandoConfig, settings: rset.Settings,) -> io.StringIO:
+    def get_archipelago_yaml(cls, config: randoconfig.RandoConfig, settings: rset.Settings, extra_yaml_data: dict[str,str]) -> io.StringIO:
         """
         :param config: RandoConfig object describing the seed
         :param settings: RandoSettings object describing the seed
+        :param extra_yaml_data: Extra data fields to add to the yaml
         :return: File-like object with a multiworld yaml for this seed
         """
-        return multiworld.generate_yaml_ap_config(settings, config)
+        return multiworld.generate_yaml_ap_config(settings, config, extra_yaml_data)
 
     @staticmethod
     def get_web_spoiler_log(config: randoconfig.RandoConfig) -> dict[str, list[dict[str, str]]]:

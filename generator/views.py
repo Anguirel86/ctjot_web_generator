@@ -204,8 +204,10 @@ class DownloadAPYamlView(View):
         # need to verify this is a multiworld seed before generating the yaml.
         # If this ever gets rolled into the main generator then some guard code
         # will have to be added here.
+        base_uri = request.build_absolute_uri('/')[:-1]
+        extra_yaml_data = {'seed_share_link': base_uri + "/share/" + share_id}
         ap_yaml = RandomizerInterface.get_archipelago_yaml(
-            pickle.loads(game.configuration), pickle.loads(game.settings))
+            pickle.loads(game.configuration), pickle.loads(game.settings), extra_yaml_data)
         file_name = 'ctjot_' + share_id + '.yaml'
         response = HttpResponse(content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=%s' % file_name
