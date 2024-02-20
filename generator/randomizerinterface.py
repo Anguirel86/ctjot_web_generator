@@ -76,8 +76,6 @@ gameflags_dict = {
     'epoch_fail': GF.EPOCH_FAIL,
     'duplicate_characters': GF.DUPLICATE_CHARS,
     'duplicate_duals': GF.DUPLICATE_TECHS,
-    # This should get moved to ROSettings.
-    'boss_spot_hp': GF.BOSS_SPOT_HP,
     # Extra
     'unlocked_skyways': GF.UNLOCKED_SKYGATES,
     'add_sunkeep_spot': GF.ADD_SUNKEEP_SPOT,
@@ -97,6 +95,7 @@ gameflags_dict = {
     'bucket_list': GF.BUCKET_LIST,
     'rocksanity': GF.ROCKSANITY,
     'tech_damage_rando': GF.TECH_DAMAGE_RANDO,
+    'element_rando': GF.ELEMENT_RANDO,
     # QoL
     'sightscope_always_on': GF.VISIBLE_HEALTH,
     'boss_sightscope': GF.BOSS_SIGHTSCOPE,
@@ -321,14 +320,14 @@ class RandomizerInterface:
             settings.cosmetic_flags = cos_flags
 
             # Character/Epoch renames
-            settings.char_names[0] = self.get_character_name(form.cleaned_data['crono_name'], 'Crono')
-            settings.char_names[1] = self.get_character_name(form.cleaned_data['marle_name'], 'Marle')
-            settings.char_names[2] = self.get_character_name(form.cleaned_data['lucca_name'], 'Lucca')
-            settings.char_names[3] = self.get_character_name(form.cleaned_data['robo_name'], 'Robo')
-            settings.char_names[4] = self.get_character_name(form.cleaned_data['frog_name'], 'Frog')
-            settings.char_names[5] = self.get_character_name(form.cleaned_data['ayla_name'], 'Ayla')
-            settings.char_names[6] = self.get_character_name(form.cleaned_data['magus_name'], 'Magus')
-            settings.char_names[7] = self.get_character_name(form.cleaned_data['epoch_name'], 'Epoch')
+            settings.char_settings.names['Crono'] = self.get_character_name(form.cleaned_data['crono_name'], 'Crono')
+            settings.char_settings.names['Marle'] = self.get_character_name(form.cleaned_data['marle_name'], 'Marle')
+            settings.char_settings.names['Lucca'] = self.get_character_name(form.cleaned_data['lucca_name'], 'Lucca')
+            settings.char_settings.names['Robo'] = self.get_character_name(form.cleaned_data['robo_name'], 'Robo')
+            settings.char_settings.names['Frog'] = self.get_character_name(form.cleaned_data['frog_name'], 'Frog')
+            settings.char_settings.names['Ayla'] = self.get_character_name(form.cleaned_data['ayla_name'], 'Ayla')
+            settings.char_settings.names['Magus'] = self.get_character_name(form.cleaned_data['magus_name'], 'Magus')
+            settings.char_settings.names['Epoch'] = self.get_character_name(form.cleaned_data['epoch_name'], 'Epoch')
 
             # In-game options
             # Boolean options

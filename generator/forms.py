@@ -97,6 +97,7 @@ class GenerateForm(forms.Form):
     use_antilife = forms.BooleanField(required=False)
     tackle_effects = forms.BooleanField(required=False)
     tech_damage_rando = forms.BooleanField(required=False)
+    element_rando = forms.BooleanField(required=False)
 
     # All of the logic tweak flags on the Extra tab
     unlocked_skyways = forms.BooleanField(required=False)
