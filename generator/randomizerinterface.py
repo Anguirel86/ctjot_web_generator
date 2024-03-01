@@ -446,7 +446,7 @@ class RandomizerInterface:
             for j in range(7):
                 if choices & (1 << j) > 0:
                     char_choices[i].append(j)
-        settings.char_choices = char_choices
+        settings.char_settings.choices = char_choices
 
         # Boss rando settings
         # TODO - Boss and location lists are just default for now. Only update the other options.
