@@ -407,6 +407,7 @@ function presetLegacyOfCyrus() {
         "gameflags": [
           "GameFlags.FIX_GLITCH",
           "GameFlags.FAST_PENDANT",
+          "GameFlags.BOSS_RANDO",
           "GameFlags.UNLOCKED_MAGIC",
           "GameFlags.FAST_TABS",
           "GameFlags.GEAR_RANDO"
