@@ -153,6 +153,11 @@ function initAll() {
   disableDuplicateTechs();
   $('#id_disable_glitches').prop('checked', true).change();
   $('#id_fast_tabs').prop('checked', true).change();
+
+  ['power', 'magic', 'speed'].forEach((tab) => {
+    setSlider(tab + '_tab_max', settingsDefaults.tab_settings[tab + '_max']);
+    setSlider(tab + '_tab_min', settingsDefaults.tab_settings[tab + '_min']);
+  });
 }
 
 /*
@@ -329,12 +334,12 @@ function presetNewPlayer() {
 	  "boss_spot_hp": true,
 	},
 	"tab_settings": {
-	  "power_tab_min": 2,
-	  "power_tab_max": 4,
-	  "magic_tab_min": 2,
-	  "magic_tab_max": 3,
-	  "speed_tab_min": 1,
-	  "speed_tab_max": 1,
+	  "power_min": 2,
+	  "power_max": 4,
+	  "magic_min": 2,
+	  "magic_max": 3,
+	  "speed_min": 1,
+	  "speed_max": 1,
 	}
       }
     }
