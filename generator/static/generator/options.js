@@ -307,6 +307,32 @@ function presetRace() {
   );
 }
 
+function presetJurassicRhythm() {
+  applyPreset(
+    {
+      "settings": {
+        "game_mode": "Standard",
+        "enemy_difficulty": "Normal",
+        "item_difficulty": "Normal",
+        "techorder": "Full random",
+        "shopprices": "Normal",
+        "gameflags": [
+          "GameFlags.FIX_GLITCH",
+          "GameFlags.ZEAL_END",
+          "GameFlags.FAST_PENDANT",
+          "GameFlags.BOSS_RANDO",
+          "GameFlags.FAST_TABS",
+          "GameFlags.GEAR_RANDO",
+          "GameFlags.HEALING_ITEM_RANDO",
+        ],
+	"boss_rando_settings": {
+	  "boss_spot_hp": true,
+	},
+      }
+    }
+  );
+}
+
 /*
  * Populate the options form with the settings for a new player seed.
  */
