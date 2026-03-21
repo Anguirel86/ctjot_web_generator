@@ -90,6 +90,8 @@ class GenerateForm(forms.Form):
     boss_sightscope = forms.BooleanField(required=False)
     fast_tabs = forms.BooleanField(required=False)
     free_menu_glitch = forms.BooleanField(required=False)
+    visible_techlist = forms.BooleanField(required=False)
+    treasure_tier_markers = forms.BooleanField(required=False)
 
     # Extra
     bucket_list = forms.BooleanField(required=False)

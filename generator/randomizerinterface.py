@@ -96,6 +96,8 @@ gameflags_dict = {
     'rocksanity': GF.ROCKSANITY,
     'tech_damage_rando': GF.TECH_DAMAGE_RANDO,
     'element_rando': GF.ELEMENT_RANDO,
+    'visible_techlist': GF.VISIBLE_TECHLIST,
+    'treasure_tier_markers': GF.TREASURE_TIER_MARKERS,
     # QoL
     'sightscope_always_on': GF.VISIBLE_HEALTH,
     'boss_sightscope': GF.BOSS_SIGHTSCOPE,
