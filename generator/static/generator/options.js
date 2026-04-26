@@ -387,7 +387,12 @@ function presetLostWorlds() {
         "gameflags": [
           "GameFlags.FIX_GLITCH",
           "GameFlags.ZEAL_END",
-          "GameFlags.FAST_TABS"
+          "GameFlags.FAST_TABS",
+          "GameFlags.FAST_PENDANT",
+          "GameFlags.VISIBLE_TECHLIST",
+          "GameFlags.BOSS_SIGHTSCOPE",
+          "GameFlags.GEAR_RANDO",
+          "GameFlags.TECH_DAMAGE_RANDO"
         ]
       }
     }
