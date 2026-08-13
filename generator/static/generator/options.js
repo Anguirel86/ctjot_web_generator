@@ -207,7 +207,8 @@ function applyPreset(preset) {
   });
 
   $('#id_lost_worlds').prop('checked', false).change();
-  $('#id_spoiler_log').prop('checked', true).change();
+  // Don't reset the spoiler log toggle with preset buttons
+  //$('#id_spoiler_log').prop('checked', true).change();
 
   // Tabs options
   const tabSetting = ((key) => {
