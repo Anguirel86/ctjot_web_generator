@@ -105,8 +105,8 @@ deploy_production() {
   ln -sf $PWD/deploy/docker-compose.prod.yml $PWD/deploy/docker-compose.yml
 
   # Build and run the containers
-  docker-compose -f deploy/docker-compose.yml build
-  docker-compose -f deploy/docker-compose.yml up -d
+  docker compose -f deploy/docker-compose.yml build
+  docker compose -f deploy/docker-compose.yml up -d
 }
 
 #
@@ -126,8 +126,8 @@ deploy_staging() {
   ln -sf $PWD/deploy/docker-compose.staging.yml $PWD/deploy/docker-compose.yml
 
   # Build and run the containers
-  docker-compose -f deploy/docker-compose.yml build
-  docker-compose -f deploy/docker-compose.yml up -d
+  docker compose -f deploy/docker-compose.yml build
+  docker compose -f deploy/docker-compose.yml up -d
 }
 
 #
@@ -141,8 +141,8 @@ deploy_dev() {
   ln -sf $PWD/deploy/docker-compose.dev.yml $PWD/deploy/docker-compose.yml
 
   # Build and run the containers
-  docker-compose -f deploy/docker-compose.yml build
-  docker-compose -f deploy/docker-compose.yml up -d
+  docker compose -f deploy/docker-compose.yml build
+  docker compose -f deploy/docker-compose.yml up -d
 }
 
 #
@@ -158,7 +158,7 @@ shutdown() {
 #
 rerun_deployment() {
   echo "Running web generator..."
-  docker-compose -f deploy/docker-compose.yml up -d
+  docker compose -f deploy/docker-compose.yml up -d
 }
 
 #
